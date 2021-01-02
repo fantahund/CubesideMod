@@ -12,7 +12,6 @@ import net.minecraft.text.TranslatableText;
 public class ConfigMenu implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        Cubeside.LOGGER.debug("IsModmenu Loded ?????????????????????????????????????????");
         if (!FabricLoader.getInstance().isModLoaded("cloth-config2")) {
             Cubeside.LOGGER.warn("Couldn't find Cloth Config, config menu disabled!");
             return parent -> null;
@@ -26,6 +25,7 @@ public class ConfigMenu implements ModMenuApi {
             ConfigCategory general = builder.getOrCreateCategory(new TranslatableText("category.cubeside.general"));
             ConfigEntryBuilder entryBuilder = builder.entryBuilder();
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.chattimestamps"), Config.chattimestamps).setDefaultValue(false).setSaveConsumer(val -> Config.chattimestamps = val).build());
+            general.addEntry(entryBuilder.startColorField(new TranslatableText("options.cubeside.timestampcolor"), Config.timestampColor).setDefaultValue(TextColor.fromFormatting(Formatting.WHITE)).setSaveConsumer3(textColor -> Config.timestampColor = textColor).build());
             return builder.build();
         }
     }
