@@ -13,6 +13,7 @@ import java.util.Properties;
 public class Config {
     public static boolean chattimestamps = false;
     public static TextColor timestampColor = TextColor.parse("#ffffff");
+    public static int chatMessageLimit = 100;
 
     static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("cubeside.properties");
 

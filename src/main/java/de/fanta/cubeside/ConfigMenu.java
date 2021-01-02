@@ -12,6 +12,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 public class ConfigMenu implements ModMenuApi {
+
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         if (!FabricLoader.getInstance().isModLoaded("cloth-config2")) {
@@ -20,6 +21,7 @@ public class ConfigMenu implements ModMenuApi {
         }
         return new Builder()::build;
     }
+
     static class Builder {
         Screen build(Screen parent) {
             ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(new TranslatableText("title.cubeside.config"));
