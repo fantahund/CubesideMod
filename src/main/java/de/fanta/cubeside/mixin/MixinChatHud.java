@@ -1,6 +1,11 @@
 package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.Config;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
+import net.minecraft.util.Formatting;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -15,9 +20,12 @@ public abstract class MixinChatHud extends net.minecraft.client.gui.DrawableHelp
     private net.minecraft.text.Text addTimestamp(net.minecraft.text.Text componentIn)
     {
         if (Config.chattimestamps) {
-            net.minecraft.text.LiteralText newComponent = new net.minecraft.text.LiteralText(getChatTimestamp() + " ");
-            newComponent.append(componentIn);
-            return newComponent;
+            net.minecraft.text.LiteralText component = new LiteralText("");
+            LiteralText timestamp = new net.minecraft.text.LiteralText(getChatTimestamp()+" ");
+            timestamp.setStyle(Style.EMPTY.withColor(Config.timestampColor));
+            component.append(timestamp);
+            component.append(componentIn);
+            return component;
         }
 
         return componentIn;
