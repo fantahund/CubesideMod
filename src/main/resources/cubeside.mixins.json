@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "de.fanta.cubeside.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "MixinChatHud"
+  ],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
