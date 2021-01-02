@@ -4,8 +4,7 @@ import de.fanta.cubeside.Config;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TextColor;
-import net.minecraft.util.Formatting;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -27,7 +26,6 @@ public abstract class MixinChatHud extends net.minecraft.client.gui.DrawableHelp
             component.append(componentIn);
             return component;
         }
-
         return componentIn;
     }
 

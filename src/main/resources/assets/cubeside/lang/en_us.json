@@ -2,5 +2,6 @@
   "title.cubeside.config": "Cubeside Mod Config",
   "category.cubeside.general": "General",
   "options.cubeside.chattimestamps": "Enable Chat Time Stamps",
-  "options.cubeside.timestampcolor": "Chat Time Stamp Color"
+  "options.cubeside.timestampcolor": "Chat Time Stamp Color",
+  "options.cubeside.chatlimit": "Chat Message Limit"
 }

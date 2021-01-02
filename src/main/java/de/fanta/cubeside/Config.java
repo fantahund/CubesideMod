@@ -20,6 +20,7 @@ public class Config {
         Properties prop = new Properties();
         prop.setProperty("enable_chat_time_stamps", Boolean.toString(chattimestamps));
         prop.setProperty("timestamp_color", timestampColor.toString());
+        prop.setProperty("chat_message_limit", String.valueOf(chatMessageLimit));
         try {
             OutputStream s = Files.newOutputStream(configPath);
             prop.store(s, "Cubeside Config");
@@ -34,8 +35,9 @@ public class Config {
         try {
             InputStream s = Files.newInputStream(configPath);
             prop.load(s);
-            chattimestamps = Boolean.parseBoolean(prop.getProperty("enable_chat_time_stamps"));
-            timestampColor = TextColor.parse(prop.getProperty("timestamp_color"));
+            chattimestamps = Boolean.parseBoolean(prop.getProperty("enable_chat_time_stamps", "false"));
+            timestampColor = TextColor.parse(prop.getProperty("timestamp_color", "#ffffff"));
+            chatMessageLimit = Integer.parseInt(prop.getProperty("chat_message_limit", "100"));
         } catch (IOException e) {
             Cubeside.LOGGER.warn("Failed to read config!");
         }
