@@ -4,7 +4,8 @@
   "package": "de.fanta.cubeside.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinChatHud"
+    "MixinChatHud",
+    "MixinKeyboard"
   ],
   "client": [],
   "injectors": {
