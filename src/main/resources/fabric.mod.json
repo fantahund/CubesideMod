@@ -12,7 +12,9 @@
   "entrypoints": {
     "main": [ "de.fanta.cubeside.Cubeside" ],
     "client": [ "de.fanta.cubeside.CubesideClient" ],
-    "modmenu": [ "de.fanta.cubeside.ConfigMenu" ]
+    "modmenu": [
+      "de.fanta.cubeside.ConfigMenu"
+    ]
   },
   "mixins": [ "cubeside.mixins.json" ],
   "depends": {

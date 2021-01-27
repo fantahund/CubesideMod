@@ -5,7 +5,10 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "MixinChatHud",
-    "MixinKeyboard"
+    "MixinItemEntity",
+    "MixinItemEntityRenderer",
+    "MixinKeyboard",
+    "MixinPlayerMove"
   ],
   "client": [],
   "injectors": {

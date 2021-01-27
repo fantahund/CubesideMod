@@ -1,11 +1,8 @@
 package de.fanta.cubeside.mixin;
 
-import com.sun.org.apache.xpath.internal.compiler.OpCodes;
 import de.fanta.cubeside.Config;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.*;
 

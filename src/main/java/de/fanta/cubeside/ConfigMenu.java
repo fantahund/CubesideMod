@@ -29,6 +29,8 @@ public class ConfigMenu implements ModMenuApi {
             ConfigCategory general = builder.getOrCreateCategory(new TranslatableText("category.cubeside.general"));
             ConfigEntryBuilder entryBuilder = builder.entryBuilder();
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.chattimestamps"), Config.chattimestamps).setDefaultValue(false).setSaveConsumer(val -> Config.chattimestamps = val).build());
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.thirdpersonelytra"), Config.thirdPersonElytra).setDefaultValue(false).setSaveConsumer(val -> Config.thirdPersonElytra = val).build());
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.dropitemfancy"), Config.dropItemFancy).setDefaultValue(false).setSaveConsumer(val -> Config.dropItemFancy = val).build());
             general.addEntry(entryBuilder.startColorField(new TranslatableText("options.cubeside.timestampcolor"), Config.timestampColor).setDefaultValue(TextColor.fromFormatting(Formatting.WHITE)).setSaveConsumer3(textColor -> Config.timestampColor = textColor).build());
             general.addEntry(entryBuilder.startIntField(new TranslatableText("options.cubeside.chatlimit"), Config.chatMessageLimit).setDefaultValue(100).setSaveConsumer(integer -> Config.chatMessageLimit = integer).build());
             return builder.build();

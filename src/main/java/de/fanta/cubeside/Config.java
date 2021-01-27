@@ -12,6 +12,8 @@ import java.util.Properties;
 
 public class Config {
     public static boolean chattimestamps = false;
+    public static boolean dropItemFancy = false;
+    public static boolean thirdPersonElytra = false;
     public static TextColor timestampColor = TextColor.parse("#ffffff");
     public static int chatMessageLimit = 100;
 
@@ -20,8 +22,10 @@ public class Config {
     static void serialize() {
         Properties prop = new Properties();
         prop.setProperty("enable_chat_time_stamps", Boolean.toString(chattimestamps));
+        prop.setProperty("drop_item_fancy", Boolean.toString(dropItemFancy));
         prop.setProperty("timestamp_color", timestampColor.toString());
         prop.setProperty("chat_message_limit", String.valueOf(chatMessageLimit));
+        prop.setProperty("third_person_elytra", String.valueOf(thirdPersonElytra));
         try {
             OutputStream s = Files.newOutputStream(configPath);
             prop.store(s, "Cubeside Config");
@@ -39,6 +43,8 @@ public class Config {
             chattimestamps = Boolean.parseBoolean(prop.getProperty("enable_chat_time_stamps", "false"));
             timestampColor = TextColor.parse(prop.getProperty("timestamp_color", "#ffffff"));
             chatMessageLimit = Integer.parseInt(prop.getProperty("chat_message_limit", "100"));
+            dropItemFancy = Boolean.parseBoolean(prop.getProperty("drop_item_fancy", "false"));
+            thirdPersonElytra = Boolean.parseBoolean(prop.getProperty("third_person_elytra", "false"));
         } catch (IOException e) {
             Cubeside.LOGGER.warn("Failed to read config!");
         }
