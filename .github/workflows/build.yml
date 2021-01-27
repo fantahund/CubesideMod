@@ -17,4 +17,12 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: CubesideMod
-          path: build/libs/cubeside-*.jar
+          path: build/libs/cubeside-1.0.jar
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Release"
+          files: |
+            build/libs/*.jar
