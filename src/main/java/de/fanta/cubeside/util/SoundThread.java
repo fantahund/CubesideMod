@@ -22,12 +22,24 @@ public class SoundThread extends Thread {
         this.soundPlaying = true;
     }
 
+    public static synchronized SoundThread of(long seconds, SoundEvent sound, PlayerEntity player){
+        return new SoundThread(seconds, sound, player);
+    }
+
     @Override
     public void run() {
         while (running) {
-            if (soundPlaying && (force || System.currentTimeMillis() % (seconds * 1000) < 500)) {
+            if (soundPlaying) {
                 player.playSound(sound, SoundCategory.PLAYERS, 100.0f, 1.0f);
                 force = false;
+            }
+            try {
+                if (!running) break;
+                if (!force) {
+                    Thread.sleep(seconds * 1000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -49,5 +61,9 @@ public class SoundThread extends Thread {
 
     public synchronized void stopThread() {
         this.running = false;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

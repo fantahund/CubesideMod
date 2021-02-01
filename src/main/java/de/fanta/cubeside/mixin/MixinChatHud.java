@@ -1,6 +1,7 @@
 package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.Config;
+import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@Mixin(net.minecraft.client.gui.hud.ChatHud.class)
+@Mixin(ChatHud.class)
 public abstract class MixinChatHud {
 
     private static final Date DATE = new Date();
