@@ -5,16 +5,17 @@
   "name": "Cubeside",
   "description": "Cubeside Mod by fanta :>",
   "authors": [ "fanta" ],
-  "contact": { "website": "https://cubeside.de" },
+  "contact": {
+    "homepage": "https://cubeside.de",
+    "sources": "https://github.com/fantahund/CubesideMod",
+    "issues": "https://github.com/fantahund/CubesideMod/issues"
+  },
   "license": "MIT",
   "icon": "assets/cubeside/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
-    "main": [ "de.fanta.cubeside.Cubeside" ],
     "client": [ "de.fanta.cubeside.CubesideClient" ],
-    "modmenu": [
-      "de.fanta.cubeside.ConfigMenu"
-    ]
+    "modmenu": [ "de.fanta.cubeside.ConfigMenu" ]
   },
   "mixins": [ "cubeside.mixins.json" ],
   "depends": {
