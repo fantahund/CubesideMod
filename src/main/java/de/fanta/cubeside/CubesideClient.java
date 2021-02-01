@@ -23,10 +23,18 @@ import org.lwjgl.glfw.GLFW;
 
 @Environment(EnvType.CLIENT)
 public class CubesideClient implements ClientModInitializer {
+    public static final String MODID = "cubeside";
+    public static final String PREFIX = "§9[§aCubeside§9] ";
+    public static final Logger LOGGER = LogManager.getLogger(MODID);
+    private ChatUtil chatUtil;
 
 
     @Override
     public void onInitializeClient() {
+        Config.deserialize();
+        chatUtil = new ChatUtil();
+
+        LOGGER.info(MODID + "Mod Loaded");
     }
 
 

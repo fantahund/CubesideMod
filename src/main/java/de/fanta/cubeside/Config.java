@@ -31,7 +31,7 @@ public class Config {
             prop.store(s, "Cubeside Config");
             s.close();
         } catch (IOException e) {
-            Cubeside.LOGGER.warn("Failed to write config!");
+            CubesideClient.LOGGER.warn("Failed to write config!");
         }
     }
 
@@ -46,7 +46,7 @@ public class Config {
             dropItemFancy = Boolean.parseBoolean(prop.getProperty("drop_item_fancy", "false"));
             thirdPersonElytra = Boolean.parseBoolean(prop.getProperty("third_person_elytra", "false"));
         } catch (IOException e) {
-            Cubeside.LOGGER.warn("Failed to read config!");
+            CubesideClient.LOGGER.warn("Failed to read config!");
         }
         Config.serialize();
     }

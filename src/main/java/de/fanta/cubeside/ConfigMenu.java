@@ -16,7 +16,7 @@ public class ConfigMenu implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         if (!FabricLoader.getInstance().isModLoaded("cloth-config2")) {
-            Cubeside.LOGGER.warn("Couldn't find Cloth Config, config menu disabled!");
+            CubesideClient.LOGGER.warn("Couldn't find Cloth Config, config menu disabled!");
             return parent -> null;
         }
         return new Builder()::build;
