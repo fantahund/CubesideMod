@@ -14,6 +14,7 @@ public class Config {
     public static boolean chattimestamps = false;
     public static boolean dropItemFancy = false;
     public static boolean thirdPersonElytra = false;
+    public static boolean elytraAlarm = false;
     public static TextColor timestampColor = TextColor.parse("#ffffff");
     public static int chatMessageLimit = 100;
 
@@ -26,6 +27,7 @@ public class Config {
         prop.setProperty("timestamp_color", timestampColor.toString());
         prop.setProperty("chat_message_limit", String.valueOf(chatMessageLimit));
         prop.setProperty("third_person_elytra", String.valueOf(thirdPersonElytra));
+        prop.setProperty("elytra_alarm", String.valueOf(elytraAlarm));
         try {
             OutputStream s = Files.newOutputStream(configPath);
             prop.store(s, "Cubeside Config");
@@ -45,6 +47,7 @@ public class Config {
             chatMessageLimit = Integer.parseInt(prop.getProperty("chat_message_limit", "100"));
             dropItemFancy = Boolean.parseBoolean(prop.getProperty("drop_item_fancy", "false"));
             thirdPersonElytra = Boolean.parseBoolean(prop.getProperty("third_person_elytra", "false"));
+            elytraAlarm = Boolean.parseBoolean(prop.getProperty("elytra_alarm", "false"));
         } catch (IOException e) {
             CubesideClient.LOGGER.warn("Failed to read config!");
         }

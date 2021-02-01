@@ -5,5 +5,6 @@
   "options.cubeside.thirdpersonelytra": "Enable Third Person Elytra",
   "options.cubeside.timestampcolor": "Chat Time Stamp Color",
   "options.cubeside.chatlimit": "Chat Message Limit",
-  "options.cubeside.dropitemfancy": "Enable Drop Items Fancy"
+  "options.cubeside.dropitemfancy": "Enable Drop Items Fancy",
+  "options.cubeside.elytraalarm": "Enable Elytra Alarm §c(Not Working)"
 }

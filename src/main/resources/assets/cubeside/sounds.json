@@ -1,0 +1,7 @@
+{
+  "alarm": {
+    "category": "player",
+    "subtitle": "cubeside.subtitle.alarm",
+    "sounds": [ "cubeside:alarm" ]
+  }
+}
