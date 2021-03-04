@@ -3,7 +3,6 @@ package de.fanta.cubeside;
 import de.fanta.cubeside.util.SoundThread;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.options.Perspective;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 

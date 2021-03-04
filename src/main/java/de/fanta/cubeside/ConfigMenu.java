@@ -7,6 +7,7 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
@@ -34,6 +35,10 @@ public class ConfigMenu implements ModMenuApi {
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.dropitemfancy"), Config.dropItemFancy).setDefaultValue(false).setSaveConsumer(val -> Config.dropItemFancy = val).build());
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.elytraalarm"), Config.elytraAlarm).setDefaultValue(false).setSaveConsumer(val -> Config.elytraAlarm = val).build());
             general.addEntry(entryBuilder.startIntField(new TranslatableText("options.cubeside.chatlimit"), Config.chatMessageLimit).setDefaultValue(100).setSaveConsumer(integer -> Config.chatMessageLimit = integer).build());
+
+            //Eiki
+            general.addEntry(entryBuilder.startBooleanToggle(Text.of("AutoChat Message"), Config.autochat).setDefaultValue(false).setSaveConsumer(val -> Config.autochat = val).build());
+            general.addEntry(entryBuilder.startStrField(Text.of("AutoChat Message"), Config.antwort).setDefaultValue("Ich habe grade leider keine Zeit!").setSaveConsumer(String -> Config.antwort = String).build());
             return builder.build();
         }
     }

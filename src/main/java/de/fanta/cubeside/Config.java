@@ -18,6 +18,10 @@ public class Config {
     public static TextColor timestampColor = TextColor.parse("#ffffff");
     public static int chatMessageLimit = 100;
 
+    //Eiki
+    public static boolean autochat = false;
+    public static String antwort = "Ich habe grade leider keine Zeit!";
+
     static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("cubeside.properties");
 
     static void serialize() {
@@ -28,6 +32,10 @@ public class Config {
         prop.setProperty("chat_message_limit", String.valueOf(chatMessageLimit));
         prop.setProperty("third_person_elytra", String.valueOf(thirdPersonElytra));
         prop.setProperty("elytra_alarm", String.valueOf(elytraAlarm));
+
+        //Eiki
+        prop.setProperty("autochat", Boolean.toString(autochat));
+        prop.setProperty("antwort", antwort);
         try {
             OutputStream s = Files.newOutputStream(configPath);
             prop.store(s, "Cubeside Config");
@@ -48,6 +56,10 @@ public class Config {
             dropItemFancy = Boolean.parseBoolean(prop.getProperty("drop_item_fancy", "false"));
             thirdPersonElytra = Boolean.parseBoolean(prop.getProperty("third_person_elytra", "false"));
             elytraAlarm = Boolean.parseBoolean(prop.getProperty("elytra_alarm", "false"));
+
+            //Eiki
+            autochat = Boolean.parseBoolean(prop.getProperty("enable_chat_time_stamps", "false"));
+            antwort = prop.getProperty("antwort", antwort);
         } catch (IOException e) {
             CubesideClient.LOGGER.warn("Failed to read config!");
         }

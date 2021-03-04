@@ -7,11 +7,11 @@ import net.minecraft.sound.SoundEvent;
 
 public class SoundThread extends Thread {
 
-    private long seconds;
-    private SoundEvent sound;
-    private PlayerEntity player;
+    private final long seconds;
+    private final SoundEvent sound;
+    private final PlayerEntity player;
     private boolean running;
-    private boolean soundPlaying;
+    private final boolean soundPlaying;
     private boolean force;
 
     public SoundThread(long seconds, SoundEvent sound, PlayerEntity player) {
@@ -48,15 +48,6 @@ public class SoundThread extends Thread {
     public synchronized void start() {
         this.running = true;
         super.start();
-    }
-
-    public synchronized void pauseSounds() {
-        this.soundPlaying = false;
-    }
-
-    public synchronized void resumeSounds() {
-        this.soundPlaying = true;
-        this.force = true;
     }
 
     public synchronized void stopThread() {

@@ -1,10 +1,13 @@
 package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.Config;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 
 import java.text.SimpleDateFormat;
@@ -12,6 +15,10 @@ import java.util.Date;
 
 @Mixin(ChatHud.class)
 public abstract class MixinChatHud {
+
+    @Final
+    @Shadow
+    private MinecraftClient client;
 
     private static final Date DATE = new Date();
 
@@ -24,6 +31,17 @@ public abstract class MixinChatHud {
             component.append(timestamp);
             component.append(componentIn);
             return component;
+        }
+
+        if(Config.autochat) {
+            String s = componentIn.toString();
+            String[] arr = s.split(" ");
+            if (arr.length >= 47) {
+                if ((arr[4].equals("color=gray,")) && (arr[28].equals("TextComponent{text='From")) && (arr[32].equals("color=light_purple,")) && (arr[46].equals("color=white,") || arr[46].equals("color=green,"))) {
+                    System.out.println("Wuhu");
+                    client.player.sendChatMessage("/r " + Config.antwort);
+                }
+            }
         }
         return componentIn;
     }
