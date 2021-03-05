@@ -37,7 +37,7 @@ public class ConfigMenu implements ModMenuApi {
             general.addEntry(entryBuilder.startIntField(new TranslatableText("options.cubeside.chatlimit"), Config.chatMessageLimit).setDefaultValue(100).setSaveConsumer(integer -> Config.chatMessageLimit = integer).build());
 
             //Eiki
-            general.addEntry(entryBuilder.startBooleanToggle(Text.of("AutoChat Message"), Config.autochat).setDefaultValue(false).setSaveConsumer(val -> Config.autochat = val).build());
+            general.addEntry(entryBuilder.startBooleanToggle(Text.of("AutoChat Enabled"), Config.autochat).setDefaultValue(false).setSaveConsumer(val -> Config.autochat = val).build());
             general.addEntry(entryBuilder.startStrField(Text.of("AutoChat Message"), Config.antwort).setDefaultValue("Ich habe grade leider keine Zeit!").setSaveConsumer(String -> Config.antwort = String).build());
             return builder.build();
         }

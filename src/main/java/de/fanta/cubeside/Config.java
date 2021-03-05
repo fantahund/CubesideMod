@@ -58,7 +58,7 @@ public class Config {
             elytraAlarm = Boolean.parseBoolean(prop.getProperty("elytra_alarm", "false"));
 
             //Eiki
-            autochat = Boolean.parseBoolean(prop.getProperty("enable_chat_time_stamps", "false"));
+            autochat = Boolean.parseBoolean(prop.getProperty("autochat", "false"));
             antwort = prop.getProperty("antwort", antwort);
         } catch (IOException e) {
             CubesideClient.LOGGER.warn("Failed to read config!");
