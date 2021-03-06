@@ -45,6 +45,6 @@ public class CubesideClient implements ClientModInitializer {
             "key.cubeside.autochat",
             InputUtil.Type.KEYSYM,
             GLFW.GLFW_KEY_RIGHT_ALT,
-            "key.categories.misc"
+            "key.categories.cubeide"
     ));
 }
