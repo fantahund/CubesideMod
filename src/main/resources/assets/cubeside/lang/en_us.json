@@ -6,5 +6,6 @@
   "options.cubeside.timestampcolor": "Chat Time Stamp Color",
   "options.cubeside.chatlimit": "Chat Message Limit",
   "options.cubeside.dropitemfancy": "Enable Drop Items Fancy",
-  "options.cubeside.elytraalarm": "Enable Elytra Alarm"
+  "options.cubeside.elytraalarm": "Enable Elytra Alarm",
+  "key.cubeside.autochat": "Toggle Auto Chat"
 }

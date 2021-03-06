@@ -40,4 +40,11 @@ public class CubesideClient implements ClientModInitializer {
             GLFW.GLFW_KEY_B,
             "key.categories.misc"
     ));
+
+    public static final KeyBinding AUTO_CHAT = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.cubeside.autochat",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_RIGHT_ALT,
+            "key.categories.misc"
+    ));
 }
