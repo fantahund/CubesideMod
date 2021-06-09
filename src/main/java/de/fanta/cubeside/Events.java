@@ -3,12 +3,11 @@ package de.fanta.cubeside;
 import de.fanta.cubeside.util.SoundThread;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
-import net.minecraft.client.options.Perspective;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import static java.lang.Double.POSITIVE_INFINITY;
 
 public class Events {
 

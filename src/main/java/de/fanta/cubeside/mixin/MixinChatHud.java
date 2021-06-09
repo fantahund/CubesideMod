@@ -52,6 +52,13 @@ public abstract class MixinChatHud {
         return Config.chatMessageLimit;
     }
 
+    @Inject(method = "clear", at = @At(value = "HEAD"), cancellable = true)
+    private void preventChatReset(boolean clearHistory, CallbackInfo ci) {
+        if (!Config.clearchatbydisconnect) {
+            ci.cancel();
+        }
+    }
+
     private static String getChatTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]");
         DATE.setTime(System.currentTimeMillis());

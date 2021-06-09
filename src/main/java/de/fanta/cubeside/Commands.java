@@ -10,6 +10,8 @@ import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.world.GameMode;
 
+import java.util.List;
+
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.string;
 import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.argument;

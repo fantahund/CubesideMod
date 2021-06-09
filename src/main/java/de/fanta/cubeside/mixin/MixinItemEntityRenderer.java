@@ -10,17 +10,18 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.ItemEntityRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.*;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.shape.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,12 +38,12 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
     @Shadow @Final private ItemRenderer itemRenderer;
     @Shadow protected abstract int getRenderedAmount(ItemStack stack);
 
-    private MixinItemEntityRenderer(EntityRenderDispatcher dispatcher) {
+    private MixinItemEntityRenderer(EntityRendererFactory.Context dispatcher) {
         super(dispatcher);
     }
 
     @Inject(at = @At("RETURN"), method = "<init>")
-    private void onConstructor(EntityRenderDispatcher dispatcher, ItemRenderer renderer, CallbackInfo callback) {
+    private void onConstructor(EntityRendererFactory.Context context, CallbackInfo ci) {
         if (Config.dropItemFancy) {
             this.shadowRadius = 0;
         }
@@ -61,7 +62,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
             this.random.setSeed(seed);
 
             matrix.push();
-            BakedModel bakedModel = this.itemRenderer.getHeldItemModel(itemStack, dropped.world, null);
+            BakedModel bakedModel = this.itemRenderer.getHeldItemModel(itemStack, dropped.world, null, 1);
             boolean hasDepthInGui = bakedModel.hasDepth();
 
             // decide how many item layers to render
@@ -95,27 +96,27 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
             // Give all non-flat items a 90* spin
             if (!renderBlockFlat) {
                 matrix.translate(0, .185, .0);
-                matrix.multiply(Vector3f.POSITIVE_X.getRadialQuaternion(1.571F));
+                matrix.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(1.571F));
                 matrix.translate(0, -.185, -.0);
             }
 
             // Item is flying through air
             boolean isAboveWater = dropped.world.getBlockState(dropped.getBlockPos()).getFluidState().getFluid().isIn(FluidTags.WATER);
             if (!dropped.isOnGround() && (!dropped.isSubmergedInWater() && !isAboveWater)) {
-                float rotation = ((float) dropped.getAge() + partialTicks) / 20.0F + dropped.hoverHeight; // calculate rotation based on age and ticks
+                float rotation = ((float) dropped.getItemAge() + partialTicks) / 20.0F + dropped.getHeight(); // calculate rotation based on age and ticks
 
                 // 90* items/blocks (non-flat) get spin on Z axis, flat items/blocks get spin on Y axis
                 if (!renderBlockFlat) {
                     // rotate renderer
                     matrix.translate(0, .185, .0);
-                    matrix.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion(rotation));
+                    matrix.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(rotation));
                     matrix.translate(0, -.185, .0);
 
                     // save rotation in entity
                     rotator.setRotation(new Vec3d(0, 0, rotation));
                 } else {
                     // rotate renderer
-                    matrix.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion(rotation));
+                    matrix.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(rotation));
 
                     // save rotation in entity
                     rotator.setRotation(new Vec3d(0, rotation, 0));
@@ -136,7 +137,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
             // Carrots/Potatoes/Redstone/other crops on ground
             else if (dropped.getStack().getItem() instanceof AliasedBlockItem) {
                 matrix.translate(0, .185, .0);
-                matrix.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion((float) rotator.getRotation().z));
+                matrix.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) rotator.getRotation().z));
                 matrix.translate(0, -.185, .0);
 
                 // Translate down to become flush with floor
@@ -145,7 +146,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
 
             // Ladders/Slabs/Carpet and other short blocks on ground
             else if (renderBlockFlat) {
-                matrix.multiply(Vector3f.POSITIVE_Y.getRadialQuaternion((float) rotator.getRotation().y));
+                matrix.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion((float) rotator.getRotation().y));
 
                 // Translate down to become flush with floor
                 matrix.translate(0, -.065, 0);
@@ -160,7 +161,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
                 }
 
                 matrix.translate(0, .185, .0);
-                matrix.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion((float) rotator.getRotation().z));
+                matrix.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) rotator.getRotation().z));
                 matrix.translate(0, -.185, .0);
             }
 
@@ -205,7 +206,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
                         x = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
                         y = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
                         matrix.translate(x, y, 0.0D);
-                        matrix.multiply(Vector3f.POSITIVE_Z.getRadialQuaternion(this.random.nextFloat()));
+                        matrix.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(this.random.nextFloat()));
                     }
                 }
 
