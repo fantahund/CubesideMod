@@ -1,5 +1,6 @@
 package de.fanta.cubeside;
 
+import de.fanta.cubeside.util.ChatUtil;
 import de.fanta.cubeside.util.SoundThread;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
@@ -59,14 +60,18 @@ public class Events {
 
         ClientTickCallback.EVENT.register(minecraftClient -> {
             while (CubesideClient.AUTO_CHAT.wasPressed()) {
-                if (Config.autochat) {
-                    Config.autochat = false;
-                    minecraftClient.player.sendMessage(Text.of("§cAuto Chat deaktiviert"), true);
+                if (CubesideClient.getInstance().hasPermission("cubeside.autochat")) {
+                    if (Config.autochat) {
+                        Config.autochat = false;
+                        minecraftClient.player.sendMessage(Text.of("§cAuto Chat deaktiviert"), true);
+                    } else {
+                        Config.autochat = true;
+                        minecraftClient.player.sendMessage(Text.of("§aAuto Chat aktiviert"), true);
+                    }
+                    Config.serialize();
                 } else {
-                    Config.autochat = true;
-                    minecraftClient.player.sendMessage(Text.of("§aAuto Chat aktiviert"), true);
+                    ChatUtil.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
                 }
-                Config.serialize();
             }
             //GAMA
             while (CubesideClient.TOGGLE_GAMA.wasPressed()) {

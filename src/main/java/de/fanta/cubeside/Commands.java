@@ -31,7 +31,11 @@ public class Commands {
                 .then(
                         argument("player", string())
                                 .executes(context -> {
-                                    ChatSkull.setItemLore(getString(context, "player"));
+                                    if (CubesideClient.getInstance().hasPermission("cubeside.addskulltolore")) {
+                                        ChatSkull.setItemLore(getString(context, "player"));
+                                    } else {
+                                        ChatUtil.sendErrorMessage("Keine Rechte!");
+                                    }
                                     return 1;
                                 })
                                 .suggests((context, builder) -> {

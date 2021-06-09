@@ -1,6 +1,7 @@
 package de.fanta.cubeside;
 
 import de.fanta.cubeside.event.RankDataChannelHandler;
+import de.fanta.cubeside.permission.PermissionHandler;
 import de.fanta.cubeside.util.ChatUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -16,6 +17,7 @@ import static java.lang.Double.POSITIVE_INFINITY;
 
 @Environment(EnvType.CLIENT)
 public class CubesideClient implements ClientModInitializer {
+    public static CubesideClient instance;
     public static final String MODID = "cubeside";
     public static final String PREFIX = "§9[§aCubeside§9] ";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
@@ -26,14 +28,22 @@ public class CubesideClient implements ClientModInitializer {
 
     private ChatUtil chatUtil;
     private Commands commands;
+    private PermissionHandler permissionHandler;
+
+    private String rank;
 
 
     @Override
     public void onInitializeClient() {
+        if (instance == null) {
+            instance = this;
+        }
+
         Config.deserialize();
         chatUtil = new ChatUtil();
         Events events = new Events();
         events.init();
+        permissionHandler = new PermissionHandler();
         new RankDataChannelHandler();
 
         LOGGER.info(MODID + "Mod Loaded");
@@ -64,4 +74,20 @@ public class CubesideClient implements ClientModInitializer {
             GLFW.GLFW_KEY_O,
             "key.categories.cubeside"
     ));
+
+    public String getRank() {
+        return rank;
+    }
+
+    public void setRank(String rank) {
+        this.rank = rank;
+    }
+
+    public static CubesideClient getInstance() {
+        return instance;
+    }
+
+    public boolean hasPermission(String permission) {
+        return permissionHandler.hasPermission(rank, permission);
+    }
 }

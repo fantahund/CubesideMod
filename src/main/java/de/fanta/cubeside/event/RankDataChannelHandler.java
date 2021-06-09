@@ -23,9 +23,7 @@ public class RankDataChannelHandler implements ClientPlayNetworking.PlayChannelH
     public void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf packet, PacketSender sender) {
         try {
             String rank = packet.toString(Charset.defaultCharset());
-
-            CubesideClient.LOGGER.info("Received rank: " + rank);
-
+            CubesideClient.getInstance().setRank(rank);
         } catch (DecoderException e) {
             CubesideClient.LOGGER.warn("Unable to decode rank data", e);
         }
