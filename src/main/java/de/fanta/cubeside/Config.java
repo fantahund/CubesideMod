@@ -15,6 +15,7 @@ public class Config {
     public static boolean dropItemFancy = false;
     public static boolean thirdPersonElytra = false;
     public static boolean elytraAlarm = false;
+    public static boolean clearchatbydisconnect = true;
     public static TextColor timestampColor = TextColor.parse("#ffffff");
     public static int chatMessageLimit = 100;
 
@@ -32,6 +33,7 @@ public class Config {
         prop.setProperty("chat_message_limit", String.valueOf(chatMessageLimit));
         prop.setProperty("third_person_elytra", String.valueOf(thirdPersonElytra));
         prop.setProperty("elytra_alarm", String.valueOf(elytraAlarm));
+        prop.setProperty("clear_chat_by_disconnect", String.valueOf(clearchatbydisconnect));
 
         //Eiki
         prop.setProperty("autochat", Boolean.toString(autochat));
@@ -56,6 +58,7 @@ public class Config {
             dropItemFancy = Boolean.parseBoolean(prop.getProperty("drop_item_fancy", "false"));
             thirdPersonElytra = Boolean.parseBoolean(prop.getProperty("third_person_elytra", "false"));
             elytraAlarm = Boolean.parseBoolean(prop.getProperty("elytra_alarm", "false"));
+            clearchatbydisconnect = Boolean.parseBoolean(prop.getProperty("clear_chat_by_disconnect", "true"));
 
             //Eiki
             autochat = Boolean.parseBoolean(prop.getProperty("autochat", "false"));

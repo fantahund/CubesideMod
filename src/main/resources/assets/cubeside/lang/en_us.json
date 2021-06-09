@@ -7,6 +7,9 @@
   "options.cubeside.chatlimit": "Chat Message Limit",
   "options.cubeside.dropitemfancy": "Enable Drop Items Fancy",
   "options.cubeside.elytraalarm": "Enable Elytra Alarm",
+  "options.cubeside.clearchatbydisconnect": "Clear Chat by disconnect",
   "key.cubeside.autochat": "Toggle Auto Chat",
-  "key.categories.cubeide": "Cubeside"
+  "key.cubeside.gama": "Toggle Gama",
+  "key.categories.cubeside": "Cubeside",
+  "custombutton.cubeside.joincubeside": "Join Cubeside"
 }

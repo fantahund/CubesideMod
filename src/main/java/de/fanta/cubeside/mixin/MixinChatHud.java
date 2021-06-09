@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,6 +25,17 @@ public abstract class MixinChatHud {
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"), argsOnly = true)
     private net.minecraft.text.Text addTimestamp(net.minecraft.text.Text componentIn) {
+        if (Config.autochat) {
+            String s = componentIn.toString();
+            String[] arr = s.split(" ");
+            if (arr.length >= 47) {
+                if ((arr[4].equals("color=gray,")) && (arr[28].equals("TextComponent{text='From")) && (arr[32].equals("color=light_purple,")) && (arr[46].equals("color=white,") || arr[46].equals("color=green,"))) {
+                    client.player.sendChatMessage("/r " + Config.antwort);
+                }
+            }
+        }
+
+
         if (Config.chattimestamps) {
             net.minecraft.text.LiteralText component = new LiteralText("");
             LiteralText timestamp = new net.minecraft.text.LiteralText(getChatTimestamp()+" ");
@@ -31,17 +43,6 @@ public abstract class MixinChatHud {
             component.append(timestamp);
             component.append(componentIn);
             return component;
-        }
-
-        if(Config.autochat) {
-            String s = componentIn.toString();
-            String[] arr = s.split(" ");
-            if (arr.length >= 47) {
-                if ((arr[4].equals("color=gray,")) && (arr[28].equals("TextComponent{text='From")) && (arr[32].equals("color=light_purple,")) && (arr[46].equals("color=white,") || arr[46].equals("color=green,"))) {
-                    System.out.println("Wuhu");
-                    client.player.sendChatMessage("/r " + Config.antwort);
-                }
-            }
         }
         return componentIn;
     }
@@ -57,3 +58,4 @@ public abstract class MixinChatHud {
         return sdf.format(DATE);
     }
 }
+

@@ -38,7 +38,9 @@ public class ChatUtil {
 
     public static void sendMessage(Object message) {
         MinecraftClient mc = MinecraftClient.getInstance();
-        mc.inGameHud.addChatMessage(MessageType.CHAT, Text.of(CubesideClient.PREFIX + message), mc.player.getUuid());
+        if (mc.player != null ) {
+            mc.inGameHud.addChatMessage(MessageType.CHAT, Text.of(CubesideClient.PREFIX + message), mc.player.getUuid());
+        }
     }
 
     public static void sendNormalMessage(Object message) {

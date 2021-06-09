@@ -1,0 +1,75 @@
+package de.fanta.cubeside.util.ChatSkullAPI;
+
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.ChatMessages;
+import net.minecraft.util.ChatUtil;
+
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+
+public class Message {
+  
+  private String[] lines;
+  
+  public Message(BufferedImage image, int height, char imgChar) {
+    String[][] chatColors = toChatColorArray(image, height);
+    this.lines = toImgMessage(chatColors, imgChar);
+  }
+  
+  public Message appendText(String[] text) {
+    for (int y = 0; y < this.lines.length; y++) {
+      if (text.length > y) {
+        int tmp16_15 = y;
+        String[] tmp16_12 = this.lines;
+        tmp16_12[tmp16_15] = tmp16_12[tmp16_15] + " " + text[y];
+      } 
+    } 
+    return this;
+  }
+
+  private String[][] toChatColorArray(BufferedImage image, int height) {
+    double ratio = (image.getHeight() / image.getWidth());
+    BufferedImage resized = resizeImage(image, (int)(height / ratio), height);
+    String[][] chatImg = new String[resized.getWidth()][resized.getHeight()];
+    for (int x = 0; x < resized.getWidth(); x++) {
+      for (int y = 0; y < resized.getHeight(); y++) {
+        int rgb = resized.getRGB(x, y);
+        chatImg[x][y] = "&x" + Integer.toHexString(rgb).substring(2) + "&l";
+      } 
+    } 
+    return chatImg;
+  }
+  
+  private String[] toImgMessage(String[][] colors, char imgchar) {
+    String[] lines = new String[(colors[0]).length];
+    for (int y = 0; y < (colors[0]).length; y++) {
+      StringBuilder line = new StringBuilder();
+      for (String[] chatColors : colors) {
+        String color = chatColors[y];
+        line.append((color != null) ? (chatColors[y] + imgchar) : Character.valueOf(' '));
+      }
+      lines[y] = line.toString() + "&r";
+    } 
+    return lines;
+  }
+  
+  private BufferedImage resizeImage(BufferedImage originalImage, int width, int height) {
+    AffineTransform af = new AffineTransform();
+    af.scale((width / originalImage.getWidth()), (height / originalImage.getHeight()));
+    AffineTransformOp operation = new AffineTransformOp(af, 1);
+    return operation.filter(originalImage, null);
+  }
+
+  public void setItemLore() {
+    byte b;
+    int i;
+    String[] arrayOfString;
+    for (i = (arrayOfString = this.lines).length, b = 0; b < i; ) {
+      String line = arrayOfString[b];
+      MinecraftClient.getInstance().player.sendChatMessage("/additemlore " + line);
+      b++;
+    }
+  }
+
+}

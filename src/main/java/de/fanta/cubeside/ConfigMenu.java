@@ -18,6 +18,7 @@ public class ConfigMenu implements ModMenuApi {
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
         if (!FabricLoader.getInstance().isModLoaded("cloth-config2")) {
             CubesideClient.LOGGER.warn("Couldn't find Cloth Config, config menu disabled!");
+            CubesideClient.LOGGER.warn(FabricLoader.getInstance().getAllMods());
             return parent -> null;
         }
         return new Builder()::build;
@@ -34,6 +35,7 @@ public class ConfigMenu implements ModMenuApi {
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.thirdpersonelytra"), Config.thirdPersonElytra).setDefaultValue(false).setSaveConsumer(val -> Config.thirdPersonElytra = val).build());
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.dropitemfancy"), Config.dropItemFancy).setDefaultValue(false).setSaveConsumer(val -> Config.dropItemFancy = val).build());
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.elytraalarm"), Config.elytraAlarm).setDefaultValue(false).setSaveConsumer(val -> Config.elytraAlarm = val).build());
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.clearchatbydisconnect"), Config.clearchatbydisconnect).setDefaultValue(false).setSaveConsumer(val -> Config.clearchatbydisconnect = val).build());
             general.addEntry(entryBuilder.startIntField(new TranslatableText("options.cubeside.chatlimit"), Config.chatMessageLimit).setDefaultValue(100).setSaveConsumer(integer -> Config.chatMessageLimit = integer).build());
 
             //Eiki

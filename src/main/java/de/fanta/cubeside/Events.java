@@ -7,6 +7,8 @@ import net.minecraft.client.options.Perspective;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
+import static java.lang.Double.POSITIVE_INFINITY;
 
 public class Events {
 
@@ -66,6 +68,13 @@ public class Events {
                     minecraftClient.player.sendMessage(Text.of("§aAuto Chat aktiviert"), true);
                 }
                 Config.serialize();
+            }
+            //GAMA
+            while (CubesideClient.TOGGLE_GAMA.wasPressed()) {
+                double temp = minecraftClient.options.gamma;
+                minecraftClient.options.gamma = MathHelper.clamp(CubesideClient.prevGamma, CubesideClient.minGamma, CubesideClient.maxGamma);
+                minecraftClient.player.sendMessage(Text.of("§aGamma: §3" + minecraftClient.options.gamma), true);
+                CubesideClient.prevGamma = temp;
             }
         });
     }
