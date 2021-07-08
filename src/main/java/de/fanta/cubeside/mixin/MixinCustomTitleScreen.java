@@ -25,7 +25,7 @@ public abstract class MixinCustomTitleScreen extends Screen {
     @Inject(at = @At("TAIL"), method = "initWidgetsNormal")
     private void addCustomButton(int y, int spacingY, CallbackInfo ci) {
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 + 205, y + 24 , 80, 20, new TranslatableText("custombutton.cubeside.joincubeside"), (ButtonWidget) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 + 205, y + 14 , 80, 20, new TranslatableText("custombutton.cubeside.joincubeside"), (ButtonWidget) -> {
             ServerInfo selectedEntry = new ServerInfo("Cubeside", "Cubeside.de", false);
             ConnectScreen.connect(this, MinecraftClient.getInstance(), new ServerAddress("cubeside.de", 25565), selectedEntry);
         }));
