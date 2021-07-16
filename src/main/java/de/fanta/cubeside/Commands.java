@@ -3,7 +3,7 @@ package de.fanta.cubeside;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import de.fanta.cubeside.util.ChatSkullAPI.ChatSkull;
-import de.fanta.cubeside.util.ChatUtil;
+import de.fanta.cubeside.util.ChatUtils;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
@@ -34,7 +34,7 @@ public class Commands {
                                     if (CubesideClient.getInstance().hasPermission("cubeside.addskulltolore")) {
                                         ChatSkull.setItemLore(getString(context, "player"));
                                     } else {
-                                        ChatUtil.sendErrorMessage("Keine Rechte!");
+                                        ChatUtils.sendErrorMessage("Keine Rechte!");
                                     }
                                     return 1;
                                 })
@@ -48,7 +48,7 @@ public class Commands {
                                 })
                 )
                 .executes(context -> {
-                    ChatUtil.sendErrorMessage("Du musst ein Spielernamen eingeben!");
+                    ChatUtils.sendErrorMessage("Du musst ein Spielernamen eingeben!");
                     return 1;
                 }));
 

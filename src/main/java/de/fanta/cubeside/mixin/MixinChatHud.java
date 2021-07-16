@@ -2,7 +2,7 @@ package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.Config;
 import de.fanta.cubeside.CubesideClient;
-import de.fanta.cubeside.util.ChatUtil;
+import de.fanta.cubeside.util.ChatUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.text.LiteralText;
@@ -36,7 +36,7 @@ public abstract class MixinChatHud {
                     if (CubesideClient.instance.hasPermission("cubeside.autochat")) {
                         client.player.sendChatMessage("/r " + Config.antwort);
                     } else {
-                        ChatUtil.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
+                        ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
                     }
                 }
             }

@@ -2,7 +2,7 @@ package de.fanta.cubeside;
 
 import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.permission.PermissionHandler;
-import de.fanta.cubeside.util.ChatUtil;
+import de.fanta.cubeside.util.ChatUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -26,7 +26,7 @@ public class CubesideClient implements ClientModInitializer {
     public static double maxGamma = 12.0;
     public static double prevGamma = POSITIVE_INFINITY;
 
-    private ChatUtil chatUtil;
+    private ChatUtils chatUtils;
     private Commands commands;
     private PermissionHandler permissionHandler;
 
@@ -40,7 +40,7 @@ public class CubesideClient implements ClientModInitializer {
         }
 
         Config.deserialize();
-        chatUtil = new ChatUtil();
+        chatUtils = new ChatUtils();
         Events events = new Events();
         events.init();
         permissionHandler = new PermissionHandler();

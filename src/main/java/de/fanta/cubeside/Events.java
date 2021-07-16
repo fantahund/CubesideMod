@@ -1,6 +1,6 @@
 package de.fanta.cubeside;
 
-import de.fanta.cubeside.util.ChatUtil;
+import de.fanta.cubeside.util.ChatUtils;
 import de.fanta.cubeside.util.SoundThread;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
@@ -45,9 +45,9 @@ public class Events {
                         location = new Identifier(CubesideClient.MODID, "alarm");
                         sound = new SoundEvent(location);
                     }
-                    if (mc.player.isFallFlying() && mc.player.getY() <= 0) {
+                    if (mc.player.isFallFlying() && mc.player.getY() <= mc.world.getBottomY()) {
                         if (soundThread == null) {
-                            soundThread = SoundThread.of(5, sound, mc.player);
+                            soundThread = SoundThread.of(1944, sound, mc.player);
                             soundThread.start();
                         }
                     } else if (soundThread != null && soundThread.isRunning()) {
@@ -70,7 +70,7 @@ public class Events {
                     }
                     Config.serialize();
                 } else {
-                    ChatUtil.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
+                    ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
                 }
             }
             //GAMA

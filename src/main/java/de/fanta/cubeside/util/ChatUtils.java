@@ -7,17 +7,17 @@ import net.minecraft.text.Text;
 
 import java.util.HashMap;
 
-public class ChatUtil {
+public class ChatUtils {
 
     private final Thread timer;
     private static final HashMap<String, Object> messageQueue = new HashMap<>();
 
-    public ChatUtil() {
+    public ChatUtils() {
         // prevent instances
         this.timer = new Thread(() -> {
             while (true) {
                 synchronized (messageQueue) {
-                    messageQueue.values().forEach(ChatUtil::sendMessage);
+                    messageQueue.values().forEach(ChatUtils::sendMessage);
                     messageQueue.clear();
                 }
                 try {
