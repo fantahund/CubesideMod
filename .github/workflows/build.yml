@@ -25,4 +25,4 @@ jobs:
           prerelease: false
           title: "Release"
           files: |
-            build/libs/*
+            build/libs/cubeside-*([0-9\.\-]).jar
