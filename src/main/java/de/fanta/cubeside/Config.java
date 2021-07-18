@@ -67,7 +67,7 @@ public class Config {
             clearchatbydisconnect = Boolean.parseBoolean(prop.getProperty("clear_chat_by_disconnect", "true"));
             showInvisibleArmorstands = Boolean.parseBoolean(prop.getProperty("show_invisible_armorstands", "true"));
             showInvisibleEntitiesinSpectator = Boolean.parseBoolean(prop.getProperty("show_invisible_entities_in_Spectator", "true"));
-            simpleSignGlow = Boolean.parseBoolean(prop.getProperty("simple_sign_glow", "true"));
+            simpleSignGlow = Boolean.parseBoolean(prop.getProperty("simple_sign_glow", "false"));
 
             //Eiki
             autochat = Boolean.parseBoolean(prop.getProperty("autochat", "false"));
