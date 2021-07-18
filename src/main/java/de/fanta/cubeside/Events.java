@@ -80,6 +80,17 @@ public class Events {
                 minecraftClient.player.sendMessage(Text.of("§aGamma: §3" + minecraftClient.options.gamma), true);
                 CubesideClient.prevGamma = temp;
             }
+
+            while (CubesideClient.TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE.wasPressed()) {
+                if (Config.showInvisibleEntitiesinSpectator) {
+                    Config.showInvisibleEntitiesinSpectator = false;
+                    minecraftClient.player.sendMessage(Text.of("§aUnsichtbare Entities werden jetzt im Spectator nicht mehr angezeigt!"), true);
+                } else {
+                    Config.showInvisibleEntitiesinSpectator = true;
+                    minecraftClient.player.sendMessage(Text.of("§aUnsichtbare Entities werden jetzt im Spectator wieder angezeigt!"), true);
+                }
+                Config.serialize();
+            }
         });
     }
 

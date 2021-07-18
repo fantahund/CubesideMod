@@ -26,7 +26,7 @@ public class MixinMinecraftClient {
         //saveConfig();
     }
 
-    @Inject(at = @At("HEAD"), method = "openScreen")
+    @Inject(at = @At("HEAD"), method = "setScreen")
     private void openScreen(Screen screen, CallbackInfo info) {
         if (screen != null && screen.getClass().getSimpleName().equals("SodiumOptionsGUI")) {
             try {

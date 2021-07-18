@@ -35,7 +35,10 @@ public class ConfigMenu implements ModMenuApi {
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.thirdpersonelytra"), Config.thirdPersonElytra).setDefaultValue(false).setSaveConsumer(val -> Config.thirdPersonElytra = val).build());
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.dropitemfancy"), Config.dropItemFancy).setDefaultValue(false).setSaveConsumer(val -> Config.dropItemFancy = val).build());
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.elytraalarm"), Config.elytraAlarm).setDefaultValue(false).setSaveConsumer(val -> Config.elytraAlarm = val).build());
-            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.clearchatbydisconnect"), Config.clearchatbydisconnect).setDefaultValue(false).setSaveConsumer(val -> Config.clearchatbydisconnect = val).build());
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.clearchatbydisconnect"), Config.clearchatbydisconnect).setDefaultValue(true).setSaveConsumer(val -> Config.clearchatbydisconnect = val).build());
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.showinvisiblearmorstands"), Config.showInvisibleArmorstands).setDefaultValue(true).setSaveConsumer(val -> Config.showInvisibleArmorstands = val).build());
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.showinvisibleentitiesinspectator"), Config.showInvisibleEntitiesinSpectator).setDefaultValue(true).setSaveConsumer(val -> Config.showInvisibleEntitiesinSpectator = val).build());
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.simplesignglow"), Config.simpleSignGlow).setDefaultValue(true).setSaveConsumer(val -> Config.simpleSignGlow = val).build());
             general.addEntry(entryBuilder.startIntField(new TranslatableText("options.cubeside.chatlimit"), Config.chatMessageLimit).setDefaultValue(100).setSaveConsumer(integer -> Config.chatMessageLimit = integer).build());
 
             //Eiki

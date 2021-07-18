@@ -10,7 +10,9 @@
     "MixinItemEntity",
     "MixinItemEntityRenderer",
     "MixinKeyboard",
-    "MixinMinecraftClient"
+    "MixinMinecraftClient",
+    "MixinRenderEntity",
+    "SignBlockEntityRendererMixin"
   ],
   "client": [],
   "injectors": {

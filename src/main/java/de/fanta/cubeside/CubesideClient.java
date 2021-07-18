@@ -75,6 +75,15 @@ public class CubesideClient implements ClientModInitializer {
             "key.categories.cubeside"
     ));
 
+    public static final KeyBinding TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.cubeside.showentitiesinspectator",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_K,
+            "key.categories.cubeside"
+    ));
+
+
+
     public String getRank() {
         return rank;
     }
