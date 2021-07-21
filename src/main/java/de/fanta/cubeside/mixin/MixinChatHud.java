@@ -5,8 +5,12 @@ import de.fanta.cubeside.CubesideClient;
 import de.fanta.cubeside.util.ChatUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
+import net.minecraft.util.Identifier;
+import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,6 +27,9 @@ public abstract class MixinChatHud {
     @Shadow
     private MinecraftClient client;
 
+    @Shadow
+    @Final
+    private static Logger LOGGER;
     private static final Date DATE = new Date();
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"), argsOnly = true)
@@ -46,12 +53,26 @@ public abstract class MixinChatHud {
 
         if (Config.chattimestamps) {
             net.minecraft.text.LiteralText component = new LiteralText("");
-            LiteralText timestamp = new net.minecraft.text.LiteralText(getChatTimestamp()+" ");
+            LiteralText timestamp = new net.minecraft.text.LiteralText(getChatTimestamp() + " ");
             timestamp.setStyle(Style.EMPTY.withColor(Config.timestampColor));
             component.append(timestamp);
             component.append(componentIn);
             return component;
         }
+
+        if (Config.afkPling) {
+            String AFKMessage = componentIn.getString();
+            if (AFKMessage.equals("* Du bist nun abwesend.")) {
+                client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.5f);
+                try {
+                    Thread.sleep(5 * 50);
+                    client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.0f);
+                } catch (Exception e) {
+                    LOGGER.error(e);
+                }
+            }
+        }
+
         return componentIn;
     }
 
