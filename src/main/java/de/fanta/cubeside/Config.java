@@ -79,7 +79,7 @@ public class Config {
             showInvisibleArmorstands = Boolean.parseBoolean(prop.getProperty("show_invisible_armorstands", "true"));
             showInvisibleEntitiesinSpectator = Boolean.parseBoolean(prop.getProperty("show_invisible_entities_in_Spectator", "true"));
             simpleSignGlow = Boolean.parseBoolean(prop.getProperty("simple_sign_glow", "false"));
-            simpleSignGlow = Boolean.parseBoolean(prop.getProperty("afk_pling", "false"));
+            afkPling = Boolean.parseBoolean(prop.getProperty("afk_pling", "false"));
 
             //Gamma
             minGamma = Double.parseDouble(prop.getProperty("minGamma", "1.0"));
