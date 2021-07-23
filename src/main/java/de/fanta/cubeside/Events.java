@@ -3,7 +3,6 @@ package de.fanta.cubeside;
 import de.fanta.cubeside.util.ChatUtils;
 import de.fanta.cubeside.util.SoundThread;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
@@ -55,41 +54,39 @@ public class Events {
                         soundThread = null;
                     }
                 }
-            }
-        });
 
-        ClientTickCallback.EVENT.register(minecraftClient -> {
-            while (CubesideClient.AUTO_CHAT.wasPressed()) {
-                if (CubesideClient.getInstance().hasPermission("cubeside.autochat")) {
-                    if (Config.autochat) {
-                        Config.autochat = false;
-                        minecraftClient.player.sendMessage(Text.of("§cAuto Chat deaktiviert"), true);
+                while (CubesideClient.AUTO_CHAT.wasPressed()) {
+                    if (CubesideClient.getInstance().hasPermission("cubeside.autochat")) {
+                        if (Config.autochat) {
+                            Config.autochat = false;
+                            mc.player.sendMessage(Text.of("§cAuto Chat deaktiviert"), true);
+                        } else {
+                            Config.autochat = true;
+                            mc.player.sendMessage(Text.of("§aAuto Chat aktiviert"), true);
+                        }
+                        Config.serialize();
                     } else {
-                        Config.autochat = true;
-                        minecraftClient.player.sendMessage(Text.of("§aAuto Chat aktiviert"), true);
+                        ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
+                    }
+                }
+                //GAMA
+                while (CubesideClient.TOGGLE_GAMA.wasPressed()) {
+                    double temp = mc.options.gamma;
+                    mc.options.gamma = MathHelper.clamp(CubesideClient.prevGamma, CubesideClient.minGamma, CubesideClient.maxGamma);
+                    mc.player.sendMessage(Text.of("§aGamma: §3" + mc.options.gamma), true);
+                    CubesideClient.prevGamma = temp;
+                }
+
+                while (CubesideClient.TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE.wasPressed()) {
+                    if (Config.showInvisibleEntitiesinSpectator) {
+                        Config.showInvisibleEntitiesinSpectator = false;
+                        mc.player.sendMessage(Text.of("§aUnsichtbare Entities werden jetzt im Spectator nicht mehr angezeigt!"), true);
+                    } else {
+                        Config.showInvisibleEntitiesinSpectator = true;
+                        mc.player.sendMessage(Text.of("§aUnsichtbare Entities werden jetzt im Spectator wieder angezeigt!"), true);
                     }
                     Config.serialize();
-                } else {
-                    ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
                 }
-            }
-            //GAMA
-            while (CubesideClient.TOGGLE_GAMA.wasPressed()) {
-                double temp = minecraftClient.options.gamma;
-                minecraftClient.options.gamma = MathHelper.clamp(CubesideClient.prevGamma, CubesideClient.minGamma, CubesideClient.maxGamma);
-                minecraftClient.player.sendMessage(Text.of("§aGamma: §3" + minecraftClient.options.gamma), true);
-                CubesideClient.prevGamma = temp;
-            }
-
-            while (CubesideClient.TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE.wasPressed()) {
-                if (Config.showInvisibleEntitiesinSpectator) {
-                    Config.showInvisibleEntitiesinSpectator = false;
-                    minecraftClient.player.sendMessage(Text.of("§aUnsichtbare Entities werden jetzt im Spectator nicht mehr angezeigt!"), true);
-                } else {
-                    Config.showInvisibleEntitiesinSpectator = true;
-                    minecraftClient.player.sendMessage(Text.of("§aUnsichtbare Entities werden jetzt im Spectator wieder angezeigt!"), true);
-                }
-                Config.serialize();
             }
         });
     }

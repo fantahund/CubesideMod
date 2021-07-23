@@ -11,6 +11,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.Async;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -64,12 +65,14 @@ public abstract class MixinChatHud {
             String AFKMessage = componentIn.getString();
             if (AFKMessage.equals("* Du bist nun abwesend.")) {
                 client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.5f);
-                try {
-                    Thread.sleep(5 * 50);
-                    client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.0f);
-                } catch (Exception e) {
-                    LOGGER.error(e);
-                }
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(5 * 50);
+                        client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.0f);
+                    } catch (Exception e) {
+                        LOGGER.error(e);
+                    }
+                }).start();
             }
         }
 
