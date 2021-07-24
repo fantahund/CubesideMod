@@ -51,16 +51,6 @@ public abstract class MixinChatHud {
 
         }
 
-
-        if (Config.chattimestamps) {
-            net.minecraft.text.LiteralText component = new LiteralText("");
-            LiteralText timestamp = new net.minecraft.text.LiteralText(getChatTimestamp() + " ");
-            timestamp.setStyle(Style.EMPTY.withColor(Config.timestampColor));
-            component.append(timestamp);
-            component.append(componentIn);
-            return component;
-        }
-
         if (Config.afkPling) {
             String AFKMessage = componentIn.getString();
             if (AFKMessage.equals("* Du bist nun abwesend.")) {
@@ -74,6 +64,15 @@ public abstract class MixinChatHud {
                     }
                 }).start();
             }
+        }
+
+        if (Config.chattimestamps) {
+            net.minecraft.text.LiteralText component = new LiteralText("");
+            LiteralText timestamp = new net.minecraft.text.LiteralText(getChatTimestamp() + " ");
+            timestamp.setStyle(Style.EMPTY.withColor(Config.timestampColor));
+            component.append(timestamp);
+            component.append(componentIn);
+            return component;
         }
 
         return componentIn;
