@@ -10,14 +10,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 
 public class Database {
     private final Connection connection;
 
     private final String addMessageQuery;
     private final String getMessagesQuery;
+    
+    private final ExecutorService executor;
 
     public Database() {
+        executor = Executors.newSingleThreadExecutor();
         try {
             Class.forName("org.h2.Driver");
             String dbUrl = "jdbc:h2:chat";
@@ -44,7 +49,7 @@ public class Database {
 
     public void addMessage(Text message, String server) {
         long timestamp = System.currentTimeMillis();
-        new Thread(() -> {
+        executor.execute(() -> {
             try {
                 PreparedStatement statement = this.connection.prepareStatement(addMessageQuery);
 
@@ -58,7 +63,7 @@ public class Database {
                 // TODO log
                 System.out.println("Could not add message " + message.getString());
             }
-        }).start();
+        });
     }
 
     public List<Text> loadMessages(String server) {
