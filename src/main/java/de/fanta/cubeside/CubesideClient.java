@@ -1,5 +1,6 @@
 package de.fanta.cubeside;
 
+import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.permission.PermissionHandler;
 import de.fanta.cubeside.util.ChatUtils;
@@ -21,6 +22,7 @@ public class CubesideClient implements ClientModInitializer {
     public static final String MODID = "cubeside";
     public static final String PREFIX = "§9[§aCubeside§9] ";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
+    private static final Database DATABASE = new Database();
     //GAMA
     public static double minGamma = -1.5;
     public static double maxGamma = 12.0;
@@ -98,5 +100,9 @@ public class CubesideClient implements ClientModInitializer {
 
     public boolean hasPermission(String permission) {
         return permissionHandler.hasPermission(rank, permission);
+    }
+
+    public static Database getDatabase() {
+        return DATABASE;
     }
 }

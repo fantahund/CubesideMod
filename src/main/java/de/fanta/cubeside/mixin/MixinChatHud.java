@@ -2,9 +2,11 @@ package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.Config;
 import de.fanta.cubeside.CubesideClient;
+import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.util.ChatUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.LiteralText;
@@ -31,6 +33,9 @@ public abstract class MixinChatHud {
     @Shadow
     @Final
     private static Logger LOGGER;
+
+    private static final Database database = CubesideClient.getDatabase();
+
     private static final Date DATE = new Date();
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"), argsOnly = true)
@@ -73,6 +78,11 @@ public abstract class MixinChatHud {
             component.append(timestamp);
             component.append(componentIn);
             return component;
+        }
+
+        IntegratedServer server = client.getServer();
+        if (server != null) {
+            database.addMessage(componentIn, server.getServerIp());
         }
 
         return componentIn;
