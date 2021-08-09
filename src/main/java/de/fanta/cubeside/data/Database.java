@@ -19,8 +19,8 @@ public class Database {
 
     public Database() {
         try {
-            Class.forName("org.sqlite.JDBC");
-            String dbUrl = "jdbc:sqlite:chat.db";
+            Class.forName("org.h2.Driver");
+            String dbUrl = "jdbc:h2:chat";
             this.connection = DriverManager.getConnection(dbUrl);
 
             createTablesIfNotExist();
@@ -53,6 +53,7 @@ public class Database {
                 statement.setString(3, message.getString());
 
                 statement.executeUpdate();
+                connection.commit();
             } catch (SQLException e) {
                 // TODO log
                 System.out.println("Could not add message " + message.getString());
