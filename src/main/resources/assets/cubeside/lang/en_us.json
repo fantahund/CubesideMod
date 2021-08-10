@@ -7,7 +7,7 @@
   "options.cubeside.chatlimit": "Chat Message Limit",
   "options.cubeside.dropitemfancy": "Enable Drop Items Fancy",
   "options.cubeside.elytraalarm": "Enable Elytra Alarm",
-  "options.cubeside.clearchatbydisconnect": "Clear Chat by disconnect",
+  "options.cubeside.savemessagestodatabase": "Save all Messanges to database an load by server join",
   "options.cubeside.showinvisiblearmorstands": "Show invisible Armorstands",
   "options.cubeside.showinvisibleentitiesinspectator": "Show invisible entities in Spectator",
   "options.cubeside.simplesignglow": "Simple Sign Glow",

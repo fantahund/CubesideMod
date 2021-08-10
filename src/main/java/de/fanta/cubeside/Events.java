@@ -1,13 +1,17 @@
 package de.fanta.cubeside;
 
+import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import de.fanta.cubeside.util.SoundThread;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.List;
 
 public class Events {
 
@@ -17,10 +21,41 @@ public class Events {
 
     private SoundThread soundThread;
 
+    private boolean connect;
+
     public Events() {
     }
 
     public void init() {
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            if (Config.saveMessagestoDatabase) {
+                if (client.getCurrentServerEntry() != null) {
+                    String server = client.getCurrentServerEntry().address.toLowerCase();
+                    List<Text> messages = CubesideClient.getDatabase().loadMessages(server);
+                    List<String> commands = CubesideClient.getDatabase().loadCommands(server);
+                    if (!connect) {
+                        if (client.player != null) {
+                            CubesideClient cubeClient = CubesideClient.getInstance();
+                            cubeClient.setLoadingMessages(true);
+                            messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredChatMessage);
+                            commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredMessage);
+                            cubeClient.setLoadingMessages(false);
+                            connect = true;
+                            cubeClient.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
+                            cubeClient.messageQueue.clear();
+                        }
+                    }
+                }
+            }
+
+        });
+
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            if (Config.saveMessagestoDatabase) {
+                connect = false;
+            }
+        });
+
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             if (mc.player != null) {
                 if (Config.thirdPersonElytra) {

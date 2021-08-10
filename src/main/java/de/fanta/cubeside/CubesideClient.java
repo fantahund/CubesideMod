@@ -3,16 +3,20 @@ package de.fanta.cubeside;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.permission.PermissionHandler;
-import de.fanta.cubeside.util.ChatUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.lang.Double.POSITIVE_INFINITY;
 
@@ -28,12 +32,13 @@ public class CubesideClient implements ClientModInitializer {
     public static double maxGamma = 12.0;
     public static double prevGamma = POSITIVE_INFINITY;
 
-    private ChatUtils chatUtils;
     private Commands commands;
     private PermissionHandler permissionHandler;
 
     private String rank;
 
+    private boolean loadingMessages;
+    public List<Text> messageQueue = new ArrayList<>();
 
     @Override
     public void onInitializeClient() {
@@ -42,7 +47,6 @@ public class CubesideClient implements ClientModInitializer {
         }
 
         Config.deserialize();
-        chatUtils = new ChatUtils();
         Events events = new Events();
         events.init();
         permissionHandler = new PermissionHandler();
@@ -51,7 +55,6 @@ public class CubesideClient implements ClientModInitializer {
         LOGGER.info(MODID + "Mod Loaded");
         commands = new Commands();
         commands.register();
-
 
 
     }
@@ -104,5 +107,13 @@ public class CubesideClient implements ClientModInitializer {
 
     public static Database getDatabase() {
         return DATABASE;
+    }
+
+    public void setLoadingMessages(boolean loadingMessages) {
+        this.loadingMessages = loadingMessages;
+    }
+
+    public boolean isLoadingMessages() {
+        return loadingMessages;
     }
 }
