@@ -72,7 +72,6 @@ public class Database {
                 statement.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
-                // TODO log
                 CubesideClient.LOGGER.error("Could not add Message to database " + message.getString(), e);
             }
         });
@@ -88,7 +87,6 @@ public class Database {
                 messages.add(message);
             }
         } catch (SQLException e) {
-            // TODO log
             CubesideClient.LOGGER.error("Could not load messages for server " + server, e);
         }
         return messages;

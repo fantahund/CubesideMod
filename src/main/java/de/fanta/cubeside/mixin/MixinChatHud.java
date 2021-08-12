@@ -2,8 +2,8 @@ package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.Config;
 import de.fanta.cubeside.CubesideClient;
-import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.data.Database;
+import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
@@ -18,7 +18,11 @@ import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.text.SimpleDateFormat;
@@ -70,17 +74,13 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         if (Config.afkPling) {
             String AFKMessage = componentIn.getString();
             if (AFKMessage.equals("* Du bist nun abwesend.")) {
-                new Thread(() -> {
-                    try {
-                        if (client.player != null) {
-                            client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.5f);
-                            Thread.sleep(5 * 50);
-                            client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.0f);
-                        }
-                    } catch (Exception e) {
-                        LOGGER.error(e);
-                    }
-                }).start();
+                playAFKSound();
+            }
+        }
+
+        if (Config.saveMessagestoDatabase) {
+            if (client.getCurrentServerEntry() != null) {
+                database.addMessage(componentIn, client.getCurrentServerEntry().address.toLowerCase());
             }
         }
 
@@ -93,13 +93,6 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
             return component;
         }
 
-        if (Config.saveMessagestoDatabase) {
-            if (client.getCurrentServerEntry() != null) {
-                String server = client.getCurrentServerEntry().address.toLowerCase();
-                database.addMessage(componentIn, server);
-            }
-        }
-
         return componentIn;
     }
 
@@ -107,8 +100,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     private void addMessageHistory(String message, CallbackInfo ci) {
         if (Config.saveMessagestoDatabase) {
             if (client.getCurrentServerEntry() != null) {
-                String server = client.getCurrentServerEntry().address.toLowerCase();
-                database.addCommand(message, server);
+                database.addCommand(message, client.getCurrentServerEntry().address.toLowerCase());
             }
         }
     }
@@ -132,6 +124,20 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]");
         DATE.setTime(System.currentTimeMillis());
         return sdf.format(DATE);
+    }
+
+    public void playAFKSound() {
+        new Thread(() -> {
+            try {
+                if (client.player != null) {
+                    client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.5f);
+                    Thread.sleep(5 * 50);
+                    client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.0f);
+                }
+            } catch (Exception e) {
+                LOGGER.error(e);
+            }
+        }).start();
     }
 }
 
