@@ -53,7 +53,6 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
             CubesideClient.getInstance().messageQueue.add(componentIn);
             return LiteralText.EMPTY;
         }
-
         if (Config.autochat) {
             String s = componentIn.toString();
             String[] arr = s.split(" ");
@@ -78,19 +77,16 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
             }
         }
 
-        if (Config.saveMessagestoDatabase) {
-            if (client.getCurrentServerEntry() != null) {
-                database.addMessage(componentIn, client.getCurrentServerEntry().address.toLowerCase());
-            }
-        }
-
         if (Config.chattimestamps) {
             net.minecraft.text.LiteralText component = new LiteralText("");
             LiteralText timestamp = new net.minecraft.text.LiteralText(getChatTimestamp() + " ");
             timestamp.setStyle(Style.EMPTY.withColor(Config.timestampColor));
             component.append(timestamp);
             component.append(componentIn);
+            addMessagetoDatabase(component);
             return component;
+        } else {
+            addMessagetoDatabase(componentIn);
         }
 
         return componentIn;
@@ -98,6 +94,9 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
     @Inject(method = "addToMessageHistory", at = @At("HEAD"), cancellable = true)
     private void addMessageHistory(String message, CallbackInfo ci) {
+        if(CubesideClient.getInstance().isLoadingMessages()) {
+            return;
+        }
         if (Config.saveMessagestoDatabase) {
             if (client.getCurrentServerEntry() != null) {
                 database.addCommand(message, client.getCurrentServerEntry().address.toLowerCase());
@@ -111,7 +110,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     }
 
     @Override
-    public void addStoredMessage(String message) {
+    public void addStoredCommand(String message) {
         this.addToMessageHistory(message);
     }
 
@@ -138,6 +137,14 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
                 LOGGER.error(e);
             }
         }).start();
+    }
+
+    public void addMessagetoDatabase(Text component) {
+        if (Config.saveMessagestoDatabase) {
+            if (client.getCurrentServerEntry() != null) {
+                database.addMessage(component, client.getCurrentServerEntry().address.toLowerCase());
+            }
+        }
     }
 }
 

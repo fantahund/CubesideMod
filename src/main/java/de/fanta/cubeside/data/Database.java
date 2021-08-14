@@ -22,6 +22,9 @@ public class Database {
     private final String addCommandQuery;
     private final String getCommandsQuery;
 
+    //private final String deleteMessagesQuery;
+    //private final String deleteCommandsQuery;
+
     private final ExecutorService executor;
 
     public Database() {
@@ -41,6 +44,9 @@ public class Database {
 
         addCommandQuery = "INSERT INTO `commands` VALUES (?, ?, ?)";
         getCommandsQuery = "SELECT `command` FROM `commands` WHERE server = ? ORDER BY `timestamp`";
+
+
+        //deleteMessagesQuery = "DELETE FROM `messages` ";
     }
 
     private void createTablesIfNotExist() throws SQLException {
@@ -103,7 +109,6 @@ public class Database {
                 statement.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
-                // TODO log
                 CubesideClient.LOGGER.error("Could not add Command to database " + command, e);
             }
         });
@@ -119,10 +124,25 @@ public class Database {
                 commands.add(command);
             }
         } catch (SQLException e) {
-            // TODO log
             CubesideClient.LOGGER.error("Could not load messages for server " + server, e);
         }
         return commands;
     }
+
+    /*public void deleteOldEntries() throws SQLException {
+        int numberOfMessages = 0;
+        int numberOfCommands = 0; // TODO
+
+        if (numberOfMessages > Config.chatMessageLimit) {
+            executor.execute(() -> {
+                try (PreparedStatement statement = this.connection.prepareStatement()) {
+
+                }
+            });
+        }
+        if (numberOfCommands > Config.chatMessageLimit) {
+
+        }
+    }*/
 
 }

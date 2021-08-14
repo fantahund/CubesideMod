@@ -6,5 +6,5 @@ public interface ChatHudMethods {
 
     void addStoredChatMessage(Text message);
 
-    void addStoredMessage(String message);
+    void addStoredCommand(String command);
 }

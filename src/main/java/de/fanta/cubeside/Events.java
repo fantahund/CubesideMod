@@ -11,6 +11,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Events {
@@ -22,6 +24,8 @@ public class Events {
     private SoundThread soundThread;
 
     private boolean connect;
+
+    private LocalDate lastTickDate;
 
     public Events() {
     }
@@ -37,8 +41,10 @@ public class Events {
                         if (client.player != null) {
                             CubesideClient cubeClient = CubesideClient.getInstance();
                             cubeClient.setLoadingMessages(true);
+                            System.out.println("Messages: " + (long) messages.size());
                             messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredChatMessage);
-                            commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredMessage);
+                            System.out.println("Commands: " + (long) commands.size());
+                            commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredCommand);
                             cubeClient.setLoadingMessages(false);
                             connect = true;
                             cubeClient.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
@@ -123,8 +129,17 @@ public class Events {
                     Config.serialize();
                 }
             }
+
+            if (Config.saveMessagestoDatabase) {
+                LocalDate date = LocalDate.now();
+                if (lastTickDate != null) {
+                    if (!lastTickDate.isEqual(date)) {
+                        ChatUtils.sendNormalMessage("Neuer Tag: " + date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
+                    }
+                }
+                lastTickDate = date;
+            }
         });
     }
-
 
 }
