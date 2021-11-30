@@ -32,6 +32,10 @@ public class Config {
     public static boolean autochat = false;
     public static String antwort = "Ich habe grade leider keine Zeit!";
 
+    public static boolean weihnachtsmarkt = false;
+
+
+
     static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("cubeside.properties");
 
     static void serialize() {
@@ -55,6 +59,8 @@ public class Config {
         //Eiki
         prop.setProperty("autochat", Boolean.toString(autochat));
         prop.setProperty("antwort", antwort);
+
+        prop.setProperty("weihnachtsmarkt", String.valueOf(weihnachtsmarkt));
         try {
             OutputStream s = Files.newOutputStream(configPath);
             prop.store(s, "Cubeside Config");
@@ -88,6 +94,8 @@ public class Config {
             //Eiki
             autochat = Boolean.parseBoolean(prop.getProperty("autochat", "false"));
             antwort = prop.getProperty("antwort", antwort);
+
+            autochat = Boolean.parseBoolean(prop.getProperty("weihnachtsmarkt", "false"));
         } catch (IOException e) {
             CubesideClient.LOGGER.warn("Failed to read config!");
         }

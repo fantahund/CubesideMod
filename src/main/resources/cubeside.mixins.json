@@ -12,6 +12,7 @@
     "MixinKeyboard",
     "MixinMinecraftClient",
     "MixinRenderEntity",
+    "MixinWeihnachtsmarktLagFix",
     "SignBlockEntityRendererMixin"
   ],
   "client": [],

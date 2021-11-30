@@ -44,6 +44,8 @@ public class ConfigMenu implements ModMenuApi {
             //Eiki
             general.addEntry(entryBuilder.startBooleanToggle(Text.of("AutoChat Enabled"), Config.autochat).setDefaultValue(false).setSaveConsumer(val -> Config.autochat = val).build());
             general.addEntry(entryBuilder.startStrField(Text.of("AutoChat Message"), Config.antwort).setDefaultValue("Ich habe grade leider keine Zeit!").setSaveConsumer(String -> Config.antwort = String).build());
+
+            general.addEntry(entryBuilder.startBooleanToggle(Text.of("Weihnachtsmart LagRemover"), Config.weihnachtsmarkt).setDefaultValue(false).setSaveConsumer(val -> Config.weihnachtsmarkt = val).build());
             return builder.build();
         }
     }
