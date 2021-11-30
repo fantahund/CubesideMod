@@ -95,7 +95,7 @@ public class Config {
             autochat = Boolean.parseBoolean(prop.getProperty("autochat", "false"));
             antwort = prop.getProperty("antwort", antwort);
 
-            autochat = Boolean.parseBoolean(prop.getProperty("weihnachtsmarkt", "false"));
+            weihnachtsmarkt = Boolean.parseBoolean(prop.getProperty("weihnachtsmarkt", "false"));
         } catch (IOException e) {
             CubesideClient.LOGGER.warn("Failed to read config!");
         }

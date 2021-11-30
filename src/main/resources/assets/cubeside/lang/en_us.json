@@ -15,6 +15,7 @@
   "key.cubeside.autochat": "Toggle Auto Chat",
   "key.cubeside.gama": "Toggle Gama",
   "key.cubeside.showentitiesinspectator": "Toggle Show invisible entities in Spectator",
+  "key.cubeside.weihnachtsmarkt": "Toggle Show ItemFrames and ArmorStands",
   "key.categories.cubeside": "Cubeside",
   "custombutton.cubeside.joincubeside": "Join Cubeside"
 }

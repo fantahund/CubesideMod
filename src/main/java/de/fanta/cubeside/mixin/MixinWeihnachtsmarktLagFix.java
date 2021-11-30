@@ -1,7 +1,10 @@
 package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.Config;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -13,25 +16,24 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(net.minecraft.client.render.entity.EntityRenderer.class)
-public class MixinWeihnachtsmarktLagFix<T extends Entity> {
+@Mixin(WorldRenderer.class)
+public class MixinWeihnachtsmarktLagFix {
 
-    @Inject(at = @At("HEAD"), method = "render", cancellable = true)
-    public void render(T entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "renderEntity", cancellable = true)
+    public void render(Entity entity, double cameraX, double cameraY, double cameraZ, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
         if (Config.weihnachtsmarkt) {
-            if (entity instanceof ItemFrameEntity itemFrame) {
-                ci.cancel();
-                System.out.println("ItemFrame " + entity);
-                /*if (itemFrame.getHeldItemStack().getItem() == Items.FILLED_MAP) {
-                    ci.cancel();
-                }*/
-            }
-            if (entity instanceof ArmorStandEntity armorStand) {
-                ci.cancel();
-                System.out.println("ArmorStand " + entity);
-                /*if (armorStand.getEquippedStack(EquipmentSlot.HEAD).getItem() != Items.PLAYER_HEAD && armorStand.isInvisible()) {
-                    ci.cancel();
-                }*/
+            ClientPlayerEntity player = MinecraftClient.getInstance().player;
+            if (player != null) {
+                if (entity instanceof ItemFrameEntity itemFrame) {
+                    if (itemFrame.getHeldItemStack().getItem() == Items.FILLED_MAP) {
+                        ci.cancel();
+                    }
+                }
+                if (entity instanceof ArmorStandEntity armorStand) {
+                    if (armorStand.getEquippedStack(EquipmentSlot.HEAD).getItem() != Items.PLAYER_HEAD) {
+                        ci.cancel();
+                    }
+                }
             }
         }
     }

@@ -87,6 +87,13 @@ public class CubesideClient implements ClientModInitializer {
             "key.categories.cubeside"
     ));
 
+    public static final KeyBinding WEIHNACHTSMARKT = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+            "key.cubeside.weihnachtsmarkt",
+            InputUtil.Type.KEYSYM,
+            GLFW.GLFW_KEY_U,
+            "key.categories.cubeside"
+    ));
+
 
 
     public String getRank() {

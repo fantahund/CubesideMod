@@ -128,6 +128,17 @@ public class Events {
                     }
                     Config.serialize();
                 }
+
+                while (CubesideClient.WEIHNACHTSMARKT.wasPressed()) {
+                    if (Config.weihnachtsmarkt) {
+                        Config.weihnachtsmarkt = false;
+                        ChatUtils.sendNormalMessage("Alle ArmorStands die keinen Kopf auf dem Kopf haben und ItemFrames mit Karten werden jetzt nicht mehr angezeigt!");
+                    } else {
+                        Config.weihnachtsmarkt = true;
+                        ChatUtils.sendNormalMessage("Alle ArmorStands die keinen Kopf auf dem Kopf haben und ItemFrames mit Karten werden jetzt weider angezeigt!");
+                    }
+                    Config.serialize();
+                }
             }
 
             if (Config.saveMessagestoDatabase) {
