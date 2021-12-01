@@ -1,8 +1,6 @@
 package de.fanta.cubeside.util.ChatSkullAPI;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.ChatMessages;
-import net.minecraft.util.ChatUtil;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;

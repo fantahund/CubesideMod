@@ -62,7 +62,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
             this.random.setSeed(seed);
 
             matrix.push();
-            BakedModel bakedModel = this.itemRenderer.getHeldItemModel(itemStack, dropped.world, null, 1);
+            BakedModel bakedModel = this.itemRenderer.getModel(itemStack, dropped.world, null, 1);
             boolean hasDepthInGui = bakedModel.hasDepth();
 
             // decide how many item layers to render
