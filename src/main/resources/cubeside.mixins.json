@@ -11,6 +11,7 @@
     "MixinItemEntityRenderer",
     "MixinKeyboard",
     "MixinMinecraftClient",
+    "MixinRenderChung",
     "MixinRenderEntity",
     "MixinWeihnachtsmarktLagFix",
     "SignBlockEntityRendererMixin"
