@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_16",
   "mixins": [
     "MixinChatHud",
+    "MixinClientPlayNetHandler",
     "MixinCustomTitleScreen",
     "MixinDoubleGammaOption",
     "MixinItemEntity",
@@ -12,7 +13,6 @@
     "MixinKeyboard",
     "MixinMinecraftClient",
     "MixinRenderEntity",
-    "MixinWeihnachtsmarktLagFix",
     "SignBlockEntityRendererMixin"
   ],
   "client": [],

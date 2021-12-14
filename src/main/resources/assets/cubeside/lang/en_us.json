@@ -17,5 +17,8 @@
   "key.cubeside.showentitiesinspectator": "Toggle Show invisible entities in Spectator",
   "key.cubeside.weihnachtsmarkt": "Toggle Show ItemFrames and ArmorStands",
   "key.categories.cubeside": "Cubeside",
-  "custombutton.cubeside.joincubeside": "Join Cubeside"
+  "custombutton.cubeside.joincubeside": "Join Cubeside",
+  "options.cubeside.fullverticalview": "Volle Vertikale Sichtweite",
+  "options.cubeside.unloadchunks": "Chunks entladen",
+  "options.cubeside.fakeviewdistance": "Fake Sichtweite"
 }

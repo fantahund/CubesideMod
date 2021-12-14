@@ -45,7 +45,11 @@ public class ConfigMenu implements ModMenuApi {
             general.addEntry(entryBuilder.startBooleanToggle(Text.of("AutoChat Enabled"), Config.autochat).setDefaultValue(false).setSaveConsumer(val -> Config.autochat = val).build());
             general.addEntry(entryBuilder.startStrField(Text.of("AutoChat Message"), Config.antwort).setDefaultValue("Ich habe grade leider keine Zeit!").setSaveConsumer(String -> Config.antwort = String).build());
 
-            general.addEntry(entryBuilder.startBooleanToggle(Text.of("Weihnachtsmart LagRemover"), Config.weihnachtsmarkt).setDefaultValue(false).setSaveConsumer(val -> Config.weihnachtsmarkt = val).build());
+            //Viewdistance
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.fullverticalview"), Config.fullverticalview).setDefaultValue(true).setSaveConsumer(val -> Config.fullverticalview = val).build());
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.unloadchunks"), Config.unloadchunks).setDefaultValue(true).setSaveConsumer(val -> Config.unloadchunks = val).build());
+            general.addEntry(entryBuilder.startIntSlider(new TranslatableText("options.cubeside.fakeviewdistance"), Config.fakeviewdistance, 1, 64).setDefaultValue(32).setSaveConsumer(val -> Config.fakeviewdistance = val).build());
+
             return builder.build();
         }
     }

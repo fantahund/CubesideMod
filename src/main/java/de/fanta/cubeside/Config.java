@@ -32,8 +32,10 @@ public class Config {
     public static boolean autochat = false;
     public static String antwort = "Ich habe grade leider keine Zeit!";
 
-    public static boolean weihnachtsmarkt = false;
-
+    //Viewdistance
+    public static boolean fullverticalview = true;
+    public static boolean unloadchunks = true;
+    public static int fakeviewdistance = 32;
 
 
     static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("cubeside.properties");
@@ -60,7 +62,11 @@ public class Config {
         prop.setProperty("autochat", Boolean.toString(autochat));
         prop.setProperty("antwort", antwort);
 
-        prop.setProperty("weihnachtsmarkt", String.valueOf(weihnachtsmarkt));
+        //Viewdistance
+        prop.setProperty("full_vertical_view", String.valueOf(fullverticalview));
+        prop.setProperty("unload_chunks", String.valueOf(unloadchunks));
+        prop.setProperty("fake_view_distance", String.valueOf(fakeviewdistance));
+
         try {
             OutputStream s = Files.newOutputStream(configPath);
             prop.store(s, "Cubeside Config");
@@ -95,7 +101,11 @@ public class Config {
             autochat = Boolean.parseBoolean(prop.getProperty("autochat", "false"));
             antwort = prop.getProperty("antwort", antwort);
 
-            weihnachtsmarkt = Boolean.parseBoolean(prop.getProperty("weihnachtsmarkt", "false"));
+            //Viewdistance
+            fullverticalview = Boolean.parseBoolean(prop.getProperty("full_vertical_view", "true"));
+            unloadchunks = Boolean.parseBoolean(prop.getProperty("unload_chunks", "true"));
+            fakeviewdistance = Integer.parseInt(prop.getProperty("fake_view_distance", String.valueOf(fakeviewdistance)));
+
         } catch (IOException e) {
             CubesideClient.LOGGER.warn("Failed to read config!");
         }
