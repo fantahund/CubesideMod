@@ -50,6 +50,9 @@ public class Database {
     }
 
     private void createTablesIfNotExist() throws SQLException {
+        if (CubesideClient.instance.databaseinuse) {
+            return;
+        }
         PreparedStatement messageStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `messages` (" +
                 "`timestamp` BIGINT," +
                 "`server` TEXT," +
@@ -68,6 +71,9 @@ public class Database {
     }
 
     public void addMessage(Text message, String server) {
+        if (CubesideClient.instance.databaseinuse) {
+            return;
+        }
         long timestamp = System.currentTimeMillis();
         executor.execute(() -> {
             try (PreparedStatement statement = this.connection.prepareStatement(addMessageQuery)) {
@@ -84,6 +90,9 @@ public class Database {
     }
 
     public List<Text> loadMessages(String server) {
+        if (CubesideClient.instance.databaseinuse) {
+            return null;
+        }
         List<Text> messages = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(getMessagesQuery)) {
             statement.setString(1, server);
@@ -99,6 +108,9 @@ public class Database {
     }
 
     public void addCommand(String command, String server) {
+        if (CubesideClient.instance.databaseinuse) {
+            return;
+        }
         long timestamp = System.currentTimeMillis();
         executor.execute(() -> {
             try (PreparedStatement statement = this.connection.prepareStatement(addCommandQuery)) {
@@ -115,6 +127,9 @@ public class Database {
     }
 
     public List<String> loadCommands(String server) {
+        if (CubesideClient.instance.databaseinuse) {
+            return null;
+        }
         List<String> commands = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(getCommandsQuery)) {
             statement.setString(1, server);

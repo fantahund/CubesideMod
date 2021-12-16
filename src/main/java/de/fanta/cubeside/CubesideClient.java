@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -25,7 +26,7 @@ public class CubesideClient implements ClientModInitializer {
     public static final String MODID = "cubeside";
     public static final String PREFIX = "§9[§aCubeside§9] ";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    private static final Database DATABASE = new Database();
+    private static Database DATABASE;
     //GAMA
     public static double minGamma = -1.5;
     public static double maxGamma = 12.0;
@@ -37,6 +38,7 @@ public class CubesideClient implements ClientModInitializer {
     private String rank;
 
     private boolean loadingMessages;
+    public boolean databaseinuse = false;
     public List<Text> messageQueue = new ArrayList<>();
 
     @Override
@@ -44,6 +46,14 @@ public class CubesideClient implements ClientModInitializer {
         if (instance == null) {
             instance = this;
         }
+
+        try {
+            DATABASE = new Database();
+        } catch (Exception e) {
+            LOGGER.log(Level.INFO, "Du hast scheinbar mehrere Minecraft Instanzen am laufen. Chat & Commands werden nicht gespeiert oder geladen!");
+            databaseinuse = true;
+        }
+
 
         Config.deserialize();
         Events events = new Events();
