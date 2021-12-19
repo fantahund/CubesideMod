@@ -50,6 +50,9 @@ public class ConfigMenu implements ModMenuApi {
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.unloadchunks"), Config.unloadchunks).setDefaultValue(true).setSaveConsumer(val -> Config.unloadchunks = val).build());
             general.addEntry(entryBuilder.startIntSlider(new TranslatableText("options.cubeside.fakeviewdistance"), Config.fakeviewdistance, 1, 64).setDefaultValue(32).setSaveConsumer(val -> Config.fakeviewdistance = val).build());
 
+            //tpa
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.clickabletpamessage"), Config.clickabletpamessage).setDefaultValue(true).setSaveConsumer(val -> Config.clickabletpamessage = val).build());
+
             return builder.build();
         }
     }

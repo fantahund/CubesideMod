@@ -10,9 +10,11 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.ClickEvent;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
@@ -25,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -39,9 +42,14 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     @Final
     private static Logger LOGGER;
 
-    @Shadow protected abstract void addMessage(Text message, int messageId, int timestamp, boolean refresh);
+    @Shadow
+    protected abstract void addMessage(Text message, int messageId, int timestamp, boolean refresh);
 
-    @Shadow public abstract void addToMessageHistory(String message);
+    @Shadow
+    public abstract void addToMessageHistory(String message);
+
+    @Shadow
+    protected abstract void removeMessage(int messageId);
 
     private static final Database database = CubesideClient.getDatabase();
 
@@ -49,7 +57,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"), argsOnly = true)
     private net.minecraft.text.Text addTimestamp(net.minecraft.text.Text componentIn) {
-        if(CubesideClient.getInstance().isLoadingMessages()) {
+        if (CubesideClient.getInstance().isLoadingMessages()) {
             CubesideClient.getInstance().messageQueue.add(componentIn);
             return LiteralText.EMPTY;
         }
@@ -77,6 +85,52 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
             }
         }
 
+        if (Config.clickabletpamessage) {
+            String tpamessage = componentIn.getString();
+            String[] args = tpamessage.split(" ", 2);
+            if (args.length == 2) {
+                LiteralText name = new net.minecraft.text.LiteralText(args[0]);
+                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+
+                LiteralText accept = new net.minecraft.text.LiteralText("[Annehmen]");
+                accept.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept")));
+
+                LiteralText deny = new net.minecraft.text.LiteralText(" [Ablehnen]");
+                deny.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny")));
+
+                if (args[1].startsWith("fragt, ob er sich zu dir teleportieren darf.")) {
+                    net.minecraft.text.LiteralText component = new LiteralText("");
+
+                    component.append(name);
+
+                    LiteralText message = new net.minecraft.text.LiteralText(" möchte sich zu dir teleportieren.\n");
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    component.append(message);
+
+                    component.append(accept);
+                    component.append(deny);
+
+                    componentIn = component;
+                }
+
+                if (args[1].startsWith("fragt, ob du dich zu ihm teleportieren möchtest.")) {
+                    net.minecraft.text.LiteralText component = new LiteralText("");
+
+                    component.append(name);
+
+                    LiteralText message = new net.minecraft.text.LiteralText(" möchte, dass du dich zu ihm teleportierst.\n");
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    component.append(message);
+
+                    component.append(accept);
+                    component.append(deny);
+
+                    componentIn = component;
+                }
+            }
+        }
+
+
         if (Config.chattimestamps) {
             net.minecraft.text.LiteralText component = new LiteralText("");
             LiteralText timestamp = new net.minecraft.text.LiteralText(getChatTimestamp() + " ");
@@ -92,9 +146,19 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         return componentIn;
     }
 
-    @Inject(method = "addToMessageHistory", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
+    private void addMessage(Text message, CallbackInfo ci) {
+        if (Config.clickabletpamessage) {
+            if (message.getString().startsWith("Du kannst")) {
+                ci.cancel();
+            }
+        }
+    }
+
+
+    @Inject(method = "addToMessageHistory", at = @At("HEAD"))
     private void addMessageHistory(String message, CallbackInfo ci) {
-        if(CubesideClient.getInstance().isLoadingMessages()) {
+        if (CubesideClient.getInstance().isLoadingMessages()) {
             return;
         }
         if (Config.saveMessagestoDatabase) {

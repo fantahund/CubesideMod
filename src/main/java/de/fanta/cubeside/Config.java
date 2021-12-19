@@ -37,6 +37,9 @@ public class Config {
     public static boolean unloadchunks = true;
     public static int fakeviewdistance = 32;
 
+    //tpa
+    public static boolean clickabletpamessage = true;
+
 
     static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("cubeside.properties");
 
@@ -66,6 +69,9 @@ public class Config {
         prop.setProperty("full_vertical_view", String.valueOf(fullverticalview));
         prop.setProperty("unload_chunks", String.valueOf(unloadchunks));
         prop.setProperty("fake_view_distance", String.valueOf(fakeviewdistance));
+
+        //tpa
+        prop.setProperty("clickable_tpa_message", String.valueOf(clickabletpamessage));
 
         try {
             OutputStream s = Files.newOutputStream(configPath);
@@ -105,6 +111,9 @@ public class Config {
             fullverticalview = Boolean.parseBoolean(prop.getProperty("full_vertical_view", "true"));
             unloadchunks = Boolean.parseBoolean(prop.getProperty("unload_chunks", "true"));
             fakeviewdistance = Integer.parseInt(prop.getProperty("fake_view_distance", String.valueOf(fakeviewdistance)));
+
+            //tpa
+            clickabletpamessage = Boolean.parseBoolean(prop.getProperty("clickable_tpa_message", "true"));
 
         } catch (IOException e) {
             CubesideClient.LOGGER.warn("Failed to read config!");

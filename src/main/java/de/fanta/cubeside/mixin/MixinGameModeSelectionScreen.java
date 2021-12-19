@@ -1,6 +1,5 @@
 package de.fanta.cubeside.mixin;
 
-import de.fanta.cubeside.util.ChatUtils;
 import net.minecraft.client.gui.screen.GameModeSelectionScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
