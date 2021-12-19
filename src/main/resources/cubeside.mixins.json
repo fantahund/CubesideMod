@@ -8,6 +8,8 @@
     "MixinClientPlayNetHandler",
     "MixinCustomTitleScreen",
     "MixinDoubleGammaOption",
+    "MixinGameModeSelectionScreen",
+    "MixinGameModeSwitch",
     "MixinItemEntity",
     "MixinItemEntityRenderer",
     "MixinKeyboard",

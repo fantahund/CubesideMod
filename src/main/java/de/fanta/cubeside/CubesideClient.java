@@ -50,7 +50,7 @@ public class CubesideClient implements ClientModInitializer {
         try {
             DATABASE = new Database();
         } catch (Exception e) {
-            LOGGER.log(Level.INFO, "Du hast scheinbar mehrere Minecraft Instanzen am laufen. Chat & Commands werden nicht gespeiert oder geladen!");
+            LOGGER.log(Level.INFO, "Du hast scheinbar mehrere Minecraft Instanzen am laufen. Chat & Commands werden nicht gespeichert oder geladen!");
             databaseinuse = true;
         }
 
