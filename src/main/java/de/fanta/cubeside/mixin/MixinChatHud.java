@@ -87,46 +87,150 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
         if (Config.clickabletpamessage) {
             String tpamessage = componentIn.getString();
-            String[] args = tpamessage.split(" ", 2);
-            if (args.length == 2) {
-                LiteralText name = new net.minecraft.text.LiteralText(args[0]);
+            String[] args2 = tpamessage.split(" ", 2);
+            String[] args5 = tpamessage.split(" ", 5);
+            String[] args6 = tpamessage.split(" ", 6);
+            net.minecraft.text.LiteralText component = new LiteralText("");
+            if (args2.length == 2) {
+                LiteralText name = new net.minecraft.text.LiteralText(args2[0]);
                 name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
-
                 LiteralText accept = new net.minecraft.text.LiteralText("[Annehmen]");
                 accept.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept")));
-
                 LiteralText deny = new net.minecraft.text.LiteralText(" [Ablehnen]");
                 deny.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny")));
 
-                if (args[1].startsWith("fragt, ob er sich zu dir teleportieren darf.")) {
-                    net.minecraft.text.LiteralText component = new LiteralText("");
-
+                if (args2[1].startsWith("fragt, ob er sich zu dir teleportieren darf.")) {
                     component.append(name);
-
                     LiteralText message = new net.minecraft.text.LiteralText(" möchte sich zu dir teleportieren.\n");
                     message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message);
-
                     component.append(accept);
                     component.append(deny);
+
+                    if (client.player != null) {
+                        client.player.playSound(new SoundEvent(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                    }
 
                     componentIn = component;
                 }
 
-                if (args[1].startsWith("fragt, ob du dich zu ihm teleportieren möchtest.")) {
-                    net.minecraft.text.LiteralText component = new LiteralText("");
-
+                if (args2[1].startsWith("fragt, ob du dich zu ihm teleportieren möchtest.")) {
                     component.append(name);
-
                     LiteralText message = new net.minecraft.text.LiteralText(" möchte, dass du dich zu ihm teleportierst.\n");
                     message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message);
-
                     component.append(accept);
                     component.append(deny);
 
+                    if (client.player != null) {
+                        client.player.playSound(new SoundEvent(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                    }
+
                     componentIn = component;
                 }
+
+                if (args2[1].startsWith("hat deine Teleportierungsanfrage angenommen.")) {
+                    component.append(name);
+                    LiteralText message = new net.minecraft.text.LiteralText(" hat deine Teleportierungsanfrage");
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    component.append(message);
+                    LiteralText message2 = new net.minecraft.text.LiteralText(" angenommen.");
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")));
+                    component.append(message2);
+                    componentIn = component;
+                }
+
+                if (args2[1].startsWith("hat deine Teleportierungsanfrage abgelehnt.")) {
+                    component.append(name);
+                    LiteralText message = new net.minecraft.text.LiteralText(" hat deine Teleportierungsanfrage");
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    component.append(message);
+                    LiteralText message2 = new net.minecraft.text.LiteralText(" abgelehnt.");
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
+                    component.append(message2);
+                    componentIn = component;
+                }
+            }
+            if (args5.length == 5) {
+                LiteralText name = new net.minecraft.text.LiteralText(args6[4].replace(".", ""));
+                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+
+                if (tpamessage.startsWith("Du teleportierst dich zu")) {
+                    LiteralText message1 = new net.minecraft.text.LiteralText("Du wirst zu ");
+                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    component.append(message1);
+                    component.append(name);
+                    LiteralText message2 = new net.minecraft.text.LiteralText(" teleportiert.");
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    component.append(message2);
+                    componentIn = component;
+                }
+            }
+
+            if (args6.length == 6) {
+                LiteralText name = new net.minecraft.text.LiteralText(args6[4].replace(".", ""));
+                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+                if (tpamessage.startsWith("Eine Anfrage wurde an")) {
+                    LiteralText message1 = new net.minecraft.text.LiteralText("Du hast eine Anfrage an ");
+                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    component.append(message1);
+                    component.append(name);
+                    LiteralText message2 = new net.minecraft.text.LiteralText(" gesendet.");
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    component.append(message2);
+                    componentIn = component;
+                }
+
+                if (tpamessage.startsWith("Diese Anfrage wird nach")) {
+                    LiteralText message1 = new net.minecraft.text.LiteralText("Diese Anfrage wird in ");
+                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    component.append(message1);
+                    component.append(name);
+                    LiteralText seconds = new net.minecraft.text.LiteralText(" Sekunden ");
+                    seconds.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+                    component.append(seconds);
+                    LiteralText message2 = new net.minecraft.text.LiteralText("ablaufen.");
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    component.append(message2);
+                    componentIn = component;
+                }
+
+            }
+            if (tpamessage.equals("Teleportation läuft...")) {
+                LiteralText message = new net.minecraft.text.LiteralText("Teleportation läuft...");
+                message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                component.append(message);
+                componentIn = component;
+            }
+
+            if (tpamessage.equals("Du hast die Teleportierungsanfrage abgelehnt.")) {
+                LiteralText message1 = new net.minecraft.text.LiteralText("Du hast die Teleportierungsanfrage");
+                message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                component.append(message1);
+                LiteralText message2 = new net.minecraft.text.LiteralText(" abgelehnt.");
+                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
+                component.append(message2);
+                componentIn = component;
+            }
+
+            if (tpamessage.equals("Du hast die Teleportierungsanfrage angenommen.")) {
+                LiteralText message1 = new net.minecraft.text.LiteralText("Du hast die Teleportierungsanfrage");
+                message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                component.append(message1);
+                LiteralText message2 = new net.minecraft.text.LiteralText(" angenommen.");
+                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")));
+                component.append(message2);
+                componentIn = component;
+            }
+
+            if (tpamessage.equals("Fehler: Du hast keine Teleportierungsanfragen.")) {
+                LiteralText message = new net.minecraft.text.LiteralText("Fehler: ");
+                message.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
+                component.append(message);
+                LiteralText message2 = new net.minecraft.text.LiteralText("Du hast keine Teleportierungsanfrage.");
+                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                component.append(message2);
+                componentIn = component;
             }
         }
 
