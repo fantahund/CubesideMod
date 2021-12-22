@@ -39,6 +39,7 @@ public class Config {
 
     //tpa
     public static boolean clickabletpamessage = true;
+    public static boolean tpasound = true;
 
 
     static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("cubeside.properties");
@@ -72,6 +73,7 @@ public class Config {
 
         //tpa
         prop.setProperty("clickable_tpa_message", String.valueOf(clickabletpamessage));
+        prop.setProperty("tpa_sound", String.valueOf(tpasound));
 
         try {
             OutputStream s = Files.newOutputStream(configPath);
@@ -114,6 +116,7 @@ public class Config {
 
             //tpa
             clickabletpamessage = Boolean.parseBoolean(prop.getProperty("clickable_tpa_message", "true"));
+            tpasound = Boolean.parseBoolean(prop.getProperty("tpa_sound", "true"));
 
         } catch (IOException e) {
             CubesideClient.LOGGER.warn("Failed to read config!");

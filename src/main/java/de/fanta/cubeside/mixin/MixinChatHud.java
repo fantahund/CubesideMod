@@ -107,8 +107,10 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
                     component.append(accept);
                     component.append(deny);
 
-                    if (client.player != null) {
-                        client.player.playSound(new SoundEvent(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                    if (Config.tpasound) {
+                        if (client.player != null) {
+                            client.player.playSound(new SoundEvent(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                        }
                     }
 
                     componentIn = component;
@@ -122,8 +124,10 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
                     component.append(accept);
                     component.append(deny);
 
-                    if (client.player != null) {
-                        client.player.playSound(new SoundEvent(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                    if (Config.tpasound) {
+                        if (client.player != null) {
+                            client.player.playSound(new SoundEvent(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                        }
                     }
 
                     componentIn = component;

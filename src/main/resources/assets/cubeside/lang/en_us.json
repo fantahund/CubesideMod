@@ -20,5 +20,6 @@
   "options.cubeside.fullverticalview": "Volle vertikale Sichtweite",
   "options.cubeside.unloadchunks": "Chunks entladen",
   "options.cubeside.fakeviewdistance": "Fake Sichtweite",
-  "options.cubeside.clickabletpamessage": "Anklickbare Teleportanfragen"
+  "options.cubeside.clickabletpamessage": "Anklickbare Teleportanfragen",
+  "options.cubeside.tpasound": "Ton bei einer Teleportanfrage"
 }

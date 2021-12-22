@@ -52,6 +52,7 @@ public class ConfigMenu implements ModMenuApi {
 
             //tpa
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.clickabletpamessage"), Config.clickabletpamessage).setDefaultValue(true).setSaveConsumer(val -> Config.clickabletpamessage = val).build());
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.tpasound"), Config.tpasound).setDefaultValue(true).setSaveConsumer(val -> Config.tpasound = val).build());
 
             return builder.build();
         }
