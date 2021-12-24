@@ -41,6 +41,9 @@ public class Config {
     public static boolean clickabletpamessage = true;
     public static boolean tpasound = true;
 
+    //christmas
+    public static boolean removeChristmasChest = false;
+
 
     static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("cubeside.properties");
 
@@ -74,6 +77,9 @@ public class Config {
         //tpa
         prop.setProperty("clickable_tpa_message", String.valueOf(clickabletpamessage));
         prop.setProperty("tpa_sound", String.valueOf(tpasound));
+
+        //christmas
+        prop.setProperty("remove_christmas", String.valueOf(removeChristmasChest));
 
         try {
             OutputStream s = Files.newOutputStream(configPath);
@@ -117,6 +123,9 @@ public class Config {
             //tpa
             clickabletpamessage = Boolean.parseBoolean(prop.getProperty("clickable_tpa_message", "true"));
             tpasound = Boolean.parseBoolean(prop.getProperty("tpa_sound", "true"));
+
+            //christmas
+            removeChristmasChest = Boolean.parseBoolean(prop.getProperty("remove_christmas", "false"));
 
         } catch (IOException e) {
             CubesideClient.LOGGER.warn("Failed to read config!");
