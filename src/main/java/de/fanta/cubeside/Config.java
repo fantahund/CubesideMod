@@ -15,7 +15,10 @@ public class Config {
     public static boolean dropItemFancy = false;
     public static boolean thirdPersonElytra = false;
     public static boolean elytraAlarm = false;
+
     public static boolean saveMessagestoDatabase = false;
+    public static int daystheMessagesareStored = 10;
+
     public static boolean showInvisibleArmorstands = true;
     public static boolean showInvisibleEntitiesinSpectator = true;
     public static boolean simpleSignGlow = false;
@@ -55,7 +58,11 @@ public class Config {
         prop.setProperty("chat_message_limit", String.valueOf(chatMessageLimit));
         prop.setProperty("third_person_elytra", String.valueOf(thirdPersonElytra));
         prop.setProperty("elytra_alarm", String.valueOf(elytraAlarm));
+
         prop.setProperty("save_messages_to_database", String.valueOf(saveMessagestoDatabase));
+        prop.setProperty("days_the_messages_are_stored", String.valueOf(daystheMessagesareStored));
+
+
         prop.setProperty("show_invisible_armorstands", String.valueOf(showInvisibleArmorstands));
         prop.setProperty("show_invisible_entities_in_Spectator", String.valueOf(showInvisibleEntitiesinSpectator));
         prop.setProperty("simple_sign_glow", String.valueOf(simpleSignGlow));
@@ -101,7 +108,10 @@ public class Config {
             dropItemFancy = Boolean.parseBoolean(prop.getProperty("drop_item_fancy", "false"));
             thirdPersonElytra = Boolean.parseBoolean(prop.getProperty("third_person_elytra", "false"));
             elytraAlarm = Boolean.parseBoolean(prop.getProperty("elytra_alarm", "false"));
+
             saveMessagestoDatabase = Boolean.parseBoolean(prop.getProperty("save_messages_to_database", "false"));
+            daystheMessagesareStored = Integer.parseInt(prop.getProperty("days_the_messages_are_stored", "10"));
+
             showInvisibleArmorstands = Boolean.parseBoolean(prop.getProperty("show_invisible_armorstands", "true"));
             showInvisibleEntitiesinSpectator = Boolean.parseBoolean(prop.getProperty("show_invisible_entities_in_Spectator", "true"));
             simpleSignGlow = Boolean.parseBoolean(prop.getProperty("simple_sign_glow", "false"));

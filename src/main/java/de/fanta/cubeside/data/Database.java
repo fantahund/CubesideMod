@@ -12,18 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Database {
     private final Connection connection;
 
     private final String addMessageQuery;
     private final String getMessagesQuery;
+    private final String deleteOldMessagesQuery;
 
     private final String addCommandQuery;
     private final String getCommandsQuery;
-
-    //private final String deleteMessagesQuery;
-    //private final String deleteCommandsQuery;
+    private final String deleteOldCommandsQuery;
 
     private final ExecutorService executor;
 
@@ -41,12 +41,11 @@ public class Database {
 
         addMessageQuery = "INSERT INTO `messages` VALUES (?, ?, ?)";
         getMessagesQuery = "SELECT `message` FROM `messages` WHERE server = ? ORDER BY `timestamp`";
+        deleteOldMessagesQuery = "DELETE FROM `messages` WHERE `timestamp` <= ?";
 
         addCommandQuery = "INSERT INTO `commands` VALUES (?, ?, ?)";
         getCommandsQuery = "SELECT `command` FROM `commands` WHERE server = ? ORDER BY `timestamp`";
-
-
-        //deleteMessagesQuery = "DELETE FROM `messages` ";
+        deleteOldCommandsQuery = "DELETE FROM `commands` WHERE `timestamp` <= ?";
     }
 
     private void createTablesIfNotExist() throws SQLException {
@@ -142,6 +141,38 @@ public class Database {
             CubesideClient.LOGGER.error("Could not load messages for server " + server, e);
         }
         return commands;
+    }
+
+    public void deleteOldMessages(long days) throws SQLException {
+        if (CubesideClient.instance.databaseinuse) {
+            return;
+        }
+        executor.execute(() -> {
+            try (PreparedStatement statement = this.connection.prepareStatement(deleteOldMessagesQuery)) {
+                statement.setLong(1, System.currentTimeMillis() - days * 24 * 60 * 60 * 1000);
+                System.out.println("Delete Messages of the last " + days + " days");
+                System.out.println(statement.executeUpdate() + " messages were deleted");
+                connection.commit();
+            } catch (SQLException e) {
+                CubesideClient.LOGGER.error("Could not delete old Messages from database", e);
+            }
+        });
+    }
+
+    public void deleteOldCommands(long days) throws SQLException {
+        if (CubesideClient.instance.databaseinuse) {
+            return;
+        }
+        executor.execute(() -> {
+            try (PreparedStatement statement = this.connection.prepareStatement(deleteOldCommandsQuery)) {
+                statement.setLong(1, System.currentTimeMillis() - days * 24 * 60 * 60 * 1000);
+                System.out.println("Delete command of the last " + days + " days");
+                System.out.println(statement.executeUpdate() + " commands were deleted");
+                connection.commit();
+            } catch (SQLException e) {
+                CubesideClient.LOGGER.error("Could not delete old Commands from database", e);
+            }
+        });
     }
 
     /*public void deleteOldEntries() throws SQLException {

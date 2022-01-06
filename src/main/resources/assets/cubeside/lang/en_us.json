@@ -8,6 +8,7 @@
   "options.cubeside.dropitemfancy": "Items schön werfen",
   "options.cubeside.elytraalarm": "Elytra Alarm (Ton bei Flug unter Höhe 0)",
   "options.cubeside.savemessagestodatabase": "Speichert alle Nachrichten in einer Datenbank und ladet sie, wenn du auf einen Server joinst",
+  "options.cubeside.daysthemessagesarestored": "Tage die Nachrichten gespeichert werden.",
   "options.cubeside.showinvisiblearmorstands": "Zeige unsichtbare Rüstungsständer",
   "options.cubeside.showinvisibleentitiesinspectator": "Zeige unsichtbare Entities im Zuschauermodus",
   "options.cubeside.simplesignglow": "Einfaches Schilder leuchten (Leistungs Fix)",

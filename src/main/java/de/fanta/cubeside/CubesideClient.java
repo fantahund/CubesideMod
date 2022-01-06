@@ -15,6 +15,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,6 @@ public class CubesideClient implements ClientModInitializer {
             databaseinuse = true;
         }
 
-
         Config.deserialize();
         Events events = new Events();
         events.init();
@@ -65,7 +65,14 @@ public class CubesideClient implements ClientModInitializer {
         commands = new Commands();
         commands.register();
 
-
+        if (!databaseinuse) {
+            try {
+                getDatabase().deleteOldMessages(Config.daystheMessagesareStored);
+                getDatabase().deleteOldCommands(Config.daystheMessagesareStored);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static final KeyBinding NARRATOR_KEYBINDING = KeyBindingHelper.registerKeyBinding(new KeyBinding(

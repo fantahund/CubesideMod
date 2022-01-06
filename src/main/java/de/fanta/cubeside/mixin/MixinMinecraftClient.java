@@ -2,6 +2,7 @@ package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.CubesideClient;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.GameOptions;
 import org.spongepowered.asm.mixin.Final;
@@ -16,9 +17,13 @@ import java.util.List;
 
 @Mixin(MinecraftClient.class)
 public class MixinMinecraftClient {
+
+    private final long SAVE_INTERVAL = 10000;
+
     @Final
     @Shadow
     public GameOptions options;
+    private long lastSaveTime = 0;
 
     @Inject(at = @At("HEAD"), method = "close")
     private void close(CallbackInfo info) {
@@ -28,6 +33,11 @@ public class MixinMinecraftClient {
 
     @Inject(at = @At("HEAD"), method = "setScreen")
     private void openScreen(Screen screen, CallbackInfo info) {
+        if (screen instanceof GameMenuScreen && System.currentTimeMillis() - lastSaveTime > SAVE_INTERVAL) {
+            //saveConfig();
+            lastSaveTime = System.currentTimeMillis();
+        }
+
         if (screen != null && screen.getClass().getSimpleName().equals("SodiumOptionsGUI")) {
             try {
                 List<?> optionPages = (List<?>) get(screen, "me.jellysquid.mods.sodium.client.gui.SodiumOptionsGUI", "pages");

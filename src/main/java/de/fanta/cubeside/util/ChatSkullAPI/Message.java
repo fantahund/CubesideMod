@@ -47,7 +47,7 @@ public class Message {
         String color = chatColors[y];
         line.append((color != null) ? (chatColors[y] + imgchar) : Character.valueOf(' '));
       }
-      lines[y] = line.toString() + "&r";
+      lines[y] = line + "&r";
     } 
     return lines;
   }
