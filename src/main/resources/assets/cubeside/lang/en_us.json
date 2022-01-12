@@ -23,5 +23,6 @@
   "options.cubeside.fakeviewdistance": "Fake Sichtweite",
   "options.cubeside.clickabletpamessage": "Anklickbare Teleportanfragen",
   "options.cubeside.tpasound": "Ton bei einer Teleportanfrage",
-  "options.cubeside.removechristmaschest": "Weihnachtskisten Deaktivieren (Texturen müssen neu geladen werden. (F3 + T))"
+  "options.cubeside.removechristmaschest": "Weihnachtskisten Deaktivieren (Client muss neu gestartet werden.)",
+  "options.cubeside.gamemodeswitcher": "Gamemode Switcher (F3 + F4)"
 }

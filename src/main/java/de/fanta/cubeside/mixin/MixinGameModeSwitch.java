@@ -1,5 +1,6 @@
 package de.fanta.cubeside.mixin;
 
+import de.fanta.cubeside.Config;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameModeSelectionScreen;
@@ -13,9 +14,11 @@ public class MixinGameModeSwitch {
 
     @Inject(at = @At("HEAD"), method = "processF3(I)Z", cancellable = true)
     public void behaviour(int key, CallbackInfoReturnable<Boolean> cir) {
-        if (key == 293) {
-            MinecraftClient.getInstance().setScreen(new GameModeSelectionScreen());
-            cir.setReturnValue(true);
+        if (Config.gamemodeSwitcher) {
+            if (key == 293) {
+                MinecraftClient.getInstance().setScreen(new GameModeSelectionScreen());
+                cir.setReturnValue(true);
+            }
         }
     }
 }

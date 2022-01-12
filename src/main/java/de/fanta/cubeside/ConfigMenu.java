@@ -60,6 +60,8 @@ public class ConfigMenu implements ModMenuApi {
             //christmas
             general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.removechristmaschest"), Config.removeChristmasChest).setDefaultValue(false).setSaveConsumer(val -> Config.removeChristmasChest = val).build());
 
+            general.addEntry(entryBuilder.startBooleanToggle(new TranslatableText("options.cubeside.gamemodeswitcher"), Config.gamemodeSwitcher).setDefaultValue(true).setSaveConsumer(val -> Config.gamemodeSwitcher = val).build());
+
             return builder.build();
         }
     }

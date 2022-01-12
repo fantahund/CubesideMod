@@ -47,6 +47,8 @@ public class Config {
     //christmas
     public static boolean removeChristmasChest = false;
 
+    public static boolean gamemodeSwitcher = true;
+
 
     static final Path configPath = FabricLoader.getInstance().getConfigDir().resolve("cubeside.properties");
 
@@ -87,6 +89,8 @@ public class Config {
 
         //christmas
         prop.setProperty("remove_christmas", String.valueOf(removeChristmasChest));
+
+        prop.setProperty("gamemode_switcher", String.valueOf(gamemodeSwitcher));
 
         try {
             OutputStream s = Files.newOutputStream(configPath);
@@ -136,6 +140,8 @@ public class Config {
 
             //christmas
             removeChristmasChest = Boolean.parseBoolean(prop.getProperty("remove_christmas", "false"));
+
+            gamemodeSwitcher = Boolean.parseBoolean(prop.getProperty("gamemode_switcher", "true"));
 
         } catch (IOException e) {
             CubesideClient.LOGGER.warn("Failed to read config!");
