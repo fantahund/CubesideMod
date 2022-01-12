@@ -1,6 +1,6 @@
 name: CubesideMod
 
-on: [push]
+on: [push, workflow_dispatch]
 
 jobs:
   build:
