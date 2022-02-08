@@ -28,7 +28,7 @@ public class SkullClass {
   }
   
   private static URL newURL(String name) throws Exception {
-    String url = "https://mineskin.de/helm/%pname%/8.png";
+    String url = "https://mineskin.eu/helm/%pname%/8.png";
     url = url.replace("%pname%", name);
     return new URL(url);
   }
