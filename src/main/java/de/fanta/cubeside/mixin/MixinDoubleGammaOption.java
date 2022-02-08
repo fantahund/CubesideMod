@@ -1,6 +1,6 @@
 package de.fanta.cubeside.mixin;
 
-import de.fanta.cubeside.Config;
+import de.fanta.cubeside.CubesideClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.DoubleOption;
 import net.minecraft.client.option.GameOptions;
@@ -41,8 +41,8 @@ public class MixinDoubleGammaOption {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void init(String key, double min, double max, float step, Function<GameOptions, Double> getter, BiConsumer<GameOptions, Double> setter, BiFunction<GameOptions, DoubleOption, Text> displayStringGetter, Function<MinecraftClient, List<OrderedText>> tooltipsGetter, CallbackInfo ci) {
         if (key.equals("options.gamma")) {
-            this.min = Config.minGamma;
-            this.max = Config.maxGamma;
+            this.min = CubesideClient.minGamma;
+            this.max = CubesideClient.maxGamma;
             this.displayStringGetter = this::displayStringGetter;
         }
     }

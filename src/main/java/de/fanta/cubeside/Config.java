@@ -26,11 +26,6 @@ public class Config {
     public static TextColor timestampColor = TextColor.parse("#ffffff");
     public static int chatMessageLimit = 100;
 
-    //gamma
-    public static double minGamma = 1.0;
-    public static double maxGamma = 12.0;
-
-
     //Eiki
     public static boolean autochat = false;
     public static String antwort = "Ich habe grade leider keine Zeit!";
@@ -69,10 +64,6 @@ public class Config {
         prop.setProperty("show_invisible_entities_in_Spectator", String.valueOf(showInvisibleEntitiesinSpectator));
         prop.setProperty("simple_sign_glow", String.valueOf(simpleSignGlow));
         prop.setProperty("afk_pling", String.valueOf(afkPling));
-
-        //Gamma
-        prop.setProperty("minGamma", String.valueOf(Double.valueOf(minGamma)));
-        prop.setProperty("maxGamma", String.valueOf(Double.valueOf(maxGamma)));
 
         //Eiki
         prop.setProperty("autochat", Boolean.toString(autochat));
@@ -120,10 +111,6 @@ public class Config {
             showInvisibleEntitiesinSpectator = Boolean.parseBoolean(prop.getProperty("show_invisible_entities_in_Spectator", "true"));
             simpleSignGlow = Boolean.parseBoolean(prop.getProperty("simple_sign_glow", "false"));
             afkPling = Boolean.parseBoolean(prop.getProperty("afk_pling", "false"));
-
-            //Gamma
-            minGamma = Double.parseDouble(prop.getProperty("minGamma", "1.0"));
-            maxGamma = Double.parseDouble(prop.getProperty("maxGamma", "12.0"));
 
             //Eiki
             autochat = Boolean.parseBoolean(prop.getProperty("autochat", "false"));

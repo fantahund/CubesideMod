@@ -174,21 +174,4 @@ public class Database {
             }
         });
     }
-
-    /*public void deleteOldEntries() throws SQLException {
-        int numberOfMessages = 0;
-        int numberOfCommands = 0; // TODO
-
-        if (numberOfMessages > Config.chatMessageLimit) {
-            executor.execute(() -> {
-                try (PreparedStatement statement = this.connection.prepareStatement()) {
-
-                }
-            });
-        }
-        if (numberOfCommands > Config.chatMessageLimit) {
-
-        }
-    }*/
-
 }

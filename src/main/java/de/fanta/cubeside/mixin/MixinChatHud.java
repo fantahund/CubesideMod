@@ -257,7 +257,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     @Inject(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
     private void addMessage(Text message, CallbackInfo ci) {
         if (Config.clickabletpamessage) {
-            if (message.getString().startsWith("Du kannst")) {
+            if (message.getString().startsWith("Du kannst diese Anfrage mit /tpdeny ablehnen.") || message.getString().startsWith("Du kannst die Teleportationsanfrage mit /tpaccept annehmen.") || message.getString().startsWith("Du kannst die Anfrage mit /tpacancel ablehnen.")) {
                 ci.cancel();
             }
         }
