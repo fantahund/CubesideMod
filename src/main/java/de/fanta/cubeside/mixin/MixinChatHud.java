@@ -16,7 +16,6 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,20 +26,23 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.awt.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Mixin(ChatHud.class)
 public abstract class MixinChatHud extends DrawableHelper implements ChatHudMethods {
 
+    private static final Database database = CubesideClient.getDatabase();
+    private static final Date DATE = new Date();
     @Final
     @Shadow
     private MinecraftClient client;
 
-    @Shadow
-    @Final
-    private static Logger LOGGER;
+    private static String getChatTimestamp() {
+        SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]");
+        DATE.setTime(System.currentTimeMillis());
+        return sdf.format(DATE);
+    }
 
     @Shadow
     protected abstract void addMessage(Text message, int messageId, int timestamp, boolean refresh);
@@ -50,10 +52,6 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
     @Shadow
     protected abstract void removeMessage(int messageId);
-
-    private static final Database database = CubesideClient.getDatabase();
-
-    private static final Date DATE = new Date();
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"), argsOnly = true)
     private net.minecraft.text.Text addTimestamp(net.minecraft.text.Text componentIn) {
@@ -263,7 +261,6 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         }
     }
 
-
     @Inject(method = "addToMessageHistory", at = @At("HEAD"))
     private void addMessageHistory(String message, CallbackInfo ci) {
         if (CubesideClient.getInstance().isLoadingMessages()) {
@@ -291,12 +288,6 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         return Config.chatMessageLimit;
     }
 
-    private static String getChatTimestamp() {
-        SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]");
-        DATE.setTime(System.currentTimeMillis());
-        return sdf.format(DATE);
-    }
-
     public void playAFKSound() {
         new Thread(() -> {
             try {
@@ -306,7 +297,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
                     client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.0f);
                 }
             } catch (Exception e) {
-                LOGGER.error(e);
+                CubesideClient.LOGGER.error(e);
             }
         }).start();
     }
