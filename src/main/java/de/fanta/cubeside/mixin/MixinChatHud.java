@@ -268,7 +268,10 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         }
         if (Config.saveMessagestoDatabase) {
             if (client.getCurrentServerEntry() != null) {
-                database.addCommand(message, client.getCurrentServerEntry().address.toLowerCase());
+                if (!CubesideClient.getInstance().databaseinuse) {
+                    database.addCommand(message, client.getCurrentServerEntry().address.toLowerCase());
+                }
+
             }
         }
     }
@@ -305,7 +308,9 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     public void addMessagetoDatabase(Text component) {
         if (Config.saveMessagestoDatabase) {
             if (client.getCurrentServerEntry() != null) {
-                database.addMessage(component, client.getCurrentServerEntry().address.toLowerCase());
+                if (!CubesideClient.instance.databaseinuse) {
+                    database.addMessage(component, client.getCurrentServerEntry().address.toLowerCase());
+                }
             }
         }
     }

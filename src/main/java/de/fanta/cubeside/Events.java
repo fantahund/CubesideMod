@@ -35,7 +35,13 @@ public class Events {
             if (Config.saveMessagestoDatabase) {
                 if (client.getCurrentServerEntry() != null) {
                     String server = client.getCurrentServerEntry().address.toLowerCase();
+                    if (CubesideClient.getInstance().databaseinuse) {
+                        return;
+                    }
                     List<Text> messages = CubesideClient.getDatabase().loadMessages(server);
+                    if (CubesideClient.instance.databaseinuse) {
+                        return;
+                    }
                     List<String> commands = CubesideClient.getDatabase().loadCommands(server);
                     if (!connect) {
                         if (client.player != null) {
