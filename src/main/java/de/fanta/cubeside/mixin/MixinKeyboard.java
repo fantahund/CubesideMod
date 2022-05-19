@@ -1,7 +1,6 @@
 package de.fanta.cubeside.mixin;
 
-
-import de.fanta.cubeside.CubesideClient;
+import de.fanta.cubeside.KeyBinds;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.Keyboard;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +12,6 @@ public class MixinKeyboard {
 
     @ModifyConstant(method = "onKey",  constant = @Constant(intValue = 66))
     private int narratorkey(int old) {
-        return KeyBindingHelper.getBoundKeyOf(CubesideClient.NARRATOR_KEYBINDING).getCode();
+        return KeyBindingHelper.getBoundKeyOf(KeyBinds.NARRATOR_KEYBINDING).getCode();
     }
 }

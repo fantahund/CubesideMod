@@ -14,14 +14,16 @@
   "icon": "assets/cubeside/icon.png",
   "environment": "client",
   "entrypoints": {
-    "client": [ "de.fanta.cubeside.CubesideClient" ],
+    "client": [
+      "de.fanta.cubeside.CubesideClientFabric"
+    ],
     "modmenu": [ "de.fanta.cubeside.ConfigMenu" ]
   },
   "mixins": [ "cubeside.mixins.json" ],
   "depends": {
     "fabricloader": ">=0.13.3",
     "fabric": "*",
-    "minecraft": "1.18.2"
+    "minecraft": "*"
   },
   "suggests": {
     "modmenu": "*",

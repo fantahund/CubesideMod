@@ -31,7 +31,7 @@ public class Commands {
                 .then(
                         argument("player", string())
                                 .executes(context -> {
-                                    if (CubesideClient.getInstance().hasPermission("cubeside.addskulltolore")) {
+                                    if (CubesideClientFabric.hasPermission("cubeside.addskulltolore")) {
                                         ChatSkull.setItemLore(getString(context, "player"));
                                     } else {
                                         ChatUtils.sendErrorMessage("Keine Rechte!");

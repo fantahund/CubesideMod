@@ -1,8 +1,7 @@
 package de.fanta.cubeside.util;
 
-import de.fanta.cubeside.CubesideClient;
+import de.fanta.cubeside.CubesideClientFabric;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.MessageType;
 import net.minecraft.text.Text;
 
 import java.util.HashMap;
@@ -39,7 +38,7 @@ public class ChatUtils {
     public static void sendMessage(Object message) {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.player != null ) {
-            mc.inGameHud.addChatMessage(MessageType.CHAT, Text.of(CubesideClient.PREFIX + message), mc.player.getUuid());
+            mc.player.sendMessage(Text.of(CubesideClientFabric.PREFIX + message), false);
         }
     }
 

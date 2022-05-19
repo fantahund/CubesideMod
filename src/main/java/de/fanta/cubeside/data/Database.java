@@ -1,6 +1,6 @@
 package de.fanta.cubeside.data;
 
-import de.fanta.cubeside.CubesideClient;
+import de.fanta.cubeside.CubesideClientFabric;
 import net.minecraft.text.Text;
 
 import java.sql.Connection;
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class Database {
     private final Connection connection;
@@ -49,7 +48,7 @@ public class Database {
     }
 
     private void createTablesIfNotExist() throws SQLException {
-        if (CubesideClient.instance.databaseinuse) {
+        if (CubesideClientFabric.databaseinuse) {
             return;
         }
         PreparedStatement messageStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `messages` (" +
@@ -70,7 +69,7 @@ public class Database {
     }
 
     public void addMessage(Text message, String server) {
-        if (CubesideClient.instance.databaseinuse) {
+        if (CubesideClientFabric.databaseinuse) {
             return;
         }
         long timestamp = System.currentTimeMillis();
@@ -83,13 +82,13 @@ public class Database {
                 statement.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
-                CubesideClient.LOGGER.error("Could not add Message to database " + message.getString(), e);
+                CubesideClientFabric.LOGGER.error("Could not add Message to database " + message.getString(), e);
             }
         });
     }
 
     public List<Text> loadMessages(String server) {
-        if (CubesideClient.instance.databaseinuse) {
+        if (CubesideClientFabric.databaseinuse) {
             return null;
         }
         List<Text> messages = new ArrayList<>();
@@ -101,13 +100,13 @@ public class Database {
                 messages.add(message);
             }
         } catch (SQLException e) {
-            CubesideClient.LOGGER.error("Could not load messages for server " + server, e);
+            CubesideClientFabric.LOGGER.error("Could not load messages for server " + server, e);
         }
         return messages;
     }
 
     public void addCommand(String command, String server) {
-        if (CubesideClient.instance.databaseinuse) {
+        if (CubesideClientFabric.databaseinuse) {
             return;
         }
         long timestamp = System.currentTimeMillis();
@@ -120,13 +119,13 @@ public class Database {
                 statement.executeUpdate();
                 connection.commit();
             } catch (SQLException e) {
-                CubesideClient.LOGGER.error("Could not add Command to database " + command, e);
+                CubesideClientFabric.LOGGER.error("Could not add Command to database " + command, e);
             }
         });
     }
 
     public List<String> loadCommands(String server) {
-        if (CubesideClient.instance.databaseinuse) {
+        if (CubesideClientFabric.databaseinuse) {
             return null;
         }
         List<String> commands = new ArrayList<>();
@@ -138,13 +137,13 @@ public class Database {
                 commands.add(command);
             }
         } catch (SQLException e) {
-            CubesideClient.LOGGER.error("Could not load messages for server " + server, e);
+            CubesideClientFabric.LOGGER.error("Could not load messages for server " + server, e);
         }
         return commands;
     }
 
     public void deleteOldMessages(long days) throws SQLException {
-        if (CubesideClient.instance.databaseinuse) {
+        if (CubesideClientFabric.databaseinuse) {
             return;
         }
         executor.execute(() -> {
@@ -154,13 +153,13 @@ public class Database {
                 System.out.println(statement.executeUpdate() + " messages were deleted");
                 connection.commit();
             } catch (SQLException e) {
-                CubesideClient.LOGGER.error("Could not delete old Messages from database", e);
+                CubesideClientFabric.LOGGER.error("Could not delete old Messages from database", e);
             }
         });
     }
 
     public void deleteOldCommands(long days) throws SQLException {
-        if (CubesideClient.instance.databaseinuse) {
+        if (CubesideClientFabric.databaseinuse) {
             return;
         }
         executor.execute(() -> {
@@ -170,7 +169,7 @@ public class Database {
                 System.out.println(statement.executeUpdate() + " commands were deleted");
                 connection.commit();
             } catch (SQLException e) {
-                CubesideClient.LOGGER.error("Could not delete old Commands from database", e);
+                CubesideClientFabric.LOGGER.error("Could not delete old Commands from database", e);
             }
         });
     }

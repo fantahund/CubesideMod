@@ -1,13 +1,10 @@
 package de.fanta.cubeside.mixin;
 
-import de.fanta.cubeside.CubesideClient;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.DoubleOption;
+//import net.minecraft.client.option.DoubleOption; //TODO Kaputt
 import net.minecraft.client.option.GameOptions;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -21,9 +18,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import static java.lang.Math.abs;
-
-@Mixin(DoubleOption.class)
+/*@Mixin(DoubleOption.class)
 public class MixinDoubleGammaOption {
     @Shadow
     @Final
@@ -49,9 +44,9 @@ public class MixinDoubleGammaOption {
 
     private Text displayStringGetter(GameOptions gameOptions, DoubleOption doubleOption) {
         double threshold = 0.025;
-        return new TranslatableText("options.gamma").append(": ").append(
-                abs(gameOptions.gamma) < threshold ? new TranslatableText("options.gamma.min") :
-                        abs(gameOptions.gamma - 1) < threshold ? new TranslatableText("options.gamma.max") :
-                                new LiteralText(Math.round(gameOptions.gamma * 100) + "%"));
+        return Text.translatable("options.gamma").append(": ").append(
+                abs(gameOptions.getGamma().getValue()) < threshold ? Text.translatable("options.gamma.min") :
+                        abs(gameOptions.getGamma().getValue() - 1) < threshold ? Text.translatable("options.gamma.max") :
+                                Text.translatable(Math.round(gameOptions.getGamma().getValue() * 100) + "%"));
     }
-}
+}*/

@@ -88,7 +88,7 @@ public class Config {
             prop.store(s, "Cubeside Config");
             s.close();
         } catch (IOException e) {
-            CubesideClient.LOGGER.warn("Failed to write config!");
+            CubesideClientFabric.LOGGER.warn("Failed to write config!");
         }
     }
 
@@ -131,7 +131,7 @@ public class Config {
             gamemodeSwitcher = Boolean.parseBoolean(prop.getProperty("gamemode_switcher", "true"));
 
         } catch (IOException e) {
-            CubesideClient.LOGGER.warn("Failed to read config!");
+            CubesideClientFabric.LOGGER.warn("Failed to read config!");
         }
         Config.serialize();
     }

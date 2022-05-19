@@ -35,26 +35,25 @@ public class Events {
             if (Config.saveMessagestoDatabase) {
                 if (client.getCurrentServerEntry() != null) {
                     String server = client.getCurrentServerEntry().address.toLowerCase();
-                    if (CubesideClient.getInstance().databaseinuse) {
+                    if (CubesideClientFabric.databaseinuse) {
                         return;
                     }
-                    List<Text> messages = CubesideClient.getDatabase().loadMessages(server);
-                    if (CubesideClient.instance.databaseinuse) {
+                    List<Text> messages = CubesideClientFabric.getDatabase().loadMessages(server);
+                    if (CubesideClientFabric.databaseinuse) {
                         return;
                     }
-                    List<String> commands = CubesideClient.getDatabase().loadCommands(server);
+                    List<String> commands = CubesideClientFabric.getDatabase().loadCommands(server);
                     if (!connect) {
                         if (client.player != null) {
-                            CubesideClient cubeClient = CubesideClient.getInstance();
-                            cubeClient.setLoadingMessages(true);
+                            CubesideClientFabric.setLoadingMessages(true);
                             System.out.println("Messages: " + (long) messages.size());
                             messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredChatMessage);
                             System.out.println("Commands: " + (long) commands.size());
                             commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredCommand);
-                            cubeClient.setLoadingMessages(false);
+                            CubesideClientFabric.setLoadingMessages(false);
                             connect = true;
-                            cubeClient.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
-                            cubeClient.messageQueue.clear();
+                            CubesideClientFabric.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
+                            CubesideClientFabric.messageQueue.clear();
                         }
                     }
                 }
@@ -88,7 +87,7 @@ public class Events {
                 if (Config.elytraAlarm) {
                     if (sound == null) {
                         Identifier location;
-                        location = new Identifier(CubesideClient.MODID, "alarm");
+                        location = new Identifier(CubesideClientFabric.MODID, "alarm");
                         sound = new SoundEvent(location);
                     }
                     if (mc.player.isFallFlying() && mc.player.getY() <= mc.world.getBottomY()) {
@@ -102,8 +101,8 @@ public class Events {
                     }
                 }
 
-                while (CubesideClient.AUTO_CHAT.wasPressed()) {
-                    if (CubesideClient.getInstance().hasPermission("cubeside.autochat")) {
+                while (KeyBinds.AUTO_CHAT.wasPressed()) {
+                    if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
                         if (Config.autochat) {
                             Config.autochat = false;
                             mc.player.sendMessage(Text.of("§cAuto Chat deaktiviert"), true);
@@ -117,14 +116,14 @@ public class Events {
                     }
                 }
                 //GAMA
-                while (CubesideClient.TOGGLE_GAMA.wasPressed()) {
-                    double temp = mc.options.gamma;
-                    mc.options.gamma = MathHelper.clamp(CubesideClient.prevGamma, CubesideClient.minGamma, CubesideClient.maxGamma);
-                    mc.player.sendMessage(Text.of("§aGamma: §3" + mc.options.gamma), true);
-                    CubesideClient.prevGamma = temp;
+                while (KeyBinds.TOGGLE_GAMA.wasPressed()) {
+                    double temp = mc.options.getGamma().getValue();
+                    //mc.options.gamma = MathHelper.clamp(CubesideClient.prevGamma, CubesideClient.minGamma, CubesideClient.maxGamma); //TODO 1.19
+                    mc.player.sendMessage(Text.of("§aGamma: §3" + mc.options.getGamma()), true);
+                    CubesideClientFabric.prevGamma = temp;
                 }
 
-                while (CubesideClient.TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE.wasPressed()) {
+                while (KeyBinds.TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE.wasPressed()) {
                     if (Config.showInvisibleEntitiesinSpectator) {
                         Config.showInvisibleEntitiesinSpectator = false;
                         mc.player.sendMessage(Text.of("§aUnsichtbare Entities werden jetzt im Spectator nicht mehr angezeigt!"), true);

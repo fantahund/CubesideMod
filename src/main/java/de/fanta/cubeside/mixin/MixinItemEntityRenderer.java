@@ -8,7 +8,6 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.SkullBlock;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.ItemEntityRenderer;
@@ -17,7 +16,11 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.AliasedBlockItem;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -34,7 +37,7 @@ import java.util.Random;
 
 @Mixin(ItemEntityRenderer.class)
 public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity> {
-    @Shadow @Final private Random random;
+    private final Random random = new Random();
     @Shadow @Final private ItemRenderer itemRenderer;
     @Shadow protected abstract int getRenderedAmount(ItemStack stack);
 

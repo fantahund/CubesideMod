@@ -1,6 +1,6 @@
 package de.fanta.cubeside.event;
 
-import de.fanta.cubeside.CubesideClient;
+import de.fanta.cubeside.CubesideClientFabric;
 import io.netty.handler.codec.DecoderException;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -23,9 +23,9 @@ public class RankDataChannelHandler implements ClientPlayNetworking.PlayChannelH
     public void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf packet, PacketSender sender) {
         try {
             String rank = packet.toString(Charset.defaultCharset());
-            CubesideClient.getInstance().setRank(rank);
+            CubesideClientFabric.setRank(rank);
         } catch (DecoderException e) {
-            CubesideClient.LOGGER.warn("Unable to decode rank data", e);
+            CubesideClientFabric.LOGGER.warn("Unable to decode rank data", e);
         }
     }
 }

@@ -1,5 +1,6 @@
 plugins {
-    id 'fabric-loom' version '0.10-SNAPSHOT'
+    id 'fabric-loom' version '0.11-SNAPSHOT'
+    id "io.github.juuxel.loom-quiltflower" version "1.7.1"
     id 'maven-publish'
     id "com.github.johnrengelman.shadow" version "7.0.0"
 }
@@ -11,8 +12,8 @@ apply plugin: "com.github.johnrengelman.shadow"
 
 defaultTasks('clean', 'build', 'publishToMavenLocal')
 
-sourceCompatibility = '1.16'
-targetCompatibility = '1.16'
+sourceCompatibility = '1.17'
+targetCompatibility = '1.17'
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -63,7 +64,7 @@ processResources {
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
-    it.options.release = 16
+    it.options.release = 17
 }
 
 shadowJar {

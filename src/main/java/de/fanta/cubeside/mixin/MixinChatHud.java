@@ -1,7 +1,7 @@
 package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.Config;
-import de.fanta.cubeside.CubesideClient;
+import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
@@ -11,7 +11,7 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.ClickEvent;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
@@ -32,7 +32,7 @@ import java.util.Date;
 @Mixin(ChatHud.class)
 public abstract class MixinChatHud extends DrawableHelper implements ChatHudMethods {
 
-    private static final Database database = CubesideClient.getDatabase();
+    private static final Database database = CubesideClientFabric.getDatabase();
     private static final Date DATE = new Date();
     @Final
     @Shadow
@@ -55,9 +55,9 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"), argsOnly = true)
     private net.minecraft.text.Text addTimestamp(net.minecraft.text.Text componentIn) {
-        if (CubesideClient.getInstance().isLoadingMessages()) {
-            CubesideClient.getInstance().messageQueue.add(componentIn);
-            return LiteralText.EMPTY;
+        if (CubesideClientFabric.isLoadingMessages()) {
+            CubesideClientFabric.messageQueue.add(componentIn);
+            return Text.empty();
         }
         if (Config.autochat) {
             String s = componentIn.toString();
@@ -65,7 +65,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
             if (arr.length >= 47) {
                 if ((arr[4].equals("color=gray,")) && (arr[28].equals("TextComponent{text='From")) && (arr[32].equals("color=light_purple,")) && (arr[46].equals("color=white,") || arr[46].equals("color=green,"))) {
-                    if (CubesideClient.instance.hasPermission("cubeside.autochat")) {
+                    if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
                         if (client.player != null) {
                             client.player.sendChatMessage("/r " + Config.antwort);
                         }
@@ -88,18 +88,18 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
             String[] args2 = tpamessage.split(" ", 2);
             String[] args5 = tpamessage.split(" ", 5);
             String[] args6 = tpamessage.split(" ", 6);
-            net.minecraft.text.LiteralText component = new LiteralText("");
+            MutableText component = Text.literal("");
             if (args2.length == 2) {
-                LiteralText name = new net.minecraft.text.LiteralText(args2[0]);
+                MutableText name = Text.literal(args2[0]);
                 name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
-                LiteralText accept = new net.minecraft.text.LiteralText("[Annehmen]");
+                MutableText accept = Text.literal("[Annehmen]");
                 accept.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept")));
-                LiteralText deny = new net.minecraft.text.LiteralText(" [Ablehnen]");
+                MutableText deny = Text.literal(" [Ablehnen]");
                 deny.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny")));
 
                 if (args2[1].startsWith("fragt, ob er sich zu dir teleportieren darf.")) {
                     component.append(name);
-                    LiteralText message = new net.minecraft.text.LiteralText(" möchte sich zu dir teleportieren.\n");
+                    MutableText message = Text.literal(" möchte sich zu dir teleportieren.\n");
                     message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message);
                     component.append(accept);
@@ -116,7 +116,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
                 if (args2[1].startsWith("fragt, ob du dich zu ihm teleportieren möchtest.")) {
                     component.append(name);
-                    LiteralText message = new net.minecraft.text.LiteralText(" möchte, dass du dich zu ihm teleportierst.\n");
+                    MutableText message = Text.literal(" möchte, dass du dich zu ihm teleportierst.\n");
                     message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message);
                     component.append(accept);
@@ -133,10 +133,10 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
                 if (args2[1].startsWith("hat deine Teleportierungsanfrage angenommen.")) {
                     component.append(name);
-                    LiteralText message = new net.minecraft.text.LiteralText(" hat deine Teleportierungsanfrage");
+                    MutableText message = Text.literal(" hat deine Teleportierungsanfrage");
                     message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message);
-                    LiteralText message2 = new net.minecraft.text.LiteralText(" angenommen.");
+                    MutableText message2 = Text.literal(" angenommen.");
                     message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")));
                     component.append(message2);
                     componentIn = component;
@@ -144,25 +144,25 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
                 if (args2[1].startsWith("hat deine Teleportierungsanfrage abgelehnt.")) {
                     component.append(name);
-                    LiteralText message = new net.minecraft.text.LiteralText(" hat deine Teleportierungsanfrage");
+                    MutableText message = Text.literal(" hat deine Teleportierungsanfrage");
                     message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message);
-                    LiteralText message2 = new net.minecraft.text.LiteralText(" abgelehnt.");
+                    MutableText message2 = Text.literal(" abgelehnt.");
                     message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
                     component.append(message2);
                     componentIn = component;
                 }
             }
             if (args5.length == 5) {
-                LiteralText name = new net.minecraft.text.LiteralText(args6[4].replace(".", ""));
+                MutableText name = Text.literal(args6[4].replace(".", ""));
                 name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
 
                 if (tpamessage.startsWith("Du teleportierst dich zu")) {
-                    LiteralText message1 = new net.minecraft.text.LiteralText("Du wirst zu ");
+                    MutableText message1 = Text.literal("Du wirst zu ");
                     message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message1);
                     component.append(name);
-                    LiteralText message2 = new net.minecraft.text.LiteralText(" teleportiert.");
+                    MutableText message2 = Text.literal(" teleportiert.");
                     message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message2);
                     componentIn = component;
@@ -170,28 +170,28 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
             }
 
             if (args6.length == 6) {
-                LiteralText name = new net.minecraft.text.LiteralText(args6[4].replace(".", ""));
+                MutableText name = Text.literal(args6[4].replace(".", ""));
                 name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
                 if (tpamessage.startsWith("Eine Anfrage wurde an")) {
-                    LiteralText message1 = new net.minecraft.text.LiteralText("Du hast eine Anfrage an ");
+                    MutableText message1 = Text.literal("Du hast eine Anfrage an ");
                     message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message1);
                     component.append(name);
-                    LiteralText message2 = new net.minecraft.text.LiteralText(" gesendet.");
+                    MutableText message2 = Text.literal(" gesendet.");
                     message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message2);
                     componentIn = component;
                 }
 
                 if (tpamessage.startsWith("Diese Anfrage wird nach")) {
-                    LiteralText message1 = new net.minecraft.text.LiteralText("Diese Anfrage wird in ");
+                    MutableText message1 = Text.literal("Diese Anfrage wird in ");
                     message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message1);
                     component.append(name);
-                    LiteralText seconds = new net.minecraft.text.LiteralText(" Sekunden ");
+                    MutableText seconds = Text.literal(" Sekunden ");
                     seconds.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
                     component.append(seconds);
-                    LiteralText message2 = new net.minecraft.text.LiteralText("ablaufen.");
+                    MutableText message2 = Text.literal("ablaufen.");
                     message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                     component.append(message2);
                     componentIn = component;
@@ -199,37 +199,37 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
             }
             if (tpamessage.equals("Teleportation läuft...")) {
-                LiteralText message = new net.minecraft.text.LiteralText("Teleportation läuft...");
+                MutableText message = Text.literal("Teleportation läuft...");
                 message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                 component.append(message);
                 componentIn = component;
             }
 
             if (tpamessage.equals("Du hast die Teleportierungsanfrage abgelehnt.")) {
-                LiteralText message1 = new net.minecraft.text.LiteralText("Du hast die Teleportierungsanfrage");
+                MutableText message1 = Text.literal("Du hast die Teleportierungsanfrage");
                 message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                 component.append(message1);
-                LiteralText message2 = new net.minecraft.text.LiteralText(" abgelehnt.");
+                MutableText message2 = Text.literal(" abgelehnt.");
                 message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
                 component.append(message2);
                 componentIn = component;
             }
 
             if (tpamessage.equals("Du hast die Teleportierungsanfrage angenommen.")) {
-                LiteralText message1 = new net.minecraft.text.LiteralText("Du hast die Teleportierungsanfrage");
+                MutableText message1 = Text.literal("Du hast die Teleportierungsanfrage");
                 message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                 component.append(message1);
-                LiteralText message2 = new net.minecraft.text.LiteralText(" angenommen.");
+                MutableText message2 = Text.literal(" angenommen.");
                 message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")));
                 component.append(message2);
                 componentIn = component;
             }
 
             if (tpamessage.equals("Fehler: Du hast keine Teleportierungsanfragen.")) {
-                LiteralText message = new net.minecraft.text.LiteralText("Fehler: ");
+                MutableText message = Text.literal("Fehler: ");
                 message.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
                 component.append(message);
-                LiteralText message2 = new net.minecraft.text.LiteralText("Du hast keine Teleportierungsanfrage.");
+                MutableText message2 = Text.literal("Du hast keine Teleportierungsanfrage.");
                 message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
                 component.append(message2);
                 componentIn = component;
@@ -238,8 +238,8 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
 
         if (Config.chattimestamps) {
-            net.minecraft.text.LiteralText component = new LiteralText("");
-            LiteralText timestamp = new net.minecraft.text.LiteralText(getChatTimestamp() + " ");
+            MutableText component = Text.literal("");
+            MutableText timestamp = Text.literal(getChatTimestamp() + " ");
             timestamp.setStyle(Style.EMPTY.withColor(Config.timestampColor));
             component.append(timestamp);
             component.append(componentIn);
@@ -263,12 +263,12 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
     @Inject(method = "addToMessageHistory", at = @At("HEAD"))
     private void addMessageHistory(String message, CallbackInfo ci) {
-        if (CubesideClient.getInstance().isLoadingMessages()) {
+        if (CubesideClientFabric.isLoadingMessages()) {
             return;
         }
         if (Config.saveMessagestoDatabase) {
             if (client.getCurrentServerEntry() != null) {
-                if (!CubesideClient.getInstance().databaseinuse) {
+                if (!CubesideClientFabric.databaseinuse) {
                     database.addCommand(message, client.getCurrentServerEntry().address.toLowerCase());
                 }
 
@@ -300,7 +300,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
                     client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.0f);
                 }
             } catch (Exception e) {
-                CubesideClient.LOGGER.error(e);
+                CubesideClientFabric.LOGGER.error(e);
             }
         }).start();
     }
@@ -308,7 +308,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     public void addMessagetoDatabase(Text component) {
         if (Config.saveMessagestoDatabase) {
             if (client.getCurrentServerEntry() != null) {
-                if (!CubesideClient.instance.databaseinuse) {
+                if (!CubesideClientFabric.databaseinuse) {
                     database.addMessage(component, client.getCurrentServerEntry().address.toLowerCase());
                 }
             }

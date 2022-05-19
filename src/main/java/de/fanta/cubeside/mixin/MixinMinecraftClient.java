@@ -1,6 +1,6 @@
 package de.fanta.cubeside.mixin;
 
-import de.fanta.cubeside.CubesideClient;
+import de.fanta.cubeside.CubesideClientFabric;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -45,11 +45,11 @@ public class MixinMinecraftClient {
                 List<?> options = (List<?>) get(optionGroups.get(0), "me.jellysquid.mods.sodium.client.gui.options.OptionGroup", "options");
                 Object sliderControl = get(options.get(1), "me.jellysquid.mods.sodium.client.gui.options.OptionImpl", "control");
                 Class<?> sliderControlClass = Class.forName("me.jellysquid.mods.sodium.client.gui.options.control.SliderControl");
-                setInt(sliderControl, sliderControlClass, "min", (int) (CubesideClient.minGamma * 100));
-                setInt(sliderControl, sliderControlClass, "max", (int) (CubesideClient.maxGamma * 100));
+                setInt(sliderControl, sliderControlClass, "min", (int) (CubesideClientFabric.minGamma * 100));
+                setInt(sliderControl, sliderControlClass, "max", (int) (CubesideClientFabric.maxGamma * 100));
             } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException ex) {
                 ex.printStackTrace();
-                CubesideClient.LOGGER.warn("an exception occurred during the manipulation of the sodium options gui");
+                CubesideClientFabric.LOGGER.warn("an exception occurred during the manipulation of the sodium options gui");
             }
         }
     }

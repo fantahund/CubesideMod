@@ -1,9 +1,6 @@
 package de.fanta.cubeside.permission;
 
-import de.fanta.cubeside.CubesideClient;
-
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class PermissionHandler {
@@ -56,6 +53,11 @@ public class PermissionHandler {
     }
 
     public boolean hasPermission(String rank, String permission) {
+        if (rank == null) {
+            rank = "player";
+        }
+
+
         Integer rankPriority = RANK_PRIORITIES.get(rank.toLowerCase());
         if (rankPriority == null) {
             rankPriority = PLAYER;

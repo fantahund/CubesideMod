@@ -7,7 +7,6 @@
     "MixinChatHud",
     "MixinClientPlayNetHandler",
     "MixinCustomTitleScreen",
-    "MixinDoubleGammaOption",
     "MixinGameModeSelectionScreen",
     "MixinGameModeSwitch",
     "MixinItemEntity",

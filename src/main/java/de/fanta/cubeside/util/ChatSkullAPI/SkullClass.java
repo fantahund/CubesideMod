@@ -1,7 +1,7 @@
 package de.fanta.cubeside.util.ChatSkullAPI;
 
 
-import de.fanta.cubeside.CubesideClient;
+import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.util.ChatUtils;
 
 import javax.imageio.ImageIO;
@@ -22,7 +22,7 @@ public class SkullClass {
       imageToSend = ImageIO.read(newURL(playerName));
     } catch (Exception e) {
       ChatUtils.sendErrorMessage("Kopf von " + playerName + " konnte nicht gefunden werden.");
-      CubesideClient.LOGGER.error("Kopf " + playerName + " konnte nicht gefunden werden.", e);
+      CubesideClientFabric.LOGGER.error("Kopf " + playerName + " konnte nicht gefunden werden.", e);
     }
     (new Message(imageToSend, 8, '█')).setItemLore();
   }

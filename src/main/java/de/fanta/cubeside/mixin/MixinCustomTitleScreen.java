@@ -8,7 +8,6 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,7 +22,7 @@ public abstract class MixinCustomTitleScreen extends Screen {
 
     @Inject(at = @At("TAIL"), method = "initWidgetsNormal")
     private void addCustomButton(int y, int spacingY, CallbackInfo ci) {
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 + 205, y + 14 , 80, 20, new TranslatableText("custombutton.cubeside.joincubeside"), (ButtonWidget) -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 + 205, y + 14 , 80, 20, Text.translatable("custombutton.cubeside.joincubeside"), (ButtonWidget) -> {
             ServerInfo selectedEntry = new ServerInfo("Cubeside", "Cubeside.de", false);
             ConnectScreen.connect(this, MinecraftClient.getInstance(), new ServerAddress("cubeside.de", 25565), selectedEntry);
         }));
