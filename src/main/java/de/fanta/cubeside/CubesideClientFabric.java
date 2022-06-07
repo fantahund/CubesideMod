@@ -29,7 +29,7 @@ public class CubesideClientFabric implements ClientModInitializer {
     public static double maxGamma = 12.0;
     public static double prevGamma = POSITIVE_INFINITY;
 
-    private static Commands commands;
+    public static Commands commands;
     private static PermissionHandler permissionHandler;
 
     private static String rank;
@@ -55,7 +55,6 @@ public class CubesideClientFabric implements ClientModInitializer {
 
         LOGGER.info(MODID + "Mod Loaded");
         commands = new Commands();
-        commands.register();
 
         if (!databaseinuse) {
             try {

@@ -67,7 +67,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
                 if ((arr[4].equals("color=gray,")) && (arr[28].equals("TextComponent{text='From")) && (arr[32].equals("color=light_purple,")) && (arr[46].equals("color=white,") || arr[46].equals("color=green,"))) {
                     if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
                         if (client.player != null) {
-                            client.player.sendChatMessage("/r " + Config.antwort);
+                            client.player.sendCommand("/r " + Config.antwort);
                         }
                     } else {
                         ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");

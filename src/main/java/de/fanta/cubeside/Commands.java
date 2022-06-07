@@ -2,9 +2,11 @@ package de.fanta.cubeside;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
+import com.mojang.brigadier.CommandDispatcher;
 import de.fanta.cubeside.util.ChatSkullAPI.ChatSkull;
 import de.fanta.cubeside.util.ChatUtils;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Team;
@@ -14,8 +16,8 @@ import java.util.List;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.string;
-import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.argument;
-import static net.fabricmc.fabric.api.client.command.v1.ClientCommandManager.literal;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.argument;
+import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class Commands {
 
@@ -26,8 +28,13 @@ public class Commands {
     });
 
     public void register() {
+        CommandDispatcher<FabricClientCommandSource> dispatcher = ClientCommandManager.getActiveDispatcher();
 
-        ClientCommandManager.DISPATCHER.register(literal("addskulltolore")
+        if (dispatcher == null) {
+            System.out.println("Command Dispatcher is null");
+            return;
+        }
+        dispatcher.register(literal("addskulltolore")
                 .then(
                         argument("player", string())
                                 .executes(context -> {

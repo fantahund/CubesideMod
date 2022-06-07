@@ -58,7 +58,7 @@ public class Events {
                     }
                 }
             }
-
+            CubesideClientFabric.commands.register();
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
