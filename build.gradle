@@ -12,10 +12,6 @@ apply plugin: "com.github.johnrengelman.shadow"
 
 defaultTasks('clean', 'build', 'publishToMavenLocal')
 
-sourceCompatibility = '1.17'
-targetCompatibility = '1.17'
-
-archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 

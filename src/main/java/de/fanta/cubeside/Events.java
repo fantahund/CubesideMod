@@ -116,12 +116,12 @@ public class Events {
                     }
                 }
                 //GAMA
-                while (KeyBinds.TOGGLE_GAMA.wasPressed()) {
+                /*while (KeyBinds.TOGGLE_GAMA.wasPressed()) {
                     double temp = mc.options.getGamma().getValue();
-                    //mc.options.gamma = MathHelper.clamp(CubesideClient.prevGamma, CubesideClient.minGamma, CubesideClient.maxGamma); //TODO 1.19
+                    //mc.options.gamma = MathHelper.clamp(CubesideClient.prevGamma, CubesideClient.minGamma, CubesideClient.maxGamma); //TODO Minecraft has prevented in the 1.19 gamma waiting for team meeting result!
                     mc.player.sendMessage(Text.of("§aGamma: §3" + mc.options.getGamma()), true);
                     CubesideClientFabric.prevGamma = temp;
-                }
+                }*/
 
                 while (KeyBinds.TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE.wasPressed()) {
                     if (Config.showInvisibleEntitiesinSpectator) {

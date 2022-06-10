@@ -48,8 +48,16 @@ public class CubesideClientFabric implements ClientModInitializer {
         }
 
         Config.deserialize();
+
+        KeyBinds keyBinds = new KeyBinds();
+        keyBinds.initKeys();
+
         Events events = new Events();
         events.init();
+
+        LogicalZoom logicalZoom = new LogicalZoom();
+        logicalZoom.initLogicalZoom();
+
         permissionHandler = new PermissionHandler();
         new RankDataChannelHandler();
 

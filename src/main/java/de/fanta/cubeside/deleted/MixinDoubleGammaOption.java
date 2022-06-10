@@ -1,4 +1,4 @@
-package de.fanta.cubeside.mixin;
+package de.fanta.cubeside.deleted;
 
 import net.minecraft.client.MinecraftClient;
 //import net.minecraft.client.option.DoubleOption; //TODO Kaputt
@@ -49,4 +49,4 @@ public class MixinDoubleGammaOption {
                         abs(gameOptions.getGamma().getValue() - 1) < threshold ? Text.translatable("options.gamma.max") :
                                 Text.translatable(Math.round(gameOptions.getGamma().getValue() * 100) + "%"));
     }
-}*/
+}*///TODO Minecraft has prevented in the 1.19 gamma waiting for team meeting result!
