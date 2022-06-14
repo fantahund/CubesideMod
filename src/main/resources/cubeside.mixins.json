@@ -14,8 +14,10 @@
     "MixinItemEntity",
     "MixinItemEntityRenderer",
     "MixinKeyboard",
+    "MixinOptionImpl",
     "MixinRemoveChristmasChest",
     "MixinRenderEntity",
+    "MixinSliderControl",
     "SignBlockEntityRendererMixin"
   ],
   "client": [],

@@ -26,6 +26,8 @@ public class CubesideClientFabric implements ClientModInitializer {
     public static double minGamma = -1.5;
     public static double maxGamma = 12.0;
 
+    public static double brightnessSliderInterval = 0.05;
+
     public static Commands commands;
     private static PermissionHandler permissionHandler;
 
