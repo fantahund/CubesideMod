@@ -20,6 +20,7 @@
     "modmenu": [ "de.fanta.cubeside.ConfigMenu" ]
   },
   "mixins": [ "cubeside.mixins.json" ],
+  "accessWidener" : "cubeside.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.6",
     "fabric": "*",

@@ -25,7 +25,7 @@ public class CubesideClientFabric implements ClientModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     private static Database DATABASE;
     //GAMA
-    public static double minGamma = -1.5;
+    public static double minGamma = -1.0;
     public static double maxGamma = 12.0;
     public static double prevGamma = POSITIVE_INFINITY;
 
