@@ -1,5 +1,6 @@
 package de.fanta.cubeside;
 
+import de.fanta.cubeside.util.BoostedSliderCallbacks;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import de.fanta.cubeside.util.SoundThread;
@@ -115,13 +116,13 @@ public class Events {
                         ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
                     }
                 }
-                //GAMA
-                /*while (KeyBinds.TOGGLE_GAMA.wasPressed()) {
+
+                while (KeyBinds.TOGGLE_GAMMA.wasPressed()) {
                     double temp = mc.options.getGamma().getValue();
-                    //mc.options.gamma = MathHelper.clamp(CubesideClient.prevGamma, CubesideClient.minGamma, CubesideClient.maxGamma); //TODO Minecraft has prevented in the 1.19 gamma waiting for team meeting result!
-                    mc.player.sendMessage(Text.of("§aGamma: §3" + mc.options.getGamma()), true);
+                    mc.options.getGamma().setValue(MathHelper.clamp(CubesideClientFabric.prevGamma, CubesideClientFabric.minGamma, CubesideClientFabric.maxGamma));
+                    mc.player.sendMessage(Text.of("§aGamma: §3" + (int)(mc.options.getGamma().getValue() * 100.0)), true);
                     CubesideClientFabric.prevGamma = temp;
-                }*/
+                }
 
                 while (KeyBinds.TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE.wasPressed()) {
                     if (Config.showInvisibleEntitiesinSpectator) {
