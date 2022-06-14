@@ -5,7 +5,6 @@ import com.google.common.collect.Ordering;
 import com.mojang.brigadier.CommandDispatcher;
 import de.fanta.cubeside.util.ChatSkullAPI.ChatSkull;
 import de.fanta.cubeside.util.ChatUtils;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
@@ -27,13 +26,13 @@ public class Commands {
         return ComparisonChain.start().compareTrueFirst(playerListEntry.getGameMode() != GameMode.SPECTATOR, playerListEntry2.getGameMode() != GameMode.SPECTATOR).compare(team != null ? team.getName() : "", team2 != null ? team2.getName() : "").compare(playerListEntry.getProfile().getName(), playerListEntry2.getProfile().getName(), String::compareToIgnoreCase).result();
     });
 
-    public void register() {
-        CommandDispatcher<FabricClientCommandSource> dispatcher = ClientCommandManager.getActiveDispatcher();
+    public void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
 
         if (dispatcher == null) {
             System.out.println("Command Dispatcher is null");
             return;
         }
+
         dispatcher.register(literal("addskulltolore")
                 .then(
                         argument("player", string())

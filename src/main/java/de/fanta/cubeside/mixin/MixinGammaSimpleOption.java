@@ -2,8 +2,6 @@ package de.fanta.cubeside.mixin;
 
 import com.mojang.serialization.Codec;
 import de.fanta.cubeside.util.BoostedSliderCallbacks;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.option.SimpleOption.Callbacks;
@@ -17,6 +15,9 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Mixin(SimpleOption.class)
 public class MixinGammaSimpleOption {

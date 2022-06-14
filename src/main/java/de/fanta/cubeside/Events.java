@@ -1,16 +1,15 @@
 package de.fanta.cubeside;
 
-import de.fanta.cubeside.util.BoostedSliderCallbacks;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import de.fanta.cubeside.util.SoundThread;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -59,7 +58,6 @@ public class Events {
                     }
                 }
             }
-            CubesideClientFabric.commands.register();
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
@@ -117,13 +115,6 @@ public class Events {
                     }
                 }
 
-                while (KeyBinds.TOGGLE_GAMMA.wasPressed()) {
-                    double temp = mc.options.getGamma().getValue();
-                    mc.options.getGamma().setValue(MathHelper.clamp(CubesideClientFabric.prevGamma, CubesideClientFabric.minGamma, CubesideClientFabric.maxGamma));
-                    mc.player.sendMessage(Text.of("§aGamma: §3" + (int)(mc.options.getGamma().getValue() * 100.0)), true);
-                    CubesideClientFabric.prevGamma = temp;
-                }
-
                 while (KeyBinds.TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE.wasPressed()) {
                     if (Config.showInvisibleEntitiesinSpectator) {
                         Config.showInvisibleEntitiesinSpectator = false;
@@ -146,6 +137,8 @@ public class Events {
                 lastTickDate = date;
             }
         });
-    }
 
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> CubesideClientFabric.commands.register(dispatcher));
+
+    }
 }

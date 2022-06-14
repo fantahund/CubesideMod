@@ -26,13 +26,6 @@ public class KeyBinds {
                 "key.categories.cubeside"
         ));
 
-        TOGGLE_GAMMA = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-                "key.cubeside.gama",
-                InputUtil.Type.KEYSYM,
-                GLFW.GLFW_KEY_O,
-                "key.categories.cubeside"
-        ));
-
         TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE = KeyBindingHelper.registerKeyBinding(new KeyBinding(
                 "key.cubeside.showentitiesinspectator",
                 InputUtil.Type.KEYSYM,

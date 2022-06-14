@@ -15,8 +15,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.lang.Double.POSITIVE_INFINITY;
-
 @Environment(EnvType.CLIENT)
 public class CubesideClientFabric implements ClientModInitializer {
 
@@ -25,9 +23,8 @@ public class CubesideClientFabric implements ClientModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     private static Database DATABASE;
     //GAMA
-    public static double minGamma = -1.0;
+    public static double minGamma = -1.5;
     public static double maxGamma = 12.0;
-    public static double prevGamma = POSITIVE_INFINITY;
 
     public static Commands commands;
     private static PermissionHandler permissionHandler;
