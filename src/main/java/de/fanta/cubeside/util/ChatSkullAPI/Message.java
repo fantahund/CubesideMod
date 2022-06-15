@@ -65,7 +65,7 @@ public class Message {
     String[] arrayOfString;
     for (i = (arrayOfString = this.lines).length, b = 0; b < i; ) {
       String line = arrayOfString[b];
-      MinecraftClient.getInstance().player.sendChatMessage("/additemlore " + line);
+      MinecraftClient.getInstance().player.sendCommand("additemlore " + line);
       b++;
     }
   }
