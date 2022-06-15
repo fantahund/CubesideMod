@@ -1,3 +1,6 @@
-Die CubesideMod wird es nur für Fabric geben.
-Es wird nur die neuste Version Supportet.
 Weitere erforderliche Mods: ModMenu, ClothConfig, FabricAPI
+
+Eine Modbeschreibung findest du in unserem [Forum](https://cubeside.de/forum/thread/10959-fabric-mod-cubeside-mod/).
+
+You can download development builds [from our Jenkins server](https://jenkins.fantacs.de/job/CubesideMod/).
+
