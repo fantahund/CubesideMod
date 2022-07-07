@@ -8,6 +8,7 @@ import de.fanta.cubeside.util.ChatUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.ClickEvent;
@@ -16,6 +17,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -45,15 +47,12 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     }
 
     @Shadow
-    protected abstract void addMessage(Text message, int messageId, int timestamp, boolean refresh);
+    protected abstract void addMessage(Text message, int messageId, @Nullable MessageIndicator indicator, boolean refresh);
 
     @Shadow
     public abstract void addToMessageHistory(String message);
 
-    @Shadow
-    protected abstract void removeMessage(int messageId);
-
-    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;I)V", at = @At("HEAD"), argsOnly = true)
+    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"), argsOnly = true)
     private net.minecraft.text.Text addTimestamp(net.minecraft.text.Text componentIn) {
         if (CubesideClientFabric.isLoadingMessages()) {
             CubesideClientFabric.messageQueue.add(componentIn);
@@ -278,7 +277,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
     @Override
     public void addStoredChatMessage(Text message) {
-        this.addMessage(message, 0, this.client.inGameHud.getTicks(), false);
+        this.addMessage(message, 0, null, false);
     }
 
     @Override
@@ -286,7 +285,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         this.addToMessageHistory(message);
     }
 
-    @ModifyConstant(method = "addMessage(Lnet/minecraft/text/Text;IIZ)V", constant = {@Constant(intValue = 100)})
+    @ModifyConstant(method = "addMessage(Lnet/minecraft/text/Text;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", constant = {@Constant(intValue = 100)})
     private int replaceMessageLimit(int original) {
         return Config.chatMessageLimit;
     }
