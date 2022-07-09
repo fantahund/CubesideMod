@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
+import net.minecraft.network.message.MessageSignature;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.ClickEvent;
@@ -47,7 +48,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     }
 
     @Shadow
-    protected abstract void addMessage(Text message, int messageId, @Nullable MessageIndicator indicator, boolean refresh);
+    protected abstract void addMessage(Text message, @Nullable MessageSignature messageSignature, int i, @Nullable MessageIndicator messageIndicator, boolean bl);
 
     @Shadow
     public abstract void addToMessageHistory(String message);
@@ -277,7 +278,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
     @Override
     public void addStoredChatMessage(Text message) {
-        this.addMessage(message, 0, null, false);
+        this.addMessage(message, null, 0, null, false);
     }
 
     @Override
@@ -285,7 +286,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         this.addToMessageHistory(message);
     }
 
-    @ModifyConstant(method = "addMessage(Lnet/minecraft/text/Text;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", constant = {@Constant(intValue = 100)})
+    @ModifyConstant(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignature;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", constant = {@Constant(intValue = 100)})
     private int replaceMessageLimit(int original) {
         return Config.chatMessageLimit;
     }
