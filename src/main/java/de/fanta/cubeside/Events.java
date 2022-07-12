@@ -1,5 +1,6 @@
 package de.fanta.cubeside;
 
+import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import de.fanta.cubeside.util.SoundThread;
@@ -32,7 +33,7 @@ public class Events {
 
     public void init() {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            if (Config.saveMessagestoDatabase) {
+            if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
                 if (client.getCurrentServerEntry() != null) {
                     String server = client.getCurrentServerEntry().address.toLowerCase();
                     if (CubesideClientFabric.databaseinuse) {
@@ -61,14 +62,14 @@ public class Events {
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-            if (Config.saveMessagestoDatabase) {
+            if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
                 connect = false;
             }
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             if (mc.player != null) {
-                if (Config.thirdPersonElytra) {
+                if (Configs.Generic.ThirdPersonElytra.getBooleanValue()) {
                     if (mc.player.isFallFlying()) {
                         if (!flyingLastTick) {
                             flyingLastTick = true;
@@ -83,7 +84,7 @@ public class Events {
                     }
                 }
 
-                if (Config.elytraAlarm) {
+                if (Configs.Generic.ElytraAlarm.getBooleanValue()) {
                     if (sound == null) {
                         Identifier location;
                         location = new Identifier(CubesideClientFabric.MODID, "alarm");
@@ -102,32 +103,32 @@ public class Events {
 
                 while (KeyBinds.AUTO_CHAT.wasPressed()) {
                     if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
-                        if (Config.autochat) {
-                            Config.autochat = false;
+                        if (Configs.PermissionSettings.AutoChat.getBooleanValue()) {
+                            Configs.PermissionSettings.AutoChat.setBooleanValue(false);
                             mc.player.sendMessage(Text.of("§cAuto Chat deaktiviert"), true);
                         } else {
-                            Config.autochat = true;
+                            Configs.PermissionSettings.AutoChat.setBooleanValue(true);
                             mc.player.sendMessage(Text.of("§aAuto Chat aktiviert"), true);
                         }
-                        Config.serialize();
+                        Configs.saveToFile();
                     } else {
                         ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
                     }
                 }
 
                 while (KeyBinds.TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE.wasPressed()) {
-                    if (Config.showInvisibleEntitiesinSpectator) {
-                        Config.showInvisibleEntitiesinSpectator = false;
+                    if (Configs.Generic.ShowInvisibleEntitiesInSpectator.getBooleanValue()) {
+                        Configs.Generic.ShowInvisibleEntitiesInSpectator.setBooleanValue(false);
                         mc.player.sendMessage(Text.of("§aUnsichtbare Entities werden jetzt im Spectator nicht mehr angezeigt!"), true);
                     } else {
-                        Config.showInvisibleEntitiesinSpectator = true;
+                        Configs.Generic.ShowInvisibleEntitiesInSpectator.setBooleanValue(true);
                         mc.player.sendMessage(Text.of("§aUnsichtbare Entities werden jetzt im Spectator wieder angezeigt!"), true);
                     }
-                    Config.serialize();
+                    Configs.saveToFile();
                 }
             }
 
-            if (Config.saveMessagestoDatabase) {
+            if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
                 LocalDate date = LocalDate.now();
                 if (lastTickDate != null) {
                     if (!lastTickDate.isEqual(date)) {

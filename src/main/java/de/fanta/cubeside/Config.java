@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
 
-public class Config {
+/*public class Config {
     public static boolean chattimestamps = false;
     public static boolean dropItemFancy = false;
     public static boolean thirdPersonElytra = false;
@@ -135,4 +135,4 @@ public class Config {
         }
         Config.serialize();
     }
-}
+}*/

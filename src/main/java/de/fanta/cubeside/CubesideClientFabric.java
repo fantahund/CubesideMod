@@ -1,5 +1,6 @@
 package de.fanta.cubeside;
 
+import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.permission.PermissionHandler;
@@ -46,7 +47,10 @@ public class CubesideClientFabric implements ClientModInitializer {
             databaseinuse = true;
         }
 
-        Config.deserialize();
+        //Config.deserialize();
+
+        //Configs.saveToFile();
+        Configs.loadFromFile();
 
         KeyBinds keyBinds = new KeyBinds();
         keyBinds.initKeys();
@@ -65,8 +69,8 @@ public class CubesideClientFabric implements ClientModInitializer {
 
         if (!databaseinuse) {
             try {
-                getDatabase().deleteOldMessages(Config.daystheMessagesareStored);
-                getDatabase().deleteOldCommands(Config.daystheMessagesareStored);
+                getDatabase().deleteOldMessages(Configs.Chat.DaysTheMessagesAreStored.getIntegerValue());
+                getDatabase().deleteOldCommands(Configs.Chat.DaysTheMessagesAreStored.getIntegerValue());
             } catch (SQLException e) {
                 e.printStackTrace();
             }

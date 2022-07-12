@@ -1,6 +1,6 @@
 package de.fanta.cubeside.mixin;
 
-import de.fanta.cubeside.Config;
+import de.fanta.cubeside.config.Configs;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -19,7 +19,7 @@ public abstract class MixinRenderEntity {
 
     @Inject(method = "isInvisibleTo", at = @At("HEAD"), cancellable = true)
     private void showInvisibleArmorstands(net.minecraft.entity.player.PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
-        if (Config.showInvisibleArmorstands) {
+        if (Configs.Generic.ShowInvisibleArmorstands.getBooleanValue()) {
             Item iteminmainhand = player.getItemsHand().iterator().next().getItem();
             if (iteminmainhand == Items.ARMOR_STAND && getType().equals(EntityType.ARMOR_STAND) && isInvisible()) {
                 cir.setReturnValue(false);
@@ -29,7 +29,7 @@ public abstract class MixinRenderEntity {
 
     @Inject(method = "isInvisibleTo", at = @At(value = "INVOKE", target = "net/minecraft/entity/player/PlayerEntity.isSpectator()Z", shift = At.Shift.AFTER), cancellable = true)
     private void hideInvisibleEntities(net.minecraft.entity.player.PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
-        if(!Config.showInvisibleEntitiesinSpectator) {
+        if(!Configs.Generic.ShowInvisibleEntitiesInSpectator.getBooleanValue()) {
             if (isInvisible() && player.isSpectator()) {
                 cir.setReturnValue(true);
             }
