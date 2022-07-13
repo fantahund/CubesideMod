@@ -53,8 +53,8 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     @Shadow
     public abstract void addToMessageHistory(String message);
 
-    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"), argsOnly = true)
-    private net.minecraft.text.Text addTimestamp(net.minecraft.text.Text componentIn) {
+    @ModifyVariable(method = "method_44811", at = @At("HEAD"), argsOnly = true)
+    private net.minecraft.text.Text modifyMessages(net.minecraft.text.Text componentIn) {
         if (CubesideClientFabric.isLoadingMessages()) {
             CubesideClientFabric.messageQueue.add(componentIn);
             return Text.empty();
@@ -252,8 +252,8 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         return componentIn;
     }
 
-    @Inject(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"), cancellable = true)
-    private void addMessage(Text message, CallbackInfo ci) {
+    @Inject(method = "method_44811", at = @At("HEAD"), cancellable = true)
+    private void addMessage(Text message, MessageSignature messageSignature, MessageIndicator messageIndicator, CallbackInfo ci) {
         if (Configs.Generic.ClickableTpaMessage.getBooleanValue()) {
             if (message.getString().startsWith("Du kannst diese Anfrage mit /tpdeny ablehnen.") || message.getString().startsWith("Du kannst die Teleportationsanfrage mit /tpaccept annehmen.") || message.getString().startsWith("Du kannst die Anfrage mit /tpacancel ablehnen.")) {
                 ci.cancel();
