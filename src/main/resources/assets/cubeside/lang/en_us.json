@@ -1,5 +1,4 @@
 {
-  "title.cubeside.config": "Cubeside Mod Config",
   "category.cubeside.general": "General",
   "options.cubeside.chattimestamps": "Zeitstempel bei Chat Nachrichten",
   "options.cubeside.thirdpersonelytra": "Automatische Third Person Ansicht beim Elytra Flug",
@@ -25,5 +24,13 @@
   "options.cubeside.clickabletpamessage": "Anklickbare Teleportanfragen",
   "options.cubeside.tpasound": "Ton bei einer Teleportanfrage",
   "options.cubeside.removechristmaschest": "Weihnachtskisten Deaktivieren (Client muss neu gestartet werden.)",
-  "options.cubeside.gamemodeswitcher": "Gamemode Switcher (F3 + F4)"
+  "options.cubeside.gamemodeswitcher": "Gamemode Switcher (F3 + F4)",
+  "cubeside.gui.title.configs": "CubesideMod Config",
+  "cubeside.gui.button.config_gui.generic": "Allgemein",
+  "cubeside.gui.button.config_gui.chat": "Chat",
+  "cubeside.gui.button.config_gui.chunkloading": "Chunk Loading",
+  "cubeside.gui.button.config_gui.fun": "Fun Stuff",
+  "cubeside.gui.button.config_gui.fixes": "Fixes",
+  "cubeside.gui.button.config_gui.permissionsettings": "Permission Settings"
+
 }

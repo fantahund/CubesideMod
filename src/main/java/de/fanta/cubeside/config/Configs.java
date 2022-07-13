@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import de.fanta.cubeside.CubesideClientFabric;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
@@ -48,8 +49,8 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean ChatTimeStamps = new ConfigBoolean("ChatTimeStamps", false, Text.translatable("options.cubeside.chattimestamps").getString());
         public static final ConfigColor TimeStampColor = new ConfigColor("TimeStampColor", "#ffffff", Text.translatable("options.cubeside.timestampcolor").getString());
         public static final ConfigBoolean SaveMessagesToDatabase = new ConfigBoolean("SaveMessagesToDatabase", false, Text.translatable("options.cubeside.savemessagestodatabase").getString());
-        public static final ConfigInteger DaysTheMessagesAreStored = new ConfigInteger("DaysTheMessagesAreStored", 10, Text.translatable("options.cubeside.daysthemessagesarestored").getString());
-        public static final ConfigInteger ChatMessageLimit = new ConfigInteger("ChatMessageLimit", 100, Text.translatable("options.cubeside.chatlimit").getString());
+        public static final ConfigInteger DaysTheMessagesAreStored = new ConfigInteger("DaysTheMessagesAreStored", 10, 1, 30, true, Text.translatable("options.cubeside.daysthemessagesarestored").getString());
+        public static final ConfigInteger ChatMessageLimit = new ConfigInteger("ChatMessageLimit", 100, 1, Integer.MAX_VALUE, true, Text.translatable("options.cubeside.chatlimit").getString());
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 ChatTimeStamps,
@@ -63,7 +64,7 @@ public class Configs implements IConfigHandler {
     public static class ChunkLoading {
         public static final ConfigBoolean FullVerticalView = new ConfigBoolean("FullVerticalView", true, Text.translatable("options.cubeside.fullverticalview").getString());
         public static final ConfigBoolean UnloadChunks = new ConfigBoolean("UnloadChunks", true, Text.translatable("options.cubeside.unloadchunks").getString());
-        public static final ConfigInteger FakeViewDistance = new ConfigInteger("FakeViewDistance", 32, Text.translatable("options.cubeside.fakeviewdistance").getString());
+        public static final ConfigInteger FakeViewDistance = new ConfigInteger("FakeViewDistance", 32, 1, 64, true, Text.translatable("options.cubeside.fakeviewdistance").getString());
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 FullVerticalView,
@@ -138,6 +139,8 @@ public class Configs implements IConfigHandler {
             root.add("config_version", new JsonPrimitive(CONFIG_VERSION));
 
             JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
+
+            CubesideClientFabric.LOGGER.info("[CubesideMod] Config Saved");
         }
     }
 
