@@ -18,6 +18,7 @@
   "key.categories.cubeside": "Cubeside",
   "key.logical_zoom.zoom": "Toggle Zoom",
   "custombutton.cubeside.joincubeside": "Join Cubeside",
+  "custombutton.cubeside.options": "CSMod Settings",
   "options.cubeside.fullverticalview": "Volle vertikale Sichtweite",
   "options.cubeside.unloadchunks": "Chunks entladen",
   "options.cubeside.fakeviewdistance": "Fake Sichtweite",

@@ -18,7 +18,8 @@
     "MixinRemoveChristmasChest",
     "MixinRenderEntity",
     "MixinSliderControl",
-    "SignBlockEntityRendererMixin"
+    "SignBlockEntityRendererMixin",
+    "MixinCustomPauseMenu"
   ],
   "client": [],
   "injectors": {
