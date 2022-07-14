@@ -7,6 +7,7 @@ import de.fanta.cubeside.permission.PermissionHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +38,8 @@ public class CubesideClientFabric implements ClientModInitializer {
     private static boolean loadingMessages;
     public static boolean databaseinuse = false;
     public static List<Text> messageQueue = new ArrayList<>();
+
+    private static boolean xaeroFairPlay;
 
     @Override
     public void onInitializeClient() {
@@ -75,6 +78,8 @@ public class CubesideClientFabric implements ClientModInitializer {
                 e.printStackTrace();
             }
         }
+
+        xaeroFairPlay = FabricLoader.getInstance().isModLoaded("xaerominimapfair");
     }
 
     public String getRank() {
@@ -99,5 +104,9 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     public static boolean isLoadingMessages() {
         return loadingMessages;
+    }
+
+    public static boolean isXaeroFairPlay() {
+        return xaeroFairPlay;
     }
 }

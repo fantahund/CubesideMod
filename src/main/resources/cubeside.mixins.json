@@ -7,6 +7,7 @@
     "LogicalZoomMixin",
     "MixinChatHud",
     "MixinClientPlayNetHandler",
+    "MixinCustomPauseMenu",
     "MixinCustomTitleScreen",
     "MixinGameModeSelectionScreen",
     "MixinGameModeSwitch",
@@ -18,8 +19,9 @@
     "MixinRemoveChristmasChest",
     "MixinRenderEntity",
     "MixinSliderControl",
-    "SignBlockEntityRendererMixin",
-    "MixinCustomPauseMenu"
+    "MixinXaeroDisableCaveMap",
+    "MixinXaeroForceFairPlay",
+    "SignBlockEntityRendererMixin"
   ],
   "client": [],
   "injectors": {

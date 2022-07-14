@@ -64,6 +64,7 @@ public class Events {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
                 connect = false;
+                CubesideClientFabric.setRank(null);
             }
         });
 
