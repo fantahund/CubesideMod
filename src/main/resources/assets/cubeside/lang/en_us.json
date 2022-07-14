@@ -27,7 +27,7 @@
   "options.cubeside.removechristmaschest": "Weihnachtskisten Deaktivieren (Client muss neu gestartet werden.)",
   "options.cubeside.gamemodeswitcher": "Gamemode Switcher (F3 + F4)",
   "cubeside.gui.title.configs": "CubesideMod Config",
-  "cubeside.gui.button.config_gui.generic": "Allgemein",
+  "cubeside.gui.button.config_gui.generic": "Generic",
   "cubeside.gui.button.config_gui.chat": "Chat",
   "cubeside.gui.button.config_gui.chunkloading": "Chunk Loading",
   "cubeside.gui.button.config_gui.fun": "Fun Stuff",
