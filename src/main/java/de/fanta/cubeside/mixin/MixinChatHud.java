@@ -9,7 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
-import net.minecraft.network.message.MessageSignature;
+import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.ClickEvent;
@@ -48,12 +48,12 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     }
 
     @Shadow
-    protected abstract void addMessage(Text message, @Nullable MessageSignature messageSignature, int i, @Nullable MessageIndicator messageIndicator, boolean bl);
+    protected abstract void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh);
 
     @Shadow
     public abstract void addToMessageHistory(String message);
 
-    @ModifyVariable(method = "method_44811", at = @At("HEAD"), argsOnly = true)
+    @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
     private net.minecraft.text.Text modifyMessages(net.minecraft.text.Text componentIn) {
         if (CubesideClientFabric.isLoadingMessages()) {
             CubesideClientFabric.messageQueue.add(componentIn);
@@ -252,8 +252,8 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         return componentIn;
     }
 
-    @Inject(method = "method_44811", at = @At("HEAD"), cancellable = true)
-    private void addMessage(Text message, MessageSignature messageSignature, MessageIndicator messageIndicator, CallbackInfo ci) {
+    @Inject(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), cancellable = true)
+    private void addMessage(Text message, MessageSignatureData signature, MessageIndicator indicator, CallbackInfo ci) {
         if (Configs.Generic.ClickableTpaMessage.getBooleanValue()) {
             if (message.getString().startsWith("Du kannst diese Anfrage mit /tpdeny ablehnen.") || message.getString().startsWith("Du kannst die Teleportationsanfrage mit /tpaccept annehmen.") || message.getString().startsWith("Du kannst die Anfrage mit /tpacancel ablehnen.")) {
                 ci.cancel();
@@ -286,7 +286,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         this.addToMessageHistory(message);
     }
 
-    @ModifyConstant(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignature;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", constant = {@Constant(intValue = 100)})
+    @ModifyConstant(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", constant = {@Constant(intValue = 100)})
     private int replaceMessageLimit(int original) {
         return Configs.Chat.ChatMessageLimit.getIntegerValue();
     }
