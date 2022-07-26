@@ -278,7 +278,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
     @Override
     public void addStoredChatMessage(Text message) {
-        this.addMessage(message, null, 0, null, false);
+        this.addMessage(message, null, 0, new MessageIndicator(10631423, null, null, null), false);
     }
 
     @Override
