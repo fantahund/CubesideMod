@@ -78,15 +78,18 @@ public class ConfigGui extends GuiConfigsBase { //GuiBase.openGui(new ConfigGui(
     }
 
     @Override
-    protected void onSettingsChanged() {
-        ConfigManager.getInstance().onConfigsChanged(CubesideClientFabric.MODID);
-
-        if (this.hotkeyChangeListeners.size() > 0) {
-            InputEventHandler.getKeybindManager().updateUsedKeys();
+    public void removed() {
+        if (this.getListWidget().wereConfigsModified()) {
+            this.getListWidget().applyPendingModifications();
+            this.onSettingsChanged();
+            this.getListWidget().clearConfigsModifiedFlag();
+            Configs.saveToFile();
         }
 
         Configs.saveToFile();
+        this.client.keyboard.setRepeatEvents(false);
     }
+
 
     private static class ButtonListener implements IButtonActionListener {
         private final ConfigGui parent;
