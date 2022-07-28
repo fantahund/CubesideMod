@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.text.SimpleDateFormat;
@@ -50,8 +51,17 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     @Shadow
     protected abstract void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh);
 
+    @Redirect(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;logChatMessage(Lnet/minecraft/text/Text;Lnet/minecraft/client/gui/hud/MessageIndicator;)V"))
+    private void addMessage(ChatHud instance, Text message, MessageIndicator indicator) {
+        if (!CubesideClientFabric.isLoadingMessages()) {
+            logChatMessage(message, indicator);
+        }
+    }
+
     @Shadow
     public abstract void addToMessageHistory(String message);
+
+    @Shadow protected abstract void logChatMessage(Text message, @Nullable MessageIndicator indicator);
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
     private net.minecraft.text.Text modifyMessages(net.minecraft.text.Text componentIn) {

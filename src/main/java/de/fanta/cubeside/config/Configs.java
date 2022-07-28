@@ -32,6 +32,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean ClickableTpaMessage = new ConfigBoolean("ClickableTpaMessage", true, Text.translatable("options.cubeside.clickabletpamessage").getString());
         public static final ConfigBoolean TpaSound = new ConfigBoolean("TpaSound", true, Text.translatable("options.cubeside.tpasound").getString());
         public static final ConfigBoolean GamemodeSwitcher = new ConfigBoolean("GamemodeSwitcher", true, Text.translatable("options.cubeside.gamemodeswitcher").getString());
+        public static final ConfigBoolean ActionBarShadow = new ConfigBoolean("ActionBarShadow", true, Text.translatable("options.cubeside.actionbarshadow").getString());
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 ThirdPersonElytra,
@@ -41,7 +42,8 @@ public class Configs implements IConfigHandler {
                 AFKPling,
                 ClickableTpaMessage,
                 TpaSound,
-                GamemodeSwitcher
+                GamemodeSwitcher,
+                ActionBarShadow
         );
     }
 
