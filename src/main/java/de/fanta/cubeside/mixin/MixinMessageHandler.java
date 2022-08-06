@@ -21,7 +21,7 @@ public abstract class MixinMessageHandler {
         if (Configs.Fixes.KickByNotValidMessage.getBooleanValue()) {
             this.disconnect();
         } else {
-            CubesideClientFabric.LOGGER.log(Level.ERROR, Text.translatable("multiplayer.disconnect.chat_validation_failed"));
+            CubesideClientFabric.LOGGER.log(Level.ERROR, Text.translatable("multiplayer.disconnect.chat_validation_failed").getString());
         }
     }
 }
