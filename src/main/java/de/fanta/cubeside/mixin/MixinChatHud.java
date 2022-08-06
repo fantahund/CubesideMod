@@ -250,7 +250,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         if (Configs.Chat.ChatTimeStamps.getBooleanValue()) {
             MutableText component = Text.literal("");
             MutableText timestamp = Text.literal(getChatTimestamp() + " ");
-            timestamp.setStyle(Style.EMPTY.withColor(Configs.Chat.TimeStampColor.getColor().intValue)); //TODO Kp obd as geht
+            timestamp.setStyle(Style.EMPTY.withColor(Configs.Chat.TimeStampColor.getColor().intValue));
             component.append(timestamp);
             component.append(componentIn);
             addMessagetoDatabase(component);

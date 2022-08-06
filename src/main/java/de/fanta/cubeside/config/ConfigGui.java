@@ -2,9 +2,7 @@ package de.fanta.cubeside.config;
 
 import com.google.common.collect.ImmutableList;
 import de.fanta.cubeside.CubesideClientFabric;
-import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.config.IConfigBase;
-import fi.dy.masa.malilib.event.InputEventHandler;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
