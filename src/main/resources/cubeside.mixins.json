@@ -24,7 +24,9 @@
     "MixinXaeroForceFairPlay",
     "SignBlockEntityRendererMixin"
   ],
-  "client": [],
+  "client": [
+    "MixinMessageHandler"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

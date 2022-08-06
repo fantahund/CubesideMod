@@ -53,7 +53,6 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean SaveMessagesToDatabase = new ConfigBoolean("SaveMessagesToDatabase", false, Text.translatable("options.cubeside.savemessagestodatabase").getString());
         public static final ConfigInteger DaysTheMessagesAreStored = new ConfigInteger("DaysTheMessagesAreStored", 10, 1, 30, true, Text.translatable("options.cubeside.daysthemessagesarestored").getString());
         public static final ConfigInteger ChatMessageLimit = new ConfigInteger("ChatMessageLimit", 100, 1, Integer.MAX_VALUE, true, Text.translatable("options.cubeside.chatlimit").getString());
-
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 ChatTimeStamps,
                 TimeStampColor,
@@ -87,9 +86,12 @@ public class Configs implements IConfigHandler {
 
     public static class Fixes {
         public static final ConfigBoolean SimpleSignGlow = new ConfigBoolean("SimpleSignGlow", false, Text.translatable("options.cubeside.simplesignglow").getString());
+        public static final ConfigBoolean KickByNotValidMessage = new ConfigBoolean("KickByNotValidMessage", true, Text.translatable("options.cubeside.kickbynotvalidmessage").getString());
+
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                SimpleSignGlow
+                SimpleSignGlow,
+                KickByNotValidMessage
         );
     }
 
