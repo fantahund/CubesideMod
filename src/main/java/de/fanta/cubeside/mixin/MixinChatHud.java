@@ -281,7 +281,6 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
                 if (!CubesideClientFabric.databaseinuse) {
                     database.addCommand(message, client.getCurrentServerEntry().address.toLowerCase());
                 }
-
             }
         }
     }
