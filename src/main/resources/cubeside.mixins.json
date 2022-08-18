@@ -4,6 +4,7 @@
   "package": "de.fanta.cubeside.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "DurabilityViewerMixin",
     "InGameHudMixin",
     "LogicalZoomMixin",
     "MixinChatHud",

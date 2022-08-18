@@ -28,6 +28,11 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven {
+        name = 'Ladysnake Mods'
+        url = 'https://ladysnake.jfrog.io/artifactory/mods'
+    }
+    maven {url "https://minecraft.guntram.de/maven/"}
     mavenCentral()
     mavenLocal()
 }
@@ -55,6 +60,10 @@ dependencies {
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"
 
     implementation "org.joml:joml:1.10.2" // Needed for Sodium
+
+    modImplementation "de.guntram.mcmod:DurabilityViewer:${project.durabilityviewer_version}"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.0.1" // Needed for DurabilityViewer
+    modImplementation "dev.emi:trinkets:3.0.0" // Needed for DurabilityViewer
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
