@@ -21,8 +21,10 @@ public class DurabilityViewerMixin {
     @Redirect(method = "onRenderGameOverlayPost", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getEquippedStack(Lnet/minecraft/entity/EquipmentSlot;)Lnet/minecraft/item/ItemStack;"))
     public ItemStack onRenderGameOverlayPost(PlayerEntity instance, EquipmentSlot slot) {
         ItemStack itemStack = instance.getEquippedStack(slot);
-        if (itemStack.getItem() == Items.POLISHED_BLACKSTONE_BUTTON) {
-            itemStack = getItemStackfromNBT(itemStack, slot);
+        if (slot == EquipmentSlot.HEAD || slot == EquipmentSlot.CHEST || slot == EquipmentSlot.LEGS || slot == EquipmentSlot.FEET) {
+            if (itemStack.getItem() == Items.POLISHED_BLACKSTONE_BUTTON) {
+                itemStack = getItemStackfromNBT(itemStack, slot);
+            }
         }
         return itemStack;
     }
@@ -31,8 +33,8 @@ public class DurabilityViewerMixin {
         if (itemStack.hasNbt()) {
             NbtCompound nbt = itemStack.getNbt();
             NbtCompound display = null;
-            int durablility = 0;
-            int maxDurablility = 0;
+            int durablility = -1;
+            int maxDurablility = -1;
             if (nbt.get("display") != null) {
                 display = (NbtCompound) nbt.get("display");
             }
@@ -44,16 +46,30 @@ public class DurabilityViewerMixin {
                     MutableText mutableText = Text.Serializer.fromJson(string);
                     if (mutableText != null) {
                         String fullDurabilityString = mutableText.getString();
-                        String[] splitFull = fullDurabilityString.split(" ", 2);
-                        String durabilityString = Text.literal(splitFull[1]).getString();
-                        String[] splitDurability = durabilityString.split("/", 2);
-                        durablility = Integer.parseInt(splitDurability[0]);
-                        maxDurablility = Integer.parseInt(splitDurability[1]);
+                        if (fullDurabilityString.startsWith("Haltbarkeit:")) {
+                            String[] splitFull = fullDurabilityString.split(" ", 2);
+                            if (splitFull.length == 2) {
+                                String durabilityString = Text.literal(splitFull[1]).getString();
+                                String[] splitDurability = durabilityString.split("/", 2);
+                                if (splitDurability.length == 2) {
+                                    try {
+                                        durablility = Integer.parseInt(splitDurability[0]);
+                                        maxDurablility = Integer.parseInt(splitDurability[1]);
+                                    } catch (NumberFormatException ignore) {
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
 
+            if (durablility == -1 || maxDurablility == -1) {
+                return itemStack;
+            }
+
             ItemStack stack = null;
+
             if (slot == EquipmentSlot.HEAD) {
                 if (maxDurablility == 55) {
                     stack = new ItemStack(Items.LEATHER_HELMET);
