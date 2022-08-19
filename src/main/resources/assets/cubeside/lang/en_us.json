@@ -34,6 +34,7 @@
   "cubeside.gui.button.config_gui.chunkloading": "Chunk Loading",
   "cubeside.gui.button.config_gui.fun": "Fun Stuff",
   "cubeside.gui.button.config_gui.fixes": "Fixes",
-  "cubeside.gui.button.config_gui.permissionsettings": "Permission Settings"
+  "cubeside.gui.button.config_gui.permissionsettings": "Permission Settings",
+  "options.debugscreen": "Debug Screen"
 
 }
