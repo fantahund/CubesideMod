@@ -1,4 +1,4 @@
-Weitere erforderliche Mods: ModMenu, ClothConfig, FabricAPI
+Weitere erforderliche Mods: MaliLib, FabricAPI
 
 Eine Modbeschreibung findest du in unserem [Forum](https://cubeside.de/forum/thread/10959-fabric-mod-cubeside-mod/).
 
