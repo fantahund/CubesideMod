@@ -61,7 +61,8 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     @Shadow
     public abstract void addToMessageHistory(String message);
 
-    @Shadow protected abstract void logChatMessage(Text message, @Nullable MessageIndicator indicator);
+    @Shadow
+    protected abstract void logChatMessage(Text message, @Nullable MessageIndicator indicator);
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
     private net.minecraft.text.Text modifyMessages(net.minecraft.text.Text componentIn) {
@@ -70,19 +71,20 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
             return Text.empty();
         }
         if (Configs.PermissionSettings.AutoChat.getBooleanValue()) {
-            String s = componentIn.toString();
-            String[] arr = s.split(" ");
+            if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
+                String s = componentIn.toString();
+                String[] arr = s.split(" ");
 
-            if (arr.length >= 47) {
-                if ((arr[4].equals("color=gray,")) && (arr[28].equals("TextComponent{text='From")) && (arr[32].equals("color=light_purple,")) && (arr[46].equals("color=white,") || arr[46].equals("color=green,"))) {
-                    if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
+                if (arr.length >= 13) {
+                    if ((arr[4].equals("literal{From")) && (arr[5].equals("}[style={color=light_purple}],")) && (arr[13].contains("color=white") || arr[13].equals("color=green"))) {
                         if (client.player != null) {
-                            client.player.sendCommand("/r " + Configs.PermissionSettings.AutoChatAntwort.getStringValue());
+                            client.player.sendCommand("r " + Configs.PermissionSettings.AutoChatAntwort.getStringValue());
                         }
-                    } else {
-                        ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
+
                     }
                 }
+            } else {
+                ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
             }
         }
 
