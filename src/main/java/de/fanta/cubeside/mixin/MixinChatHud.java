@@ -71,20 +71,20 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
             return Text.empty();
         }
         if (Configs.PermissionSettings.AutoChat.getBooleanValue()) {
-            if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
-                String s = componentIn.toString();
-                String[] arr = s.split(" ");
+            String s = componentIn.toString();
+            String[] arr = s.split(" ");
 
-                if (arr.length >= 13) {
-                    if ((arr[4].equals("literal{From")) && (arr[5].equals("}[style={color=light_purple}],")) && (arr[13].contains("color=white") || arr[13].equals("color=green"))) {
-                        if (client.player != null) {
+            if (arr.length >= 13) {
+                if ((arr[4].equals("literal{From")) && (arr[5].equals("}[style={color=light_purple}],")) && (arr[13].contains("color=white") || arr[13].equals("color=green"))) {
+                    if (client.player != null) {
+                        if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
                             client.player.sendCommand("r " + Configs.PermissionSettings.AutoChatAntwort.getStringValue());
+                        } else {
+                            ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
                         }
-
                     }
+
                 }
-            } else {
-                ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
             }
         }
 
