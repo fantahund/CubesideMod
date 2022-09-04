@@ -77,10 +77,16 @@ public class Configs implements IConfigHandler {
     public static class Fun {
         public static final ConfigBoolean DropItemFancy = new ConfigBoolean("DropItemFancy", false, Text.translatable("options.cubeside.dropitemfancy").getString());
         public static final ConfigBoolean DisableChristmasChest = new ConfigBoolean("DisableChristmasChest", false, Text.translatable("options.cubeside.removechristmaschest").getString());
+        public static final ConfigBoolean RainbowHitBox = new ConfigBoolean("RainbowHitBox", false, Text.translatable("options.cubeside.rainbowhitbox").getString());
+        public static final ConfigColor HitBoxColor = new ConfigColor("HitBoxColor", "#ffffff", Text.translatable("options.cubeside.hitboxcolor").getString());
+        public static final ConfigBoolean HitBoxDirection = new ConfigBoolean("HitBoxDirection", true, Text.translatable("options.cubeside.hitboxdirection").getString());
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 DropItemFancy,
-                DisableChristmasChest
+                DisableChristmasChest,
+                RainbowHitBox,
+                HitBoxColor,
+                HitBoxDirection
         );
     }
 

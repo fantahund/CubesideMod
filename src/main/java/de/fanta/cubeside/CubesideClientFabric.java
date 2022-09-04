@@ -41,6 +41,8 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     private static boolean xaeroFairPlay;
 
+    private static long time;
+
     @Override
     public void onInitializeClient() {
         try {
@@ -80,6 +82,9 @@ public class CubesideClientFabric implements ClientModInitializer {
         }
 
         xaeroFairPlay = FabricLoader.getInstance().isModLoaded("xaerominimapfair");
+
+        this.time = 0;
+        this.restartTask(50);
     }
 
     public String getRank() {
@@ -108,5 +113,24 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     public static boolean isXaeroFairPlay() {
         return xaeroFairPlay;
+    }
+
+    public void restartTask(long l) {
+        Thread timer = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(l);
+                    time++;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    break;
+                }
+            }
+        });
+        timer.start();
+    }
+
+    public static long getTime() {
+        return time;
     }
 }
