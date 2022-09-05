@@ -33,14 +33,19 @@ public abstract class MixinCustomHitBox {
     private static void renderHitbox(MatrixStack matrices, VertexConsumer vertices, Entity entity, float tickDelta) {
         Color color;
         if (Configs.Fun.RainbowHitBox.getBooleanValue()) {
-            color = ColorUtils.getColor(CubesideClientFabric.getTime(), 0.1);
+            if (Configs.Fun.RainbowHitBoxPastel.getBooleanValue()) {
+                int[] baseColors = new int[] { 0xff7575, 0xff9e75, 0xffdf75, 0x9eff75, 0x7598ff, 0xb875ff }; //TODO Read from Config Color List. (Wait for MaLiLib update)
+                color = ColorUtils.getColorGradient(CubesideClientFabric.getTime(), Configs.Fun.RainbowHitBoxSpeed.getDoubleValue(), baseColors);
+            } else {
+                color = ColorUtils.getColor(CubesideClientFabric.getTime(), Configs.Fun.RainbowHitBoxSpeed.getDoubleValue());
+            }
         } else {
             Color4f color4f = Configs.Fun.HitBoxColor.getColor();
             color = new Color(color4f.r, color4f.g, color4f.b);
         }
 
         Box box = entity.getBoundingBox().offset(-entity.getX(), -entity.getY(), -entity.getZ());
-        WorldRenderer.drawBox(matrices, vertices, box, color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 1.0F);
+        WorldRenderer.drawBox(matrices, vertices, box, color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, 0.2F);
 
         if (entity instanceof EnderDragonEntity enderDragon) {
             double d = -MathHelper.lerp(tickDelta, enderDragon.lastRenderX, enderDragon.getX());
