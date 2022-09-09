@@ -10,9 +10,11 @@ import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigColor;
+import fi.dy.masa.malilib.config.options.ConfigColorList;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigInteger;
 import fi.dy.masa.malilib.config.options.ConfigString;
+import fi.dy.masa.malilib.util.Color4f;
 import fi.dy.masa.malilib.util.FileUtils;
 import fi.dy.masa.malilib.util.JsonUtils;
 import net.minecraft.text.Text;
@@ -79,8 +81,9 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean DropItemFancy = new ConfigBoolean("DropItemFancy", false, Text.translatable("options.cubeside.dropitemfancy").getString());
         public static final ConfigBoolean DisableChristmasChest = new ConfigBoolean("DisableChristmasChest", false, Text.translatable("options.cubeside.removechristmaschest").getString());
         public static final ConfigBoolean RainbowHitBox = new ConfigBoolean("RainbowHitBox", false, Text.translatable("options.cubeside.rainbowhitbox").getString());
-        public static final ConfigBoolean RainbowHitBoxPastel = new ConfigBoolean("RainbowHitBoxPastel", false, Text.translatable("options.cubeside.rainbowhitboxpastel").getString());//TODO Replace with Color list
+        public static final ConfigColorList RainbowHitBoxColorList = new ConfigColorList("RainbowHitBoxColorList", ImmutableList.of(Color4f.fromColor(16711684), Color4f.fromColor(16754176), Color4f.fromColor(16769280), Color4f.fromColor(65305), Color4f.fromColor(35071), Color4f.fromColor(13959423)), Text.translatable("options.cubeside.rainbowhitboxcolorlist").getString());
         public static final ConfigDouble RainbowHitBoxSpeed = new ConfigDouble("RainbowHitBoxSpeed", 0.1, 0.0, 1, true, Text.translatable("options.cubeside.rainbowhitboxspeed").getString());
+        public static final ConfigDouble HitBoxVisibility = new ConfigDouble("HitBoxVisibility", 1, 0.0, 1, true, Text.translatable("options.cubeside.hitboxvisibility").getString());
         public static final ConfigColor HitBoxColor = new ConfigColor("HitBoxColor", "#ffffff", Text.translatable("options.cubeside.hitboxcolor").getString());
         public static final ConfigBoolean HitBoxDirection = new ConfigBoolean("HitBoxDirection", true, Text.translatable("options.cubeside.hitboxdirection").getString());
 
@@ -88,9 +91,10 @@ public class Configs implements IConfigHandler {
                 DropItemFancy,
                 DisableChristmasChest,
                 RainbowHitBox,
-                RainbowHitBoxPastel,
+                RainbowHitBoxColorList,
                 RainbowHitBoxSpeed,
                 HitBoxColor,
+                HitBoxVisibility,
                 HitBoxDirection
         );
     }
