@@ -1,6 +1,6 @@
 package de.fanta.cubeside.mixin;
 
-import de.fanta.cubeside.Config;
+import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ItemEntityRotator;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -38,8 +38,12 @@ import java.util.Random;
 @Mixin(ItemEntityRenderer.class)
 public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity> {
     private final Random random = new Random();
-    @Shadow @Final private ItemRenderer itemRenderer;
-    @Shadow protected abstract int getRenderedAmount(ItemStack stack);
+    @Shadow
+    @Final
+    private ItemRenderer itemRenderer;
+
+    @Shadow
+    protected abstract int getRenderedAmount(ItemStack stack);
 
     private MixinItemEntityRenderer(EntityRendererFactory.Context dispatcher) {
         super(dispatcher);
@@ -47,14 +51,14 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
 
     @Inject(at = @At("RETURN"), method = "<init>")
     private void onConstructor(EntityRendererFactory.Context context, CallbackInfo ci) {
-        if (Config.dropItemFancy) {
+        if (Configs.Fun.DropItemFancy.getBooleanValue()) {
             this.shadowRadius = 0;
         }
     }
 
     @Inject(at = @At("HEAD"), method = "render", cancellable = true)
     private void render(ItemEntity dropped, float f, float partialTicks, MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo callback) {
-        if (Config.dropItemFancy) {
+        if (Configs.Fun.DropItemFancy.getBooleanValue()) {
             ItemStack itemStack = dropped.getStack();
 
             if (itemStack.getItem() == Items.REPEATER || itemStack.getItem() == Items.COMPARATOR) {

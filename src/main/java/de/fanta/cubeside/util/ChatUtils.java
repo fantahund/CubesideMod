@@ -28,7 +28,6 @@ public class ChatUtils {
             }
         });
         this.timer.start();
-
     }
 
     public void stopTimer() {

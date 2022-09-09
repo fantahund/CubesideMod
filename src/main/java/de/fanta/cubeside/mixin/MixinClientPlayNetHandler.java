@@ -1,6 +1,6 @@
 package de.fanta.cubeside.mixin;
 
-import de.fanta.cubeside.Config;
+import de.fanta.cubeside.config.Configs;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.ChunkLoadDistanceS2CPacket;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
@@ -16,23 +16,23 @@ public class MixinClientPlayNetHandler {
 
     @Inject(method = "onUnloadChunk", at = {@At("HEAD")}, cancellable = true)
     private void onUnload(UnloadChunkS2CPacket packet, CallbackInfo ci) {
-        if (!Config.unloadchunks) {
+        if (!Configs.ChunkLoading.UnloadChunks.getBooleanValue()) {
             ci.cancel();
         }
     }
 
     @Redirect(method = "onChunkLoadDistance", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/play/ChunkLoadDistanceS2CPacket;getDistance()I"))
     private int onViewDistChange(ChunkLoadDistanceS2CPacket instance) {
-        if (Config.fullverticalview) {
-            return Config.fakeviewdistance;
+        if (Configs.ChunkLoading.FullVerticalView.getBooleanValue()) {
+            return Configs.ChunkLoading.FakeViewDistance.getIntegerValue();
         }
         return instance.getDistance();
     }
 
     @Redirect(method = "onGameJoin", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/packet/s2c/play/GameJoinS2CPacket;viewDistance()I"))
     private int onJoinGame(GameJoinS2CPacket instance) {
-        if (Config.fullverticalview) {
-            return Config.fakeviewdistance;
+        if (Configs.ChunkLoading.FullVerticalView.getBooleanValue()) {
+            return Configs.ChunkLoading.FakeViewDistance.getIntegerValue();
         }
         return instance.viewDistance();
     }

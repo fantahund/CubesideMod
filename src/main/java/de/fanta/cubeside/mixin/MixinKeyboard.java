@@ -14,4 +14,9 @@ public class MixinKeyboard {
     private int narratorkey(int old) {
         return KeyBindingHelper.getBoundKeyOf(KeyBinds.NARRATOR_KEYBINDING).getCode();
     }
+
+    @ModifyConstant(method = "onKey",  constant = @Constant(intValue = 292))
+    private int f3Key(int old) {
+        return KeyBindingHelper.getBoundKeyOf(KeyBinds.F3_KEYBINDING).getCode();
+    }
 }

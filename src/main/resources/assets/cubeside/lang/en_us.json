@@ -1,5 +1,4 @@
 {
-  "title.cubeside.config": "Cubeside Mod Config",
   "category.cubeside.general": "General",
   "options.cubeside.chattimestamps": "Zeitstempel bei Chat Nachrichten",
   "options.cubeside.thirdpersonelytra": "Automatische Third Person Ansicht beim Elytra Flug",
@@ -13,17 +12,44 @@
   "options.cubeside.showinvisibleentitiesinspectator": "Zeige unsichtbare Entities im Zuschauermodus",
   "options.cubeside.simplesignglow": "Einfaches Schilder leuchten (Leistungs Fix)",
   "options.cubeside.afkpling": "AFK Pling",
+  "options.cubeside.actionbarshadow": "Textschatten in der ActionBar",
+  "options.cubeside.kickbynotvalidmessage": "Kick beim überprüfen von Nachrichten",
+
+  "options.cubeside.rainbowentityhitbox": "Regenbogen Entity Hitbox",
+  "options.cubeside.rainbowentityhitboxcolorlist": "Regenbogen Entity Hitbox Farben",
+  "options.cubeside.entityhitboxvisibility": "Entity Hitbox Sichtbarkeit",
+  "options.cubeside.rainbowentityhitboxspeed": "Regenbogen Entity Hitbox Geschwindigkeit",
+  "options.cubeside.entityhitboxcolor": "Entity Hitbox farbe",
+  "options.cubeside.entityhitboxdirection": "Entity HitBox Blickrichtung und Augenhöhe",
+
+  "options.cubeside.rainbowblockhitbox": "Regenbogen Block Hitbox",
+  "options.cubeside.rainbowblockhitboxcolorlist": "Regenbogen Block Hitbox Farben",
+  "options.cubeside.blockhitboxvisibility": "Block Hitbox Sichtbarkeit",
+  "options.cubeside.rainbowblockhitboxspeed": "Regenbogen Block Hitbox Geschwindigkeit",
+  "options.cubeside.blockhitboxcolor": "Block Hitbox farbe",
+
   "key.cubeside.autochat": "Auto Chat (Staff)",
   "key.cubeside.gama": "Helligkeit anpassen",
   "key.cubeside.showentitiesinspectator": "Zeige unsichtbare Entities im Zuschauer Modus",
   "key.categories.cubeside": "Cubeside",
   "key.logical_zoom.zoom": "Toggle Zoom",
   "custombutton.cubeside.joincubeside": "Join Cubeside",
+  "custombutton.cubeside.options": "CSMod Settings",
   "options.cubeside.fullverticalview": "Volle vertikale Sichtweite",
   "options.cubeside.unloadchunks": "Chunks entladen",
   "options.cubeside.fakeviewdistance": "Fake Sichtweite",
   "options.cubeside.clickabletpamessage": "Anklickbare Teleportanfragen",
   "options.cubeside.tpasound": "Ton bei einer Teleportanfrage",
   "options.cubeside.removechristmaschest": "Weihnachtskisten Deaktivieren (Client muss neu gestartet werden.)",
-  "options.cubeside.gamemodeswitcher": "Gamemode Switcher (F3 + F4)"
+  "options.cubeside.gamemodeswitcher": "Gamemode Switcher (F3 + F4)",
+  "cubeside.gui.title.configs": "CubesideMod Config",
+  "cubeside.gui.button.config_gui.generic": "Generic",
+  "cubeside.gui.button.config_gui.chat": "Chat",
+  "cubeside.gui.button.config_gui.chunkloading": "Chunk Loading",
+  "cubeside.gui.button.config_gui.fun": "Fun Stuff",
+  "cubeside.gui.button.config_gui.hitbox": "HitBox",
+  "cubeside.gui.button.config_gui.fixes": "Fixes",
+  "cubeside.gui.button.config_gui.permissionsettings": "Permission Settings",
+  "options.debugscreen": "Debug Screen"
+
 }

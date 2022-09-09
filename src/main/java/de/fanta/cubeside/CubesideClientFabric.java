@@ -1,11 +1,13 @@
 package de.fanta.cubeside;
 
+import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.permission.PermissionHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -37,6 +39,10 @@ public class CubesideClientFabric implements ClientModInitializer {
     public static boolean databaseinuse = false;
     public static List<Text> messageQueue = new ArrayList<>();
 
+    private static boolean xaeroFairPlay;
+
+    private static long time;
+
     @Override
     public void onInitializeClient() {
         try {
@@ -46,7 +52,10 @@ public class CubesideClientFabric implements ClientModInitializer {
             databaseinuse = true;
         }
 
-        Config.deserialize();
+        //Config.deserialize();
+
+        //Configs.saveToFile();
+        Configs.loadFromFile();
 
         KeyBinds keyBinds = new KeyBinds();
         keyBinds.initKeys();
@@ -65,12 +74,17 @@ public class CubesideClientFabric implements ClientModInitializer {
 
         if (!databaseinuse) {
             try {
-                getDatabase().deleteOldMessages(Config.daystheMessagesareStored);
-                getDatabase().deleteOldCommands(Config.daystheMessagesareStored);
+                getDatabase().deleteOldMessages(Configs.Chat.DaysTheMessagesAreStored.getIntegerValue());
+                getDatabase().deleteOldCommands(Configs.Chat.DaysTheMessagesAreStored.getIntegerValue());
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
+
+        xaeroFairPlay = FabricLoader.getInstance().isModLoaded("xaerominimapfair");
+
+        this.time = 0;
+        this.restartTask(50);
     }
 
     public String getRank() {
@@ -95,5 +109,28 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     public static boolean isLoadingMessages() {
         return loadingMessages;
+    }
+
+    public static boolean isXaeroFairPlay() {
+        return xaeroFairPlay;
+    }
+
+    public void restartTask(long l) {
+        Thread timer = new Thread(() -> {
+            while (true) {
+                try {
+                    Thread.sleep(l);
+                    time++;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    break;
+                }
+            }
+        });
+        timer.start();
+    }
+
+    public static long getTime() {
+        return time;
     }
 }

@@ -1,6 +1,6 @@
 package de.fanta.cubeside.mixin;
 
-import de.fanta.cubeside.Config;
+import de.fanta.cubeside.config.Configs;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,9 +14,9 @@ public abstract class MixinRemoveChristmasChest {
     @Shadow
     private boolean christmas;
 
-    @Inject(method="<init>", at=@At("TAIL"))
+    @Inject(method = "<init>", at = @At("TAIL"))
     public void ChestBlockEntityRenderer(BlockEntityRendererFactory.Context ctx, CallbackInfo ci) {
-        if (Config.removeChristmasChest) {
+        if (Configs.Fun.DisableChristmasChest.getBooleanValue()) {
             this.christmas = false;
         }
     }

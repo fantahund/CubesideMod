@@ -34,7 +34,7 @@ public class PermissionHandler {
     public PermissionHandler() {
         this.minRequiredPermission = new HashMap<>();
         //Player
-
+        minRequiredPermission.put("xareomap", PLAYER);
         //VIP
 
         //VETERAN
@@ -54,7 +54,7 @@ public class PermissionHandler {
 
     public boolean hasPermission(String rank, String permission) {
         if (rank == null) {
-            rank = "player";
+            return false;
         }
 
 

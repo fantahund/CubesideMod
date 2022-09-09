@@ -17,17 +17,14 @@
     "client": [
       "de.fanta.cubeside.CubesideClientFabric"
     ],
-    "modmenu": [ "de.fanta.cubeside.ConfigMenu" ]
+    "modmenu": [ "de.fanta.cubeside.config.ModMenuImpl" ]
   },
   "mixins": [ "cubeside.mixins.json" ],
   "accessWidener" : "cubeside.accesswidener",
   "depends": {
     "fabricloader": ">=0.14.6",
     "fabric": "*",
-    "minecraft": "*"
-  },
-  "suggests": {
-    "modmenu": "*",
-    "cloth-config2": "*"
+    "minecraft": "*",
+    "malilib": ">=0.13.1"
   }
 }
