@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 import java.awt.*;
+import java.util.List;
 
 @Mixin(EntityRenderDispatcher.class)
 public abstract class MixinCustomHitBox {
@@ -32,15 +33,19 @@ public abstract class MixinCustomHitBox {
     @Overwrite
     private static void renderHitbox(MatrixStack matrices, VertexConsumer vertices, Entity entity, float tickDelta) {
         Color color;
-        if (Configs.Fun.RainbowHitBox.getBooleanValue()) {
-            color = ColorUtils.getColorGradient(CubesideClientFabric.getTime(), Configs.Fun.RainbowHitBoxSpeed.getDoubleValue(), Configs.Fun.RainbowHitBoxColorList.getColors());
+        if (Configs.HitBox.RainbowEntityHitBox.getBooleanValue()) {
+            List<Color4f> color4fList = Configs.HitBox.RainbowEntityHitBoxColorList.getColors();
+            if (color4fList.isEmpty()) {
+                color4fList = Configs.HitBox.RainbowEntityHitBoxColorList.getDefaultColors();
+            }
+            color = ColorUtils.getColorGradient(CubesideClientFabric.getTime(), Configs.HitBox.RainbowEntityHitBoxSpeed.getDoubleValue(), color4fList);
         } else {
-            Color4f color4f = Configs.Fun.HitBoxColor.getColor();
+            Color4f color4f = Configs.HitBox.EntityHitBoxColor.getColor();
             color = new Color(color4f.r, color4f.g, color4f.b);
         }
 
         Box box = entity.getBoundingBox().offset(-entity.getX(), -entity.getY(), -entity.getZ());
-        WorldRenderer.drawBox(matrices, vertices, box, color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, (float) Configs.Fun.HitBoxVisibility.getDoubleValue());
+        WorldRenderer.drawBox(matrices, vertices, box, color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, (float) Configs.HitBox.EntityHitBoxVisibility.getDoubleValue());
 
         if (entity instanceof EnderDragonEntity enderDragon) {
             double d = -MathHelper.lerp(tickDelta, enderDragon.lastRenderX, enderDragon.getX());
@@ -53,17 +58,17 @@ public abstract class MixinCustomHitBox {
                 double h = e + MathHelper.lerp(tickDelta, enderDragonPart.lastRenderY, enderDragonPart.getY());
                 double i = f + MathHelper.lerp(tickDelta, enderDragonPart.lastRenderZ, enderDragonPart.getZ());
                 matrices.translate(g, h, i);
-                if (!Configs.Fun.RainbowHitBox.getBooleanValue()) {
-                    if (Configs.Fun.HitBoxColor.getColor().intValue == 16777215) {
+                if (!Configs.HitBox.RainbowEntityHitBox.getBooleanValue()) {
+                    if (Configs.HitBox.EntityHitBoxColor.getColor().intValue == 16777215) {
                         color = new Color(64, 255, 0);
                     }
                 }
-                WorldRenderer.drawBox(matrices, vertices, enderDragonPart.getBoundingBox().offset(-enderDragonPart.getX(), -enderDragonPart.getY(), -enderDragonPart.getZ()), color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, (float) Configs.Fun.HitBoxVisibility.getDoubleValue());
+                WorldRenderer.drawBox(matrices, vertices, enderDragonPart.getBoundingBox().offset(-enderDragonPart.getX(), -enderDragonPart.getY(), -enderDragonPart.getZ()), color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, (float) Configs.HitBox.EntityHitBoxVisibility.getDoubleValue());
                 matrices.pop();
             }
         }
 
-        if (Configs.Fun.HitBoxDirection.getBooleanValue()) {
+        if (Configs.HitBox.EntityHitBoxDirection.getBooleanValue()) {
             if (entity instanceof LivingEntity) {
                 WorldRenderer.drawBox(matrices, vertices, box.minX, entity.getStandingEyeHeight() - 0.01F, box.minZ, box.maxX, entity.getStandingEyeHeight() + 0.01F, box.maxZ, 1.0F, 0.0F, 0.0F, 1.0F);
             }

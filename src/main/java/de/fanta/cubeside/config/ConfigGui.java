@@ -64,6 +64,8 @@ public class ConfigGui extends GuiConfigsBase { //GuiBase.openGui(new ConfigGui(
             configs = Configs.ChunkLoading.OPTIONS;
         } else if (tab == ConfigGuiTab.FUN) {
             configs = Configs.Fun.OPTIONS;
+        } else if (tab == ConfigGuiTab.HITBOX) {
+            configs = Configs.HitBox.OPTIONS;
         } else if (tab == ConfigGuiTab.FIXES) {
             configs = Configs.Fixes.OPTIONS;
         } else if (tab == ConfigGuiTab.PERMISSIONSETTINGS) {
@@ -113,6 +115,7 @@ public class ConfigGui extends GuiConfigsBase { //GuiBase.openGui(new ConfigGui(
         CHAT("cubeside.gui.button.config_gui.chat"),
         CHUNKLOADING("cubeside.gui.button.config_gui.chunkloading"),
         FUN("cubeside.gui.button.config_gui.fun"),
+        HITBOX("cubeside.gui.button.config_gui.hitbox"),
         FIXES("cubeside.gui.button.config_gui.fixes"),
         PERMISSIONSETTINGS("cubeside.gui.button.config_gui.permissionsettings");
 

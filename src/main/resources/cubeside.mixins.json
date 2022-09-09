@@ -21,6 +21,7 @@
     "MixinRemoveChristmasChest",
     "MixinRenderEntity",
     "MixinSliderControl",
+    "MixinWorldRenderer",
     "MixinXaeroDisableCaveMap",
     "MixinXaeroForceFairPlay",
     "SignBlockEntityRendererMixin"

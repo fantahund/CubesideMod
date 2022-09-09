@@ -11,9 +11,6 @@ public class ColorUtils {
     }
 
     public static Color getColorGradient(long time, double speed, List<Color4f> baseColors) {
-        if (baseColors.isEmpty()) {
-            baseColors = Configs.Fun.RainbowHitBoxColorList.getDefaultColors();
-        }
         int colorCount = baseColors.size();
         int v = Math.floorMod((int) (time * speed * 21), colorCount * 100);
         int step = v / 100;
