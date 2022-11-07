@@ -6,12 +6,17 @@ import com.mojang.brigadier.CommandDispatcher;
 import de.fanta.cubeside.util.ChatSkullAPI.ChatSkull;
 import de.fanta.cubeside.util.ChatUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.world.GameMode;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static com.mojang.brigadier.arguments.StringArgumentType.getString;
 import static com.mojang.brigadier.arguments.StringArgumentType.string;
@@ -19,6 +24,9 @@ import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.arg
 import static net.fabricmc.fabric.api.client.command.v2.ClientCommandManager.literal;
 
 public class Commands {
+
+    private static boolean teleport = false;
+    private static final ArrayList<String> playerList = new ArrayList<>();
 
     private static final Ordering<PlayerListEntry> ENTRY_ORDERING = Ordering.from((playerListEntry, playerListEntry2) -> {
         Team team = playerListEntry.getScoreboardTeam();
@@ -34,9 +42,7 @@ public class Commands {
         }
 
         dispatcher.register(literal("addskulltolore")
-                .then(
-                        argument("player", string())
-                                .executes(context -> {
+                .then(argument("player", string()).executes(context -> {
                                     if (CubesideClientFabric.hasPermission("cubeside.addskulltolore")) {
                                         ChatSkull.setItemLore(getString(context, "player"));
                                     } else {
@@ -58,6 +64,77 @@ public class Commands {
                     return 1;
                 }));
 
+        dispatcher.register(literal("afkcheck")
+                .then(argument("status", string()).executes(context -> {
+                    if (!CubesideClientFabric.hasPermission("cubeside.afkcheck")) {
+                        ChatUtils.sendErrorMessage("Keine Berechtigung!");
+                        return 1;
+                    }
+
+                    String status = getString(context, "status");
+                    switch (status) {
+                        case "start":
+                            if (teleport) {
+                                ChatUtils.sendErrorMessage("AFK Check bereits aktiv.");
+                                return 1;
+                            }
+                            Collection<String> admins = (Arrays.asList("Eiki", "Brokkonaut", "jonibohni", "_Scorcho", "Starjon"));
+                            ClientPlayNetworkHandler clientPlayNetworkHandler = context.getSource().getPlayer().networkHandler;
+                            List<PlayerListEntry> list = ENTRY_ORDERING.sortedCopy(clientPlayNetworkHandler.getPlayerList());
+                            for (PlayerListEntry playerListEntry : list) {
+                                if (playerListEntry != null) {
+                                    String playername = playerListEntry.getProfile().getName();
+                                    if (!Objects.equals(playername, MinecraftClient.getInstance().player.getName().getString()) && !admins.contains(playername)) {
+                                        playerList.add(playername);
+                                    }
+                                }
+                            }
+
+                            if (playerList.isEmpty()) {
+                                ChatUtils.sendErrorMessage("Es ist kein Spieler online");
+                                break;
+                            }
+
+                            teleport = true;
+                            String teleportPlayer = playerList.get(0);
+                            MinecraftClient.getInstance().player.sendCommand("tt p " + teleportPlayer);
+                            ChatUtils.sendNormalMessage("Du wurdest zu " + teleportPlayer + " teleportiert.");
+                            playerList.remove(teleportPlayer);
+                            break;
+                        case "next":
+                            if (teleport) {
+                                if (!playerList.isEmpty()) {
+                                    String portPlayer = playerList.get(0);
+                                    MinecraftClient.getInstance().player.sendCommand("tt p " + portPlayer);
+                                    ChatUtils.sendNormalMessage("Du wurdest zu " + portPlayer + " teleportiert.");
+                                    playerList.remove(portPlayer);
+                                } else {
+                                    ChatUtils.sendNormalMessage("Du hast dich zu allen Spielern Teleportiert.");
+                                    teleport = false;
+                                }
+                            } else {
+                                ChatUtils.sendErrorMessage("AFKCheck wurde nicht gestartet!");
+                            }
+                            break;
+                        case "stop":
+                            if (teleport) {
+                                playerList.clear();
+                                teleport = false;
+                                ChatUtils.sendNormalMessage("AFK Check gestoppt.");
+                            } else {
+                                ChatUtils.sendErrorMessage("Aktuell ist kein AFK Check gestartet!");
+                            }
+                            break;
+                        default:
+                            ChatUtils.sendErrorMessage("/afkcheck [start|next|stop]");
+                    }
+                    return 1;
+                }).suggests(((context, builder) -> {
+                    builder.suggest("start");
+                    builder.suggest("next");
+                    builder.suggest("stop");
+                    return builder.buildFuture();
+                }))));
     }
 
 }

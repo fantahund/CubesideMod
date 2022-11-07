@@ -46,6 +46,7 @@ public class PermissionHandler {
 
         //STAFF
         minRequiredPermission.put("cubeside.autochat", STAFF);
+        minRequiredPermission.put("cubeside.afkcheck", STAFF);
 
         //ADMIN
 
