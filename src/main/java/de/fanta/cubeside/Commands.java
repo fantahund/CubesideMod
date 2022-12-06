@@ -79,7 +79,7 @@ public class Commands {
                                 ChatUtils.sendErrorMessage("AFK Check bereits aktiv.");
                                 return 1;
                             }
-                            Collection<String> admins = (Arrays.asList("Eiki", "Brokkonaut", "jonibohni", "_Scorcho", "Starjon"));
+                            Collection<String> admins = (Arrays.asList("Eiki", "Brokkonaut", "jonibohni", "_Scorcho", "Starjon", "Becky0810", "Scoptixxx"));
                             ClientPlayNetworkHandler clientPlayNetworkHandler = context.getSource().getPlayer().networkHandler;
                             List<PlayerListEntry> list = ENTRY_ORDERING.sortedCopy(clientPlayNetworkHandler.getPlayerList());
                             for (PlayerListEntry playerListEntry : list) {
@@ -98,7 +98,7 @@ public class Commands {
 
                             teleport = true;
                             String teleportPlayer = playerList.get(0);
-                            MinecraftClient.getInstance().player.sendMessage(Text.literal("tt p " + teleportPlayer));
+                            MinecraftClient.getInstance().player.networkHandler.sendCommand("tt p " + teleportPlayer);
                             ChatUtils.sendNormalMessage("Du wurdest zu " + teleportPlayer + " teleportiert.");
                             playerList.remove(teleportPlayer);
                             break;
@@ -106,7 +106,7 @@ public class Commands {
                             if (teleport) {
                                 if (!playerList.isEmpty()) {
                                     String portPlayer = playerList.get(0);
-                                    MinecraftClient.getInstance().player.sendMessage(Text.literal("tt p " + portPlayer));
+                                    MinecraftClient.getInstance().player.networkHandler.sendCommand("tt p " + portPlayer);
                                     ChatUtils.sendNormalMessage("Du wurdest zu " + portPlayer + " teleportiert.");
                                     playerList.remove(portPlayer);
                                 } else {
