@@ -51,10 +51,6 @@ public class CubesideClientFabric implements ClientModInitializer {
             LOGGER.log(Level.INFO, "Du hast scheinbar mehrere Minecraft Instanzen am laufen. Chat & Commands werden nicht gespeichert oder geladen!");
             databaseinuse = true;
         }
-
-        //Config.deserialize();
-
-        //Configs.saveToFile();
         Configs.loadFromFile();
 
         KeyBinds keyBinds = new KeyBinds();
@@ -83,7 +79,7 @@ public class CubesideClientFabric implements ClientModInitializer {
 
         xaeroFairPlay = FabricLoader.getInstance().isModLoaded("xaerominimapfair");
 
-        this.time = 0;
+        time = 0;
         this.restartTask(50);
     }
 

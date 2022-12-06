@@ -27,8 +27,7 @@
     "SignBlockEntityRendererMixin"
   ],
   "client": [
-    "MixinCustomHitBox",
-    "MixinMessageHandler"
+    "MixinCustomHitBox"
   ],
   "injectors": {
     "defaultRequire": 1

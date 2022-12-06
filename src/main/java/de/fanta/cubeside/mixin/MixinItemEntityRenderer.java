@@ -21,10 +21,10 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.tag.FluidTags;
+import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.shape.VoxelShape;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -103,7 +103,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
             // Give all non-flat items a 90* spin
             if (!renderBlockFlat) {
                 matrix.translate(0, .185, .0);
-                matrix.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(1.571F));
+                matrix.multiply(RotationAxis.POSITIVE_X.rotation(1.571F));
                 matrix.translate(0, -.185, -.0);
             }
 
@@ -116,14 +116,14 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
                 if (!renderBlockFlat) {
                     // rotate renderer
                     matrix.translate(0, .185, .0);
-                    matrix.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(rotation));
+                    matrix.multiply(RotationAxis.POSITIVE_Z.rotation(rotation));
                     matrix.translate(0, -.185, .0);
 
                     // save rotation in entity
                     rotator.setRotation(new Vec3d(0, 0, rotation));
                 } else {
                     // rotate renderer
-                    matrix.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(rotation));
+                    matrix.multiply(RotationAxis.POSITIVE_Y.rotation(rotation));
 
                     // save rotation in entity
                     rotator.setRotation(new Vec3d(0, rotation, 0));
@@ -144,7 +144,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
             // Carrots/Potatoes/Redstone/other crops on ground
             else if (dropped.getStack().getItem() instanceof AliasedBlockItem) {
                 matrix.translate(0, .185, .0);
-                matrix.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) rotator.getRotation().z));
+                matrix.multiply(RotationAxis.POSITIVE_Z.rotation((float) rotator.getRotation().z));
                 matrix.translate(0, -.185, .0);
 
                 // Translate down to become flush with floor
@@ -153,7 +153,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
 
             // Ladders/Slabs/Carpet and other short blocks on ground
             else if (renderBlockFlat) {
-                matrix.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion((float) rotator.getRotation().y));
+                matrix.multiply(RotationAxis.POSITIVE_Y.rotation((float) rotator.getRotation().y));
 
                 // Translate down to become flush with floor
                 matrix.translate(0, -.065, 0);
@@ -168,7 +168,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
                 }
 
                 matrix.translate(0, .185, .0);
-                matrix.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion((float) rotator.getRotation().z));
+                matrix.multiply(RotationAxis.POSITIVE_Z.rotation((float) rotator.getRotation().z));
                 matrix.translate(0, -.185, .0);
             }
 
@@ -185,9 +185,9 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
                 }
             }
 
-            float scaleX = bakedModel.getTransformation().ground.scale.getX();
-            float scaleY = bakedModel.getTransformation().ground.scale.getY();
-            float scaleZ = bakedModel.getTransformation().ground.scale.getZ();
+            float scaleX = bakedModel.getTransformation().ground.scale.x();
+            float scaleY = bakedModel.getTransformation().ground.scale.y();
+            float scaleZ = bakedModel.getTransformation().ground.scale.z();
 
             float x;
             float y;
@@ -213,7 +213,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
                         x = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
                         y = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F * 0.5F;
                         matrix.translate(x, y, 0.0D);
-                        matrix.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(this.random.nextFloat()));
+                        matrix.multiply(RotationAxis.POSITIVE_Z.rotation(this.random.nextFloat()));
                     }
                 }
 

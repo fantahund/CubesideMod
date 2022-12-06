@@ -20,7 +20,7 @@ public abstract class MixinCustomPauseMenu extends Screen {
 
     @Inject(at = @At("TAIL"), method = "initWidgets")
     private void addCustomButton(CallbackInfo ci) {
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 + 205, this.height / 4 + 72 - 16, 100, 20, Text.translatable("custombutton.cubeside.options"), (ButtonWidget) -> GuiBase.openGui(new ConfigGui())));
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("custombutton.cubeside.options"), button -> GuiBase.openGui(new ConfigGui())).dimensions(this.width / 2 - 100 + 205, this.height / 4 + 72 - 16, 100, 20).build());
     }
 
 }

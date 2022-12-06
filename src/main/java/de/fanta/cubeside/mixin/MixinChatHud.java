@@ -51,7 +51,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     @Shadow
     protected abstract void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh);
 
-    @Redirect(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;logChatMessage(Lnet/minecraft/text/Text;Lnet/minecraft/client/gui/hud/MessageIndicator;)V"))
+    @Redirect(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;logChatMessage(Lnet/minecraft/text/Text;Lnet/minecraft/client/gui/hud/MessageIndicator;)V"))
     private void addMessage(ChatHud instance, Text message, MessageIndicator indicator) {
         if (!CubesideClientFabric.isLoadingMessages()) {
             logChatMessage(message, indicator);
@@ -65,7 +65,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     protected abstract void logChatMessage(Text message, @Nullable MessageIndicator indicator);
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
-    private net.minecraft.text.Text modifyMessages(net.minecraft.text.Text componentIn) {
+    private Text modifyMessages(Text componentIn) {
         if (CubesideClientFabric.isLoadingMessages()) {
             CubesideClientFabric.messageQueue.add(componentIn);
             return Text.empty();
@@ -78,7 +78,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
                 if ((arr[4].equals("literal{From")) && (arr[5].equals("}[style={color=light_purple}],")) && (arr[13].contains("color=white") || arr[13].equals("color=green"))) {
                     if (client.player != null) {
                         if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
-                            client.player.sendCommand("r " + Configs.PermissionSettings.AutoChatAntwort.getStringValue());
+                            client.player.sendMessage(Text.literal("r " + Configs.PermissionSettings.AutoChatAntwort.getStringValue()));
                         } else {
                             ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
                         }
@@ -119,7 +119,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
                     if (Configs.Generic.TpaSound.getBooleanValue()) {
                         if (client.player != null) {
-                            client.player.playSound(new SoundEvent(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                            client.player.playSound(SoundEvent.of(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
                         }
                     }
 
@@ -136,7 +136,7 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
 
                     if (Configs.Generic.TpaSound.getBooleanValue()) {
                         if (client.player != null) {
-                            client.player.playSound(new SoundEvent(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                            client.player.playSound(SoundEvent.of(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
                         }
                     }
 
@@ -306,9 +306,9 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         new Thread(() -> {
             try {
                 if (client.player != null) {
-                    client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.5f);
+                    client.player.playSound(SoundEvent.of(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.5f);
                     Thread.sleep(5 * 50);
-                    client.player.playSound(new SoundEvent(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.0f);
+                    client.player.playSound(SoundEvent.of(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.0f);
                 }
             } catch (Exception e) {
                 CubesideClientFabric.LOGGER.error(e);

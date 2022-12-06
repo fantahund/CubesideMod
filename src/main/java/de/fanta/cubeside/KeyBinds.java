@@ -9,7 +9,6 @@ public class KeyBinds {
     public static KeyBinding NARRATOR_KEYBINDING;
     public static KeyBinding F3_KEYBINDING;
     public static KeyBinding AUTO_CHAT;
-    public static KeyBinding TOGGLE_GAMMA;
     public static KeyBinding TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE;
 
     public void initKeys() {

@@ -87,7 +87,7 @@ public class ConfigGui extends GuiConfigsBase { //GuiBase.openGui(new ConfigGui(
         }
 
         Configs.saveToFile();
-        this.client.keyboard.setRepeatEvents(false);
+        //this.client.keyboard.setRepeatEvents(false);
     }
 
 

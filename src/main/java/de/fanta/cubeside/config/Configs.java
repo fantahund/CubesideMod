@@ -147,7 +147,7 @@ public class Configs implements IConfigHandler {
 
             if (element != null && element.isJsonObject()) {
                 JsonObject root = element.getAsJsonObject();
-                ConfigUtils.readConfigBase(root, "Generic", Configs.Generic.OPTIONS);
+                ConfigUtils.readConfigBase(root, "Generic", Generic.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Chat", Chat.OPTIONS);
                 ConfigUtils.readConfigBase(root, "ChunkLoading", ChunkLoading.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Fun", Fun.OPTIONS);

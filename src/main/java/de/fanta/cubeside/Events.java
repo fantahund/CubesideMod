@@ -89,7 +89,7 @@ public class Events {
                     if (sound == null) {
                         Identifier location;
                         location = new Identifier(CubesideClientFabric.MODID, "alarm");
-                        sound = new SoundEvent(location);
+                        sound = SoundEvent.of(location);
                     }
                     if (mc.player.isFallFlying() && mc.player.getY() <= mc.world.getBottomY()) {
                         if (soundThread == null) {

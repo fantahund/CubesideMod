@@ -1,6 +1,7 @@
 package de.fanta.cubeside.util.ChatSkullAPI;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.text.Text;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -8,7 +9,7 @@ import java.awt.image.BufferedImage;
 
 public class Message {
   
-  private String[] lines;
+  private final String[] lines;
   
   public Message(BufferedImage image, int height, char imgChar) {
     String[][] chatColors = toChatColorArray(image, height);
@@ -18,9 +19,8 @@ public class Message {
   public Message appendText(String[] text) {
     for (int y = 0; y < this.lines.length; y++) {
       if (text.length > y) {
-        int tmp16_15 = y;
         String[] tmp16_12 = this.lines;
-        tmp16_12[tmp16_15] = tmp16_12[tmp16_15] + " " + text[y];
+        tmp16_12[y] = tmp16_12[y] + " " + text[y];
       } 
     } 
     return this;
@@ -65,7 +65,7 @@ public class Message {
     String[] arrayOfString;
     for (i = (arrayOfString = this.lines).length, b = 0; b < i; ) {
       String line = arrayOfString[b];
-      MinecraftClient.getInstance().player.sendCommand("additemlore " + line);
+      MinecraftClient.getInstance().player.sendMessage(Text.literal("additemlore " + line));
       b++;
     }
   }

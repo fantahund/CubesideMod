@@ -10,6 +10,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
 
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class Commands {
 
                             teleport = true;
                             String teleportPlayer = playerList.get(0);
-                            MinecraftClient.getInstance().player.sendCommand("tt p " + teleportPlayer);
+                            MinecraftClient.getInstance().player.sendMessage(Text.literal("tt p " + teleportPlayer));
                             ChatUtils.sendNormalMessage("Du wurdest zu " + teleportPlayer + " teleportiert.");
                             playerList.remove(teleportPlayer);
                             break;
@@ -105,7 +106,7 @@ public class Commands {
                             if (teleport) {
                                 if (!playerList.isEmpty()) {
                                     String portPlayer = playerList.get(0);
-                                    MinecraftClient.getInstance().player.sendCommand("tt p " + portPlayer);
+                                    MinecraftClient.getInstance().player.sendMessage(Text.literal("tt p " + portPlayer));
                                     ChatUtils.sendNormalMessage("Du wurdest zu " + portPlayer + " teleportiert.");
                                     playerList.remove(portPlayer);
                                 } else {
