@@ -3,7 +3,7 @@ package de.fanta.cubeside.mixin;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ColorUtils;
-import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.malilibcs.util.Color4f;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;

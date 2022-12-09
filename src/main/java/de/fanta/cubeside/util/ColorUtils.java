@@ -1,7 +1,7 @@
 package de.fanta.cubeside.util;
 
 import de.fanta.cubeside.config.Configs;
-import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.malilibcs.util.Color4f;
 
 import java.awt.*;
 import java.util.List;

@@ -1,7 +1,7 @@
 package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.config.ConfigGui;
-import fi.dy.masa.malilib.gui.GuiBase;
+import fi.dy.masa.malilibcs.gui.GuiBase;
 import net.minecraft.client.gui.screen.GameMenuScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
