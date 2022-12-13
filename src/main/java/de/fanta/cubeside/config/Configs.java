@@ -14,6 +14,7 @@ import fi.dy.masa.malilibcs.config.options.ConfigColorList;
 import fi.dy.masa.malilibcs.config.options.ConfigDouble;
 import fi.dy.masa.malilibcs.config.options.ConfigInteger;
 import fi.dy.masa.malilibcs.config.options.ConfigString;
+import fi.dy.masa.malilibcs.config.options.ConfigStringList;
 import fi.dy.masa.malilibcs.util.Color4f;
 import fi.dy.masa.malilibcs.util.FileUtils;
 import fi.dy.masa.malilibcs.util.JsonUtils;
@@ -128,10 +129,12 @@ public class Configs implements IConfigHandler {
     public static class PermissionSettings {
         public static final ConfigBoolean AutoChat = new ConfigBoolean("AutoChat", false, "AutoChat Enabled");
         public static final ConfigString AutoChatAntwort = new ConfigString("AutoChatAntwort", "Ich habe grade leider keine Zeit!", "AutoChat Message");
+        public static final ConfigStringList AdminList = new ConfigStringList("AdminList", ImmutableList.of("Eiki", "Brokkonaut", "jonibohni", "_Scorcho", "Starjon", "Becky0810", "Scoptixxx"), "Admin Liste");
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 AutoChat,
-                AutoChatAntwort
+                AutoChatAntwort,
+                AdminList
         );
     }
 

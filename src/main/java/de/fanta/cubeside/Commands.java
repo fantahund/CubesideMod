@@ -3,6 +3,7 @@ package de.fanta.cubeside;
 import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import com.mojang.brigadier.CommandDispatcher;
+import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ChatSkullAPI.ChatSkull;
 import de.fanta.cubeside.util.ChatUtils;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -10,12 +11,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Team;
-import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -79,13 +77,12 @@ public class Commands {
                                 ChatUtils.sendErrorMessage("AFK Check bereits aktiv.");
                                 return 1;
                             }
-                            Collection<String> admins = (Arrays.asList("Eiki", "Brokkonaut", "jonibohni", "_Scorcho", "Starjon", "Becky0810", "Scoptixxx"));
                             ClientPlayNetworkHandler clientPlayNetworkHandler = context.getSource().getPlayer().networkHandler;
                             List<PlayerListEntry> list = ENTRY_ORDERING.sortedCopy(clientPlayNetworkHandler.getPlayerList());
                             for (PlayerListEntry playerListEntry : list) {
                                 if (playerListEntry != null) {
                                     String playername = playerListEntry.getProfile().getName();
-                                    if (!Objects.equals(playername, MinecraftClient.getInstance().player.getName().getString()) && !admins.contains(playername)) {
+                                    if (!Objects.equals(playername, MinecraftClient.getInstance().player.getName().getString()) && !Configs.PermissionSettings.AdminList.getStrings().contains(playername)) {
                                         playerList.add(playername);
                                     }
                                 }
