@@ -56,7 +56,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigColor TimeStampColor = new ConfigColor("TimeStampColor", "#ffffff", Text.translatable("options.cubeside.timestampcolor").getString());
         public static final ConfigBoolean SaveMessagesToDatabase = new ConfigBoolean("SaveMessagesToDatabase", false, Text.translatable("options.cubeside.savemessagestodatabase").getString());
         public static final ConfigInteger DaysTheMessagesAreStored = new ConfigInteger("DaysTheMessagesAreStored", 10, 1, 30, true, Text.translatable("options.cubeside.daysthemessagesarestored").getString());
-        public static final ConfigInteger ChatMessageLimit = new ConfigInteger("ChatMessageLimit", 100, 1, Integer.MAX_VALUE, true, Text.translatable("options.cubeside.chatlimit").getString());
+        public static final ConfigInteger ChatMessageLimit = new ConfigInteger("ChatMessageLimit", 100, 1, 100000, true, Text.translatable("options.cubeside.chatlimit").getString());
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 ChatTimeStamps,
                 TimeStampColor,
