@@ -50,9 +50,9 @@ public class ChatInfoHud {
         ChatHud.fill(stack, 2, height - 2, getWith(getWith(0, currentResponsPlayerString), currentChannelString) + 8, currentResponsPlayerString.equals("") ? height + 10 : height + 20, v << 24);
 
         result.width = getWith(result.width, currentChannelString);
-        this.fontRenderer.drawWithShadow(stack, currentChannelString, 5, (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2f)), Color.LIGHT_GRAY.getRGB());
+        this.fontRenderer.drawWithShadow(stack, currentChannelString, 5, (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2f)), Color.WHITE.getRGB());
         result.height -= distance;
-        this.fontRenderer.drawWithShadow(stack, currentResponsPlayerString, 5, (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2f)), Color.LIGHT_GRAY.getRGB());
+        this.fontRenderer.drawWithShadow(stack, currentResponsPlayerString, 5, (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2f)), Color.WHITE.getRGB());
 
         if (result.width != 0) {
             result.width += 20;
