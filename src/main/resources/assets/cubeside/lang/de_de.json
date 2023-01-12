@@ -4,6 +4,7 @@
     "options.cubeside.thirdpersonelytra": "Beim Fliegen mit der Elytra automatisch in die dritte Person wechseln",
     "options.cubeside.timestampcolor": "Ändert die Farbe des Zeitstempels",
     "options.cubeside.chatlimit": "Die maximale Anzahl an Nachrichten, die gespeichert werden",
+    "options.cubeside.displaychatinfo": "Zeigt deinen aktuellen Channel und Chatpartner an",
     "options.cubeside.dropitemfancy": "Items mit einer alternativen Animation werfen",
     "options.cubeside.elytraalarm": "Spielt einen Alarmsound ab, wenn man unter der minimalen Bauhöhe fliegt",
     "options.cubeside.savemessagestodatabase": "Speichert alle Nachrichten in einer Datenbank und lädt sie, wenn du auf einen Server joinst",

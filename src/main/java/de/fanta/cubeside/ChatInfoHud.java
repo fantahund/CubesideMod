@@ -1,6 +1,7 @@
 package de.fanta.cubeside;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import de.fanta.cubeside.config.Configs;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.ChatHud;
@@ -32,7 +33,7 @@ public class ChatInfoHud {
         if (minecraft.options.debugEnabled) {
             return;
         }
-        if (this.minecraft.currentScreen instanceof ChatScreen) {
+        if (this.minecraft.currentScreen instanceof ChatScreen && Configs.Chat.DisplayChatInfo.getBooleanValue()) {
             GlStateManager._clearColor(1.0f, 1.0f, 1.0f, 1.0f);
             renderChatInfoHud(stack);
         }
