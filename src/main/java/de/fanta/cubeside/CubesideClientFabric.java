@@ -2,6 +2,7 @@ package de.fanta.cubeside;
 
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.Database;
+import de.fanta.cubeside.event.CubesideModChannelHandler;
 import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.permission.PermissionHandler;
 import net.fabricmc.api.ClientModInitializer;
@@ -42,6 +43,10 @@ public class CubesideClientFabric implements ClientModInitializer {
     private static boolean xaeroFairPlay;
 
     private static long time;
+    
+    private static String currentGlobalChatChannel = "";
+    private static String currentGlobalChatPrivateMessagePlayer = "";
+    private static String currentGlobalChatPrivateMessageRespondPlayer = "";
 
     @Override
     public void onInitializeClient() {
@@ -64,6 +69,7 @@ public class CubesideClientFabric implements ClientModInitializer {
 
         permissionHandler = new PermissionHandler();
         new RankDataChannelHandler();
+        new CubesideModChannelHandler();
 
         LOGGER.info(MODID + "Mod Loaded");
         commands = new Commands();
@@ -128,5 +134,29 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     public static long getTime() {
         return time;
+    }
+
+    public static void setCurrentGlobalChatChannel(String currentGlobalChatChannel) {
+        CubesideClientFabric.currentGlobalChatChannel = currentGlobalChatChannel;
+    }
+
+    public static void setCurrentGlobalChatPrivateMessagePlayer(String currentGlobalChatPrivateMessagePlayer) {
+        CubesideClientFabric.currentGlobalChatPrivateMessagePlayer = currentGlobalChatPrivateMessagePlayer;
+    }
+
+    public static void setCurrentGlobalChatPrivateMessageRespondPlayer(String currentGlobalChatPrivateMessageRespondPlayer) {
+        CubesideClientFabric.currentGlobalChatPrivateMessageRespondPlayer = currentGlobalChatPrivateMessageRespondPlayer;
+    }
+
+    public static String getCurrentGlobalChatChannel() {
+        return currentGlobalChatChannel;
+    }
+
+    public static String getCurrentGlobalChatPrivateMessagePlayer() {
+        return currentGlobalChatPrivateMessagePlayer;
+    }
+
+    public static String getCurrentGlobalChatPrivateMessageRespondPlayer() {
+        return currentGlobalChatPrivateMessageRespondPlayer;
     }
 }

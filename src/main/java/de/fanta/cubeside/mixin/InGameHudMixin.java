@@ -1,17 +1,23 @@
 package de.fanta.cubeside.mixin;
 
+import de.fanta.cubeside.ChatInfoHud;
 import de.fanta.cubeside.config.Configs;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
+
+    private static ChatInfoHud chatInfoHud;
 
     @Shadow
     private Text overlayMessage;
@@ -25,5 +31,11 @@ public abstract class InGameHudMixin {
             return getTextRenderer().draw(matrices, this.overlayMessage, x, -4.0F, color);
         }
         return getTextRenderer().drawWithShadow(matrices, this.overlayMessage, x, -4.0F, color);
+    }
+
+    @Inject(method="render", at=@At(value="FIELD", target="Lnet/minecraft/client/option/GameOptions;debugEnabled:Z", opcode = Opcodes.GETFIELD, args = {"log=false"}))
+    private void beforeRenderDebugScreen2(MatrixStack stack, float f, CallbackInfo ci) {
+        chatInfoHud = chatInfoHud != null ? chatInfoHud : new ChatInfoHud();
+        chatInfoHud.onRenderGameOverlayPost(stack);
     }
 }

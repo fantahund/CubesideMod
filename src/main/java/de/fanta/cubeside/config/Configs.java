@@ -117,12 +117,8 @@ public class Configs implements IConfigHandler {
 
     public static class Fixes {
         public static final ConfigBoolean SimpleSignGlow = new ConfigBoolean("SimpleSignGlow", false, Text.translatable("options.cubeside.simplesignglow").getString());
-        public static final ConfigBoolean KickByNotValidMessage = new ConfigBoolean("KickByNotValidMessage", true, Text.translatable("options.cubeside.kickbynotvalidmessage").getString());
-
-
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                SimpleSignGlow,
-                KickByNotValidMessage
+                SimpleSignGlow
         );
     }
 
