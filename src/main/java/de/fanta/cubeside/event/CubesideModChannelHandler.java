@@ -1,12 +1,14 @@
 package de.fanta.cubeside.event;
 
 import de.fanta.cubeside.CubesideClientFabric;
-import io.netty.handler.codec.DecoderException;
+import de.fanta.cubeside.util.ChatInfo;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class CubesideModChannelHandler implements ClientPlayNetworking.PlayChannelHandler {
@@ -23,9 +25,21 @@ public class CubesideModChannelHandler implements ClientPlayNetworking.PlayChann
             int cubesideDateChannel = packet.readByte();
             int cubesideDateChannelVersion = packet.readByte();
             if (cubesideDateChannel == 0 && cubesideDateChannelVersion == 0) {
-                CubesideClientFabric.setCurrentGlobalChatChannel(packet.readString());
-                CubesideClientFabric.setCurrentGlobalChatPrivateMessagePlayer(packet.readString());
-                CubesideClientFabric.setCurrentGlobalChatPrivateMessageRespondPlayer(packet.readString());
+                String currentChannelName = packet.readString();
+                String currentPrivateChat = packet.readString();
+                String currentResponsePartner = packet.readString();
+                MutableText currentChannelColor = Text.empty();
+                MutableText currentPrivateChatPrefix = Text.empty();
+                MutableText currentResponsePartnerPrefix = Text.empty();
+                try {
+                    currentChannelColor = (MutableText) packet.readText();
+                    currentPrivateChatPrefix = (MutableText) packet.readText();
+                    currentResponsePartnerPrefix = (MutableText) packet.readText();
+                } catch (IndexOutOfBoundsException ignored) {
+                }
+
+                ChatInfo chatInfo = new ChatInfo(currentChannelName, currentPrivateChat, currentResponsePartner, currentChannelColor, currentPrivateChatPrefix, currentResponsePartnerPrefix);
+                CubesideClientFabric.setChatInfo(chatInfo);
             }
         } catch (Exception e) {
             CubesideClientFabric.LOGGER.warn("Unable to read CubesideMod data", e);

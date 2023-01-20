@@ -5,6 +5,7 @@ import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.event.CubesideModChannelHandler;
 import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.permission.PermissionHandler;
+import de.fanta.cubeside.util.ChatInfo;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -44,9 +45,7 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     private static long time;
     
-    private static String currentGlobalChatChannel = "";
-    private static String currentGlobalChatPrivateMessagePlayer = "";
-    private static String currentGlobalChatPrivateMessageRespondPlayer = "";
+    private static ChatInfo chatInfo;
 
     @Override
     public void onInitializeClient() {
@@ -136,27 +135,11 @@ public class CubesideClientFabric implements ClientModInitializer {
         return time;
     }
 
-    public static void setCurrentGlobalChatChannel(String currentGlobalChatChannel) {
-        CubesideClientFabric.currentGlobalChatChannel = currentGlobalChatChannel;
+    public static ChatInfo getChatInfo() {
+        return chatInfo;
     }
 
-    public static void setCurrentGlobalChatPrivateMessagePlayer(String currentGlobalChatPrivateMessagePlayer) {
-        CubesideClientFabric.currentGlobalChatPrivateMessagePlayer = currentGlobalChatPrivateMessagePlayer;
-    }
-
-    public static void setCurrentGlobalChatPrivateMessageRespondPlayer(String currentGlobalChatPrivateMessageRespondPlayer) {
-        CubesideClientFabric.currentGlobalChatPrivateMessageRespondPlayer = currentGlobalChatPrivateMessageRespondPlayer;
-    }
-
-    public static String getCurrentGlobalChatChannel() {
-        return currentGlobalChatChannel;
-    }
-
-    public static String getCurrentGlobalChatPrivateMessagePlayer() {
-        return currentGlobalChatPrivateMessagePlayer;
-    }
-
-    public static String getCurrentGlobalChatPrivateMessageRespondPlayer() {
-        return currentGlobalChatPrivateMessageRespondPlayer;
+    public static void setChatInfo(ChatInfo chatInfo) {
+        CubesideClientFabric.chatInfo = chatInfo;
     }
 }

@@ -303,17 +303,17 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
     }
 
     public void playAFKSound() {
-        new Thread(() -> {
-            try {
-                if (client.player != null) {
-                    client.player.playSound(SoundEvent.of(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.5f);
+        if (client.player != null) {
+            client.player.playSound(SoundEvent.of(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.5f);
+            new Thread(() -> {
+                try {
                     Thread.sleep(5 * 50);
                     client.player.playSound(SoundEvent.of(new Identifier("block.note_block.bell")), SoundCategory.PLAYERS, 20.0f, 1.0f);
+                } catch (Exception e) {
+                    CubesideClientFabric.LOGGER.error(e);
                 }
-            } catch (Exception e) {
-                CubesideClientFabric.LOGGER.error(e);
-            }
-        }).start();
+            }).start();
+        }
     }
 
     public void addMessagetoDatabase(Text component) {
