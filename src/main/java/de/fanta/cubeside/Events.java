@@ -81,8 +81,7 @@ public class Events {
 
                 if (Configs.Generic.ElytraAlarm.getBooleanValue()) {
                     if (sound == null) {
-                        Identifier location;
-                        location = new Identifier(CubesideClientFabric.MODID, "alarm");
+                        Identifier location = new Identifier(CubesideClientFabric.MODID, "alarm");
                         sound = SoundEvent.of(location);
                     }
                     if (mc.player.isFallFlying() && mc.player.getY() <= mc.world.getBottomY()) {

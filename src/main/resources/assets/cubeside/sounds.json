@@ -3,5 +3,10 @@
     "category": "player",
     "subtitle": "cubeside.subtitle.alarm",
     "sounds": [ "cubeside:alarm" ]
+  },
+  "afk": {
+    "category": "player",
+    "subtitle": "cubeside.subtitle.afk",
+    "sounds": [ "cubeside:afk" ]
   }
 }
