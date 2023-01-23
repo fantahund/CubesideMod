@@ -24,7 +24,7 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     public static final String MODID = "cubeside";
     public static final String PREFIX = "§9[§aCubeside§9] ";
-    public static final Logger LOGGER = LogManager.getLogger(MODID);
+    public static final Logger LOGGER = LogManager.getLogger("CubesideMod");
     private static Database DATABASE;
     //GAMA
     public static double minGamma = -1.5;

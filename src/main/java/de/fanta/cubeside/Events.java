@@ -11,6 +11,7 @@ import net.minecraft.client.option.Perspective;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.apache.logging.log4j.Level;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -32,30 +33,23 @@ public class Events {
     }
 
     public void init() {
-        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
-            if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
-                if (client.getCurrentServerEntry() != null) {
-                    String server = client.getCurrentServerEntry().address.toLowerCase();
-                    if (CubesideClientFabric.databaseinuse) {
-                        return;
-                    }
+        ClientPlayConnectionEvents.INIT.register((handler, client) -> {
+            if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue() && !CubesideClientFabric.databaseinuse) {
+                if (handler.getServerInfo() != null) {
+                    String server = handler.getServerInfo().address.toLowerCase();
                     List<Text> messages = CubesideClientFabric.getDatabase().loadMessages(server);
-                    if (CubesideClientFabric.databaseinuse) {
-                        return;
-                    }
                     List<String> commands = CubesideClientFabric.getDatabase().loadCommands(server);
+
                     if (!connect) {
-                        if (client.player != null) {
-                            CubesideClientFabric.setLoadingMessages(true);
-                            System.out.println("Messages: " + (long) messages.size());
-                            messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredChatMessage);
-                            System.out.println("Commands: " + (long) commands.size());
-                            commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredCommand);
-                            CubesideClientFabric.setLoadingMessages(false);
-                            connect = true;
-                            CubesideClientFabric.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
-                            CubesideClientFabric.messageQueue.clear();
-                        }
+                        CubesideClientFabric.setLoadingMessages(true);
+                        messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredChatMessage);
+                        CubesideClientFabric.LOGGER.log(Level.INFO, (long) messages.size() + " messages loaded.");
+                        commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredCommand);
+                        CubesideClientFabric.LOGGER.log(Level.INFO, (long) commands.size() + " commands loaded.");
+                        CubesideClientFabric.setLoadingMessages(false);
+                        connect = true;
+                        CubesideClientFabric.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
+                        CubesideClientFabric.messageQueue.clear();
                     }
                 }
             }
@@ -141,6 +135,5 @@ public class Events {
         });
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> CubesideClientFabric.commands.register(dispatcher));
-
     }
 }

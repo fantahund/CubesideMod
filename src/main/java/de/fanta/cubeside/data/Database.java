@@ -149,8 +149,8 @@ public class Database {
         executor.execute(() -> {
             try (PreparedStatement statement = this.connection.prepareStatement(deleteOldMessagesQuery)) {
                 statement.setLong(1, System.currentTimeMillis() - days * 24 * 60 * 60 * 1000);
-                System.out.println("Delete Messages of the last " + days + " days");
-                System.out.println(statement.executeUpdate() + " messages were deleted");
+                CubesideClientFabric.LOGGER.info("Delete Messages of the last " + days + " days");
+                CubesideClientFabric.LOGGER.info(statement.executeUpdate() + " messages were deleted");
                 connection.commit();
             } catch (SQLException e) {
                 CubesideClientFabric.LOGGER.error("Could not delete old Messages from database", e);
@@ -165,8 +165,8 @@ public class Database {
         executor.execute(() -> {
             try (PreparedStatement statement = this.connection.prepareStatement(deleteOldCommandsQuery)) {
                 statement.setLong(1, System.currentTimeMillis() - days * 24 * 60 * 60 * 1000);
-                System.out.println("Delete command of the last " + days + " days");
-                System.out.println(statement.executeUpdate() + " commands were deleted");
+                CubesideClientFabric.LOGGER.info("Delete command of the last " + days + " days");
+                CubesideClientFabric.LOGGER.info(statement.executeUpdate() + " commands were deleted");
                 connection.commit();
             } catch (SQLException e) {
                 CubesideClientFabric.LOGGER.error("Could not delete old Commands from database", e);
