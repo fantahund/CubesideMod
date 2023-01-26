@@ -60,6 +60,7 @@ public class Events {
                 connect = false;
                 CubesideClientFabric.setRank(null);
             }
+            CubesideClientFabric.setChatInfo(null);
         });
 
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
