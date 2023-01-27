@@ -20,6 +20,7 @@
     "MixinOptionImpl",
     "MixinRemoveChristmasChest",
     "MixinRenderEntity",
+    "MixinServerPlayNetHandler",
     "MixinSliderControl",
     "MixinWorldRenderer",
     "MixinXaeroDisableCaveMap",

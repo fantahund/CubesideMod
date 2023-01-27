@@ -3,6 +3,7 @@ plugins {
     id "io.github.juuxel.loom-quiltflower" version "1.7.1"
     id 'maven-publish'
     id "com.github.johnrengelman.shadow" version "7.0.0"
+    id "com.modrinth.minotaur" version "2.4.3"
 }
 
 apply plugin: 'java'
@@ -33,6 +34,7 @@ repositories {
         url = 'https://ladysnake.jfrog.io/artifactory/mods'
     }
     maven {url "https://minecraft.guntram.de/maven/"}
+    maven { url = "https://plugins.gradle.org/m2/" }
     mavenCentral()
     mavenLocal()
 }
@@ -100,4 +102,23 @@ remapJar {
 
 artifacts {
     archives shadowJar
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = project.modrinth_id
+    versionNumber = project.mod_version
+    versionName = "CubesideMod ${project.minecraft_version_out}-${project.mod_version}"
+    versionType = isMCVersionNonRelease() ? "beta" : "release"
+    changelog = file("changelog.md").text
+    uploadFile = remapJar
+    gameVersions = [ project.minecraft_version_out ]
+    loaders = [ "fabric" ]
+    dependencies {
+        required.project 'fabric-api'
+    }
+}
+
+boolean isMCVersionNonRelease() {
+    return project.minecraft_version.matches('^\\d\\dw\\d\\d[a-z]$') || project.minecraft_version.matches('\\d+\\.\\d+-(pre|rc)(\\d+)')
 }
