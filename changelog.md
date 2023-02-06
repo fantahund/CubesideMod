@@ -1,1 +1,1 @@
-- Add AutoUpload for Modrinth
+- Fix Crash by Startup

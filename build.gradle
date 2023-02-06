@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
+    id 'fabric-loom' version '1.0-SNAPSHOT'
     id "io.github.juuxel.loom-quiltflower" version "1.7.1"
     id 'maven-publish'
     id "com.github.johnrengelman.shadow" version "7.0.0"
@@ -108,11 +108,11 @@ modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = project.modrinth_id
     versionNumber = project.mod_version
-    versionName = "CubesideMod ${project.minecraft_version_out}-${project.mod_version}"
+    versionName = "CubesideMod ${project.minecraft_version}-${project.mod_version}"
     versionType = isMCVersionNonRelease() ? "beta" : "release"
     changelog = file("changelog.md").text
     uploadFile = remapJar
-    gameVersions = [ project.minecraft_version_out ]
+    gameVersions = [ project.minecraft_version ]
     loaders = [ "fabric" ]
     dependencies {
         required.project 'fabric-api'
