@@ -74,8 +74,8 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
             String s = componentIn.toString();
             String[] arr = s.split(" ");
 
-            if (arr.length >= 13) {
-                if ((arr[4].equals("literal{From")) && (arr[5].equals("}[style={color=light_purple}],")) && (arr[13].contains("color=white") || arr[13].equals("color=green"))) {
+            if (arr.length >= 16) {
+                if (arr[7].equals("literal{From") && arr[8].equals("}[style={color=light_purple}],") && (arr[16].contains("style={color=white}") || arr[16].contains("style={color=green}"))) {
                     if (client.player != null) {
                         if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
                             client.player.networkHandler.sendCommand("r " + Configs.PermissionSettings.AutoChatAntwort.getStringValue());

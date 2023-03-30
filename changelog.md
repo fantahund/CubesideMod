@@ -1,1 +1,1 @@
-- Fix Crash by Startup
+- Fix AutoChat
