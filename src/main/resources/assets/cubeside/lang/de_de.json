@@ -51,6 +51,12 @@
     "cubeside.gui.button.config_gui.hitbox": "HitBox",
     "cubeside.gui.button.config_gui.fixes": "Behebungen",
     "cubeside.gui.button.config_gui.permissionsettings": "Erlaubnis-Einstellungen",
-    "options.debugscreen": "Debug Bildschirm"
+    "options.debugscreen": "Debug Bildschirm",
 
+    "cubeside.gui.button.config_gui.miningassistent": "Mining Assistent",
+    "options.cubeside.miningassistentenabled": "Mining Assistent Aktiv",
+    "options.cubeside.miningassistentdistance": "Mining Assistent entfernung",
+    "options.cubeside.miningassistentcircles": "Mining Assistent runden",
+    "key.cubeside.miningassistant": "Mining Assistent umschalten",
+    "key.cubeside.setminingassistantstartpoint": "Mining Assistent Startpunkt"
 }

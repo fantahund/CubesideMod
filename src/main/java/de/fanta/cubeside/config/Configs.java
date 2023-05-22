@@ -117,6 +117,25 @@ public class Configs implements IConfigHandler {
         );
     }
 
+    public static class MiningAssistent {
+        public static final ConfigBoolean MiningAssistentEnabled = new ConfigBoolean("MiningAssistentEnabled", false, Text.translatable("options.cubeside.miningassistentenabled").getString());
+        public static final ConfigInteger MiningAssistentDistance = new ConfigInteger("MiningAssistentDistance", 3, 0, 10, Text.translatable("options.cubeside.miningassistentdistance").getString());
+        public static final ConfigInteger MiningAssistentCircles = new ConfigInteger("MiningAssistentCircles", 16, 1, 30, Text.translatable("options.cubeside.miningassistentcircles").getString());
+        public static final ConfigInteger MiningAssistentStartX = new ConfigInteger("MiningAssistentStartX", 0, Text.translatable("options.cubeside.miningassistentstartx").getString());
+        public static final ConfigInteger MiningAssistentStartY = new ConfigInteger("MiningAssistentStartY", 0, Text.translatable("options.cubeside.miningassistentstarty").getString());
+        public static final ConfigInteger MiningAssistentStartZ = new ConfigInteger("MiningAssistentStartZ", 0, Text.translatable("options.cubeside.miningassistentstartz").getString());
+        public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                MiningAssistentEnabled,
+                MiningAssistentDistance,
+                MiningAssistentCircles
+        );
+        public static final ImmutableList<IConfigBase> INVISIBLE_OPTIONS = ImmutableList.of(
+                MiningAssistentStartX,
+                MiningAssistentStartY,
+                MiningAssistentStartZ
+        );
+    }
+
     public static class Fixes {
         public static final ConfigBoolean SimpleSignGlow = new ConfigBoolean("SimpleSignGlow", false, Text.translatable("options.cubeside.simplesignglow").getString());
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
@@ -153,6 +172,8 @@ public class Configs implements IConfigHandler {
                 ConfigUtils.readConfigBase(root, "ChunkLoading", ChunkLoading.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Fun", Fun.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Hitbox", HitBox.OPTIONS);
+                ConfigUtils.readConfigBase(root, "MiningAssistent", MiningAssistent.OPTIONS);
+                ConfigUtils.readConfigBase(root, "MiningAssistent", MiningAssistent.INVISIBLE_OPTIONS);
                 ConfigUtils.readConfigBase(root, "Fixes", Fixes.OPTIONS);
                 ConfigUtils.readConfigBase(root, "PermissionSettings", PermissionSettings.OPTIONS);
             }
@@ -170,6 +191,8 @@ public class Configs implements IConfigHandler {
             ConfigUtils.writeConfigBase(root, "ChunkLoading", ChunkLoading.OPTIONS);
             ConfigUtils.writeConfigBase(root, "Fun", Fun.OPTIONS);
             ConfigUtils.writeConfigBase(root, "Hitbox", HitBox.OPTIONS);
+            ConfigUtils.writeConfigBase(root, "MiningAssistent", MiningAssistent.OPTIONS);
+            ConfigUtils.writeConfigBase(root, "MiningAssistent", MiningAssistent.INVISIBLE_OPTIONS);
             ConfigUtils.writeConfigBase(root, "Fixes", Fixes.OPTIONS);
             ConfigUtils.writeConfigBase(root, "PermissionSettings", PermissionSettings.OPTIONS);
 

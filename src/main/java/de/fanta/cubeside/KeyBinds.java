@@ -10,6 +10,8 @@ public class KeyBinds {
     public static KeyBinding F3_KEYBINDING;
     public static KeyBinding AUTO_CHAT;
     public static KeyBinding TOGGLE_SHOW_ENTITIES_IN_SPECTATOR_MODE;
+    public static KeyBinding TOGGLE_MINING_ASSISTANT;
+    public static KeyBinding SET_MINING_ASSISTANT_START_POINT;
 
     public void initKeys() {
         NARRATOR_KEYBINDING = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -37,6 +39,20 @@ public class KeyBinds {
                 "key.cubeside.showentitiesinspectator",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_K,
+                "key.categories.cubeside"
+        ));
+
+        TOGGLE_MINING_ASSISTANT = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.cubeside.miningassistant",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
+                "key.categories.cubeside"
+        ));
+
+        SET_MINING_ASSISTANT_START_POINT = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.cubeside.setminingassistantstartpoint",
+                InputUtil.Type.KEYSYM,
+                GLFW.GLFW_KEY_UNKNOWN,
                 "key.categories.cubeside"
         ));
     }

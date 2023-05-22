@@ -7,7 +7,10 @@ import de.fanta.cubeside.util.SoundThread;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -121,6 +124,15 @@ public class Events {
                     }
                     Configs.saveToFile();
                 }
+
+                while (KeyBinds.SET_MINING_ASSISTANT_START_POINT.wasPressed()) {
+                    MiningAssistent.setStartPos(MinecraftClient.getInstance().player.getBlockPos());
+                }
+
+                while (KeyBinds.TOGGLE_MINING_ASSISTANT.wasPressed()) {
+                    Configs.MiningAssistent.MiningAssistentEnabled.setBooleanValue(!Configs.MiningAssistent.MiningAssistentEnabled.getBooleanValue());
+                    Configs.saveToFile();
+                }
             }
 
             if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
@@ -135,5 +147,7 @@ public class Events {
         });
 
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> CubesideClientFabric.commands.register(dispatcher));
+
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> MiningAssistent.render(context.matrixStack()));
     }
 }

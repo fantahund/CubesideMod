@@ -1,1 +1,1 @@
-- Fix AutoChat
+- Add MiningAssistent

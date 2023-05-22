@@ -306,7 +306,6 @@ public abstract class MixinChatHud extends DrawableHelper implements ChatHudMeth
         if (client.player != null) {
             SoundEvent sound = SoundEvent.of(new Identifier(CubesideClientFabric.MODID, "afk"));
             client.player.playSound(sound, SoundCategory.PLAYERS, 0.2f, 1.0f);
-            System.out.println("Test123");
         }
     }
 

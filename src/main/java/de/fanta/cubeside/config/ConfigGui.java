@@ -66,6 +66,8 @@ public class ConfigGui extends GuiConfigsBase { //GuiBase.openGui(new ConfigGui(
             configs = Configs.Fun.OPTIONS;
         } else if (tab == ConfigGuiTab.HITBOX) {
             configs = Configs.HitBox.OPTIONS;
+        } else if (tab == ConfigGuiTab.MININGASSISTENT) {
+            configs = Configs.MiningAssistent.OPTIONS;
         } else if (tab == ConfigGuiTab.FIXES) {
             configs = Configs.Fixes.OPTIONS;
         } else if (tab == ConfigGuiTab.PERMISSIONSETTINGS) {
@@ -116,6 +118,7 @@ public class ConfigGui extends GuiConfigsBase { //GuiBase.openGui(new ConfigGui(
         CHUNKLOADING("cubeside.gui.button.config_gui.chunkloading"),
         FUN("cubeside.gui.button.config_gui.fun"),
         HITBOX("cubeside.gui.button.config_gui.hitbox"),
+        MININGASSISTENT("cubeside.gui.button.config_gui.miningassistent"),
         FIXES("cubeside.gui.button.config_gui.fixes"),
         PERMISSIONSETTINGS("cubeside.gui.button.config_gui.permissionsettings");
 
