@@ -8,8 +8,8 @@ import me.jellysquid.mods.sodium.client.gui.options.binding.OptionBinding;
 import me.jellysquid.mods.sodium.client.gui.options.control.Control;
 import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -25,9 +25,10 @@ import java.util.function.Function;
 @Pseudo
 @Mixin(OptionImpl.class)
 public class MixinOptionImpl<S, T> {
+
+    @Mutable
     @Shadow
     @Final
-    @Mutable
     private OptionBinding<S, T> binding;
 
     @Inject(at = @At("RETURN"), method = "<init>")
@@ -42,7 +43,7 @@ public class MixinOptionImpl<S, T> {
                       CallbackInfo info) {
 
         if (name.getContent() instanceof TranslatableTextContent content && content.getKey().equals("options.gamma")) {
-            this.binding = new GenericBinding<S, T>((opt, val) -> MinecraftClient.getInstance().options.getGamma().setValue((Integer) val * 0.01D), binding::getValue);
+            this.binding = new GenericBinding<>((opt, val) -> MinecraftClient.getInstance().options.getGamma().setValue((Integer) val * 0.01D), binding::getValue);
         }
     }
 }

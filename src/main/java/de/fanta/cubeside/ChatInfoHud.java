@@ -5,10 +5,12 @@ import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ChatInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
 import java.awt.*;
@@ -32,17 +34,17 @@ public class ChatInfoHud {
         }
     }
 
-    public void onRenderGameOverlayPost(MatrixStack stack) {
+    public void onRenderGameOverlayPost(DrawContext context) {
         if (minecraft.options.debugEnabled) {
             return;
         }
         if (this.minecraft.currentScreen instanceof ChatScreen && Configs.Chat.DisplayChatInfo.getBooleanValue() && CubesideClientFabric.getChatInfo() != null) {
             GlStateManager._clearColor(1.0f, 1.0f, 1.0f, 1.0f);
-            renderChatInfoHud(stack, CubesideClientFabric.getChatInfo());
+            renderChatInfoHud(context, CubesideClientFabric.getChatInfo());
         }
     }
 
-    private void renderChatInfoHud(MatrixStack stack, ChatInfo chatInfo) {
+    private void renderChatInfoHud(DrawContext context, ChatInfo chatInfo) {
         MutableText currentChannelText = Text.literal("Aktueller Chat: ");
         MutableText currentChannelColorText = chatInfo.isPrivatChat() ? chatInfo.getColoredPrivatText() : chatInfo.getColoredChannelText();
         currentChannelText.append(currentChannelColorText);
@@ -56,12 +58,13 @@ public class ChatInfoHud {
         double e = this.minecraft.options.getTextBackgroundOpacity().getValue();
         int v = (int) (255.0 * 1.0 * e);
         int height = (int) (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2f));
-        ChatHud.fill(stack, 2, height - 2, getWith(getWith(0, currentResponseText.getString()), currentChannelText.getString()) + 8, !chatInfo.hasResponsePlayer() ? height + 10 : height + 20, v << 24);
+
+        context.fill(2, height - 2, getWith(getWith(0, currentResponseText.getString()), currentChannelText.getString()) + 8, !chatInfo.hasResponsePlayer() ? height + 10 : height + 20, v << 24);
 
         result.width = getWith(result.width, currentChannelText.getString());
-        this.fontRenderer.drawWithShadow(stack, currentChannelText, 5, (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2f)), Color.WHITE.getRGB());
+        context.drawText(this.fontRenderer, currentChannelText, 5, (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2)), Color.WHITE.getRGB(), true);
         result.height -= distance;
-        this.fontRenderer.drawWithShadow(stack, currentResponseText, 5, (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2f)), Color.WHITE.getRGB());
+        context.drawText(this.fontRenderer, currentResponseText, 5, (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2)), Color.WHITE.getRGB(), true);
 
         if (result.width != 0) {
             result.width += 20;
