@@ -5,22 +5,23 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import de.fanta.cubeside.CubesideClientFabric;
-import fi.dy.masa.malilibcs.config.ConfigUtils;
-import fi.dy.masa.malilibcs.config.IConfigBase;
-import fi.dy.masa.malilibcs.config.IConfigHandler;
-import fi.dy.masa.malilibcs.config.options.ConfigBoolean;
-import fi.dy.masa.malilibcs.config.options.ConfigColor;
-import fi.dy.masa.malilibcs.config.options.ConfigColorList;
-import fi.dy.masa.malilibcs.config.options.ConfigDouble;
-import fi.dy.masa.malilibcs.config.options.ConfigInteger;
-import fi.dy.masa.malilibcs.config.options.ConfigString;
-import fi.dy.masa.malilibcs.config.options.ConfigStringList;
-import fi.dy.masa.malilibcs.util.Color4f;
-import fi.dy.masa.malilibcs.util.FileUtils;
-import fi.dy.masa.malilibcs.util.JsonUtils;
+import fi.dy.masa.malilib.config.ConfigUtils;
+import fi.dy.masa.malilib.config.IConfigBase;
+import fi.dy.masa.malilib.config.IConfigHandler;
+import fi.dy.masa.malilib.config.options.ConfigBoolean;
+import fi.dy.masa.malilib.config.options.ConfigColor;
+import fi.dy.masa.malilib.config.options.ConfigColorList;
+import fi.dy.masa.malilib.config.options.ConfigDouble;
+import fi.dy.masa.malilib.config.options.ConfigInteger;
+import fi.dy.masa.malilib.config.options.ConfigString;
+import fi.dy.masa.malilib.config.options.ConfigStringList;
+import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.malilib.util.JsonUtils;
 import net.minecraft.text.Text;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 public class Configs implements IConfigHandler {
 
@@ -156,7 +157,15 @@ public class Configs implements IConfigHandler {
     }
 
     public static void loadFromFile() {
-        File configFile = new File(FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
+        File oldConfigFile = new File(fi.dy.masa.malilib.util.FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
+        File configFile = new File(CubesideClientFabric.getConfigDirectory(), CONFIG_FILE_NAME);
+        if (oldConfigFile.exists()) {
+            try {
+                FileUtils.moveFile(oldConfigFile, configFile);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         if (!configFile.exists()) {
             saveToFile();
@@ -181,7 +190,7 @@ public class Configs implements IConfigHandler {
     }
 
     public static void saveToFile() {
-        File dir = FileUtils.getConfigDirectory();
+        File dir = CubesideClientFabric.getConfigDirectory();
 
         if ((dir.exists() && dir.isDirectory()) || dir.mkdirs()) {
             JsonObject root = new JsonObject();

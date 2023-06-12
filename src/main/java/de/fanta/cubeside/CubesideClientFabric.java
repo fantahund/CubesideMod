@@ -6,6 +6,7 @@ import de.fanta.cubeside.event.CubesideModChannelHandler;
 import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.permission.PermissionHandler;
 import de.fanta.cubeside.util.ChatInfo;
+import fi.dy.masa.malilib.util.FileUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +49,18 @@ public class CubesideClientFabric implements ClientModInitializer {
     
     private static ChatInfo chatInfo;
 
+    private static File configDirectory;
+
     @Override
     public void onInitializeClient() {
+        configDirectory = new File(FileUtils.getConfigDirectory().getPath() + "/CubesideMod");
+        if (!configDirectory.isDirectory()) {
+            configDirectory.mkdirs();
+        }
         try {
             DATABASE = new Database();
         } catch (Exception e) {
-            LOGGER.log(Level.INFO, "Du hast scheinbar mehrere Minecraft Instanzen am laufen. Chat & Commands werden nicht gespeichert oder geladen!");
+            LOGGER.log(Level.INFO, "Du hast scheinbar mehrere Minecraft Instanzen am laufen. Chat & Commands werden nicht gespeichert oder geladen!", e);
             databaseinuse = true;
         }
         Configs.loadFromFile();
@@ -141,5 +149,9 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     public static void setChatInfo(ChatInfo chatInfo) {
         CubesideClientFabric.chatInfo = chatInfo;
+    }
+
+    public static File getConfigDirectory() {
+        return configDirectory;
     }
 }

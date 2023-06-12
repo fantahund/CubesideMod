@@ -2,7 +2,11 @@ package de.fanta.cubeside.data;
 
 import de.fanta.cubeside.CubesideClientFabric;
 import net.minecraft.text.Text;
+import org.apache.commons.io.FileUtils;
+import org.joml.sampling.BestCandidateSampling;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -28,9 +32,18 @@ public class Database {
 
     public Database() {
         executor = Executors.newSingleThreadExecutor();
+        File oldDatabase = new File("chat.h2.db");
+        if (oldDatabase.exists()) {
+            try {
+                FileUtils.moveFile(oldDatabase, new File(CubesideClientFabric.getConfigDirectory(), "chat.h2.db"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         try {
             Class.forName("org.h2.Driver");
-            String dbUrl = "jdbc:h2:chat";
+            String dbUrl = "jdbc:h2:" + CubesideClientFabric.getConfigDirectory() + "/chat";
             this.connection = DriverManager.getConnection(dbUrl);
 
             createTablesIfNotExist();
