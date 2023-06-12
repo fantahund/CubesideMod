@@ -6,7 +6,6 @@ import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.network.message.MessageSignatureData;
@@ -34,7 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Mixin(ChatHud.class)
-public abstract class MixinChatHud extends DrawableHelper implements ChatHudMethods {
+public abstract class MixinChatHud implements ChatHudMethods {
 
     private static final Database database = CubesideClientFabric.getDatabase();
     private static final Date DATE = new Date();
