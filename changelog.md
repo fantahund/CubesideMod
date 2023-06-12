@@ -1,1 +1,1 @@
-- Add MiningAssistent
+- Update to 1.20

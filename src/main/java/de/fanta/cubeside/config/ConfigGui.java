@@ -2,12 +2,12 @@ package de.fanta.cubeside.config;
 
 import com.google.common.collect.ImmutableList;
 import de.fanta.cubeside.CubesideClientFabric;
-import fi.dy.masa.malilibcs.config.IConfigBase;
-import fi.dy.masa.malilibcs.gui.GuiConfigsBase;
-import fi.dy.masa.malilibcs.gui.button.ButtonBase;
-import fi.dy.masa.malilibcs.gui.button.ButtonGeneric;
-import fi.dy.masa.malilibcs.gui.button.IButtonActionListener;
-import fi.dy.masa.malilibcs.util.StringUtils;
+import fi.dy.masa.malilib.config.IConfigBase;
+import fi.dy.masa.malilib.gui.GuiConfigsBase;
+import fi.dy.masa.malilib.gui.button.ButtonBase;
+import fi.dy.masa.malilib.gui.button.ButtonGeneric;
+import fi.dy.masa.malilib.gui.button.IButtonActionListener;
+import fi.dy.masa.malilib.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;

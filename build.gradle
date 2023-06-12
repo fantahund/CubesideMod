@@ -54,7 +54,7 @@ dependencies {
 
     modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modImplementation include("fi.dy.masa.malilibcs:malilibcs-fabric-${project.minecraft_version_out}:${project.malilibcs_version}")
+    modImplementation include("fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version_out}:${project.malilib_version}")
 
     shade 'com.h2database:h2:2.1.214'
 
@@ -62,7 +62,7 @@ dependencies {
 
     implementation "org.joml:joml:1.10.2" // Needed for Sodium
 
-    modImplementation "de.guntram.mcmod:DurabilityViewer:${project.durabilityviewer_version}"
+    modImplementation "de.guntram.mcmod:durabilityviewer:${project.durabilityviewer_version}"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.0.1" // Needed for DurabilityViewer
     modImplementation "dev.emi:trinkets:3.0.0" // Needed for DurabilityViewer
 
