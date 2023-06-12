@@ -54,7 +54,7 @@ dependencies {
 
     modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modImplementation include("fi.dy.masa.malilibcs:malilibcs-fabric-${project.minecraft_version_out}:${project.malilibcs_version}")
+    modImplementation include("fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version_out}:${project.malilib_version}")
 
     shade 'com.h2database:h2:2.1.214'
 
