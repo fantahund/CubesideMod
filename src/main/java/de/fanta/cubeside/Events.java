@@ -8,12 +8,23 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.minecraft.block.AbstractSignBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HangingSignBlock;
+import net.minecraft.block.SignBlock;
+import net.minecraft.block.WallSignBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ShovelItem;
+import net.minecraft.item.ToolItem;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.Level;
 
 import java.time.LocalDate;
@@ -132,6 +143,25 @@ public class Events {
                 while (KeyBinds.TOGGLE_MINING_ASSISTANT.wasPressed()) {
                     Configs.MiningAssistent.MiningAssistentEnabled.setBooleanValue(!Configs.MiningAssistent.MiningAssistentEnabled.getBooleanValue());
                     Configs.saveToFile();
+                    mc.player.sendMessage(Text.of("MiningAssistent set to: " + (Configs.MiningAssistent.MiningAssistentEnabled.getBooleanValue() ? "§atrue" : "§cfalse")), true);
+                }
+
+                while (KeyBinds.WOOD_STRIPING.wasPressed()) {
+                    Configs.Generic.WoodStriping.setBooleanValue(!Configs.Generic.WoodStriping.getBooleanValue());
+                    Configs.saveToFile();
+                    mc.player.sendMessage(Text.of("WoodStriping set to: " + (Configs.Generic.WoodStriping.getBooleanValue() ? "§atrue" : "§cfalse")), true);
+                }
+
+                while (KeyBinds.CREATE_GRASS_PATH.wasPressed()) {
+                    Configs.Generic.CreateGrassPath.setBooleanValue(!Configs.Generic.CreateGrassPath.getBooleanValue());
+                    Configs.saveToFile();
+                    mc.player.sendMessage(Text.of("CreateGrassPath set to: " + (Configs.Generic.CreateGrassPath.getBooleanValue() ? "§atrue" : "§cfalse")), true);
+                }
+
+                while (KeyBinds.EDIT_SIGN.wasPressed()) {
+                    Configs.Generic.SignEdit.setBooleanValue(!Configs.Generic.SignEdit.getBooleanValue());
+                    Configs.saveToFile();
+                    mc.player.sendMessage(Text.of("SignEdit set to: " + (Configs.Generic.SignEdit.getBooleanValue() ? "§atrue" : "§cfalse")), true);
                 }
             }
 
@@ -149,5 +179,25 @@ public class Events {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> CubesideClientFabric.commands.register(dispatcher));
 
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> MiningAssistent.render(context.matrixStack()));
+
+        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+            ItemStack itemInHand = player.getStackInHand(hand);
+            BlockPos blockPos = hitResult.getBlockPos();
+            BlockState blockState = world.getBlockState(blockPos);
+
+            if (!Configs.Generic.WoodStriping.getBooleanValue() && itemInHand.getItem() instanceof ToolItem && AxeItem.STRIPPED_BLOCKS.containsKey(blockState.getBlock())) {
+                return ActionResult.FAIL;
+            }
+
+            if (!Configs.Generic.CreateGrassPath.getBooleanValue() && itemInHand.getItem() instanceof ShovelItem && ShovelItem.PATH_STATES.containsKey(blockState.getBlock())) {
+                return ActionResult.FAIL;
+            }
+
+            if (!Configs.Generic.SignEdit.getBooleanValue() && blockState.getBlock() instanceof AbstractSignBlock) {
+                return ActionResult.FAIL;
+            }
+
+            return ActionResult.PASS;
+        });
     }
 }

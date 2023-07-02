@@ -38,6 +38,9 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean TpaSound = new ConfigBoolean("TpaSound", true, Text.translatable("options.cubeside.tpasound").getString());
         public static final ConfigBoolean GamemodeSwitcher = new ConfigBoolean("GamemodeSwitcher", true, Text.translatable("options.cubeside.gamemodeswitcher").getString());
         public static final ConfigBoolean ActionBarShadow = new ConfigBoolean("ActionBarShadow", true, Text.translatable("options.cubeside.actionbarshadow").getString());
+        public static final ConfigBoolean WoodStriping = new ConfigBoolean("WoodStriping", true, Text.translatable("options.cubeside.woodstriping").getString());
+        public static final ConfigBoolean CreateGrassPath = new ConfigBoolean("CreateGrassPath", true, Text.translatable("options.cubeside.creategrasspath").getString());
+        public static final ConfigBoolean SignEdit = new ConfigBoolean("SingEdit", true, Text.translatable("options.cubeside.singedit").getString());
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 ThirdPersonElytra,
@@ -48,7 +51,10 @@ public class Configs implements IConfigHandler {
                 ClickableTpaMessage,
                 TpaSound,
                 GamemodeSwitcher,
-                ActionBarShadow
+                ActionBarShadow,
+                WoodStriping,
+                CreateGrassPath,
+                SignEdit
         );
     }
 

@@ -33,9 +33,10 @@ public class Database {
     public Database() {
         executor = Executors.newSingleThreadExecutor();
         File oldDatabase = new File("chat.h2.db");
-        if (oldDatabase.exists()) {
+        File moveToLocation = new File(CubesideClientFabric.getConfigDirectory(), "chat.h2.db");
+        if (oldDatabase.exists() && !moveToLocation.exists()) {
             try {
-                FileUtils.moveFile(oldDatabase, new File(CubesideClientFabric.getConfigDirectory(), "chat.h2.db"));
+                FileUtils.moveFile(oldDatabase, moveToLocation);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

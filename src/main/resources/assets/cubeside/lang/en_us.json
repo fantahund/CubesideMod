@@ -58,5 +58,11 @@
     "options.cubeside.miningassistentdistance": "Mining Assistent Distance",
     "options.cubeside.miningassistentcircles": "Mining Assistent Circles",
     "key.cubeside.miningassistant": "Toggle Mining Assistent",
-    "key.cubeside.setminingassistantstartpoint": "Mining Assistent Startpoint"
+    "key.cubeside.setminingassistantstartpoint": "Mining Assistent Startpoint",
+    "key.cubeside.woodstriping": "Toggle Wood Striping",
+    "key.cubeside.creategrasspath": "Toggle Create Grass Path",
+    "key.cubeside.editsign": "Toggle Sign Edit",
+    "options.cubeside.woodstriping": "Wood striping at right click with axe",
+    "options.cubeside.creategrasspath": "Create grass path at right click with shovel",
+    "options.cubeside.singedit": "Edit sign with right click"
 }
