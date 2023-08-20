@@ -11,9 +11,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HangingSignBlock;
-import net.minecraft.block.SignBlock;
-import net.minecraft.block.WallSignBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.item.AxeItem;
@@ -65,6 +62,10 @@ public class Events {
                         CubesideClientFabric.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
                         CubesideClientFabric.messageQueue.clear();
                     }
+                }
+
+                if (Configs.HitBox.KeepEntityHitBox.getBooleanValue()) {
+                    client.getEntityRenderDispatcher().setRenderHitboxes(Configs.HitBox.ShowHitBox.getBooleanValue());
                 }
             }
         });

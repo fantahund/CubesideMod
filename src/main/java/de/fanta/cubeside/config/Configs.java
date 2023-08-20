@@ -97,6 +97,7 @@ public class Configs implements IConfigHandler {
     }
 
     public static class HitBox {
+        public static final ConfigBoolean KeepEntityHitBox = new ConfigBoolean("KeepEntityHitBox", false, Text.translatable("options.cubeside.keepentityhitbox").getString());
         public static final ConfigBoolean RainbowEntityHitBox = new ConfigBoolean("RainbowEntityHitBox", false, Text.translatable("options.cubeside.rainbowentityhitbox").getString());
         public static final ConfigColorList RainbowEntityHitBoxColorList = new ConfigColorList("RainbowEntityHitBoxColorList", ImmutableList.of(Color4f.fromColor(16711684), Color4f.fromColor(16754176), Color4f.fromColor(16769280), Color4f.fromColor(65305), Color4f.fromColor(35071), Color4f.fromColor(13959423)), Text.translatable("options.cubeside.rainbowentityhitboxcolorlist").getString());
         public static final ConfigDouble RainbowEntityHitBoxSpeed = new ConfigDouble("RainbowEntityHitBoxSpeed", 0.1, 0.0, 1, true, Text.translatable("options.cubeside.rainbowentityhitboxspeed").getString());
@@ -108,8 +109,8 @@ public class Configs implements IConfigHandler {
         public static final ConfigDouble RainbowBlockHitBoxSpeed = new ConfigDouble("RainbowBlockHitBoxSpeed", 0.1, 0.0, 1, true, Text.translatable("options.cubeside.rainbowblockhitboxspeed").getString());
         public static final ConfigDouble BlockHitBoxVisibility = new ConfigDouble("BlockHitBoxVisibility", 0.4, 0.0, 1, true, Text.translatable("options.cubeside.blockhitboxvisibility").getString());
         public static final ConfigColor BlockHitBoxColor = new ConfigColor("BlockHitBoxColor", "#000000", Text.translatable("options.cubeside.blockhitboxcolor").getString());
-
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                KeepEntityHitBox,
                 RainbowEntityHitBox,
                 RainbowEntityHitBoxColorList,
                 RainbowEntityHitBoxSpeed,
@@ -122,20 +123,26 @@ public class Configs implements IConfigHandler {
                 BlockHitBoxColor,
                 BlockHitBoxVisibility
         );
+
+        public static final ConfigBoolean ShowHitBox = new ConfigBoolean("ShowHitBox", false, Text.translatable("options.cubeside.showhitbox").getString());
+        public static final ImmutableList<IConfigBase> INVISIBLE_OPTIONS = ImmutableList.of(
+                ShowHitBox
+        );
     }
 
     public static class MiningAssistent {
         public static final ConfigBoolean MiningAssistentEnabled = new ConfigBoolean("MiningAssistentEnabled", false, Text.translatable("options.cubeside.miningassistentenabled").getString());
         public static final ConfigInteger MiningAssistentDistance = new ConfigInteger("MiningAssistentDistance", 3, 0, 10, Text.translatable("options.cubeside.miningassistentdistance").getString());
         public static final ConfigInteger MiningAssistentCircles = new ConfigInteger("MiningAssistentCircles", 16, 1, 30, Text.translatable("options.cubeside.miningassistentcircles").getString());
-        public static final ConfigInteger MiningAssistentStartX = new ConfigInteger("MiningAssistentStartX", 0, Text.translatable("options.cubeside.miningassistentstartx").getString());
-        public static final ConfigInteger MiningAssistentStartY = new ConfigInteger("MiningAssistentStartY", 0, Text.translatable("options.cubeside.miningassistentstarty").getString());
-        public static final ConfigInteger MiningAssistentStartZ = new ConfigInteger("MiningAssistentStartZ", 0, Text.translatable("options.cubeside.miningassistentstartz").getString());
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 MiningAssistentEnabled,
                 MiningAssistentDistance,
                 MiningAssistentCircles
         );
+
+        public static final ConfigInteger MiningAssistentStartX = new ConfigInteger("MiningAssistentStartX", 0, Text.translatable("options.cubeside.miningassistentstartx").getString());
+        public static final ConfigInteger MiningAssistentStartY = new ConfigInteger("MiningAssistentStartY", 0, Text.translatable("options.cubeside.miningassistentstarty").getString());
+        public static final ConfigInteger MiningAssistentStartZ = new ConfigInteger("MiningAssistentStartZ", 0, Text.translatable("options.cubeside.miningassistentstartz").getString());
         public static final ImmutableList<IConfigBase> INVISIBLE_OPTIONS = ImmutableList.of(
                 MiningAssistentStartX,
                 MiningAssistentStartY,
@@ -187,6 +194,7 @@ public class Configs implements IConfigHandler {
                 ConfigUtils.readConfigBase(root, "ChunkLoading", ChunkLoading.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Fun", Fun.OPTIONS);
                 ConfigUtils.readConfigBase(root, "Hitbox", HitBox.OPTIONS);
+                ConfigUtils.readConfigBase(root, "Hitbox", HitBox.INVISIBLE_OPTIONS);
                 ConfigUtils.readConfigBase(root, "MiningAssistent", MiningAssistent.OPTIONS);
                 ConfigUtils.readConfigBase(root, "MiningAssistent", MiningAssistent.INVISIBLE_OPTIONS);
                 ConfigUtils.readConfigBase(root, "Fixes", Fixes.OPTIONS);
@@ -206,6 +214,7 @@ public class Configs implements IConfigHandler {
             ConfigUtils.writeConfigBase(root, "ChunkLoading", ChunkLoading.OPTIONS);
             ConfigUtils.writeConfigBase(root, "Fun", Fun.OPTIONS);
             ConfigUtils.writeConfigBase(root, "Hitbox", HitBox.OPTIONS);
+            ConfigUtils.writeConfigBase(root, "Hitbox", HitBox.INVISIBLE_OPTIONS);
             ConfigUtils.writeConfigBase(root, "MiningAssistent", MiningAssistent.OPTIONS);
             ConfigUtils.writeConfigBase(root, "MiningAssistent", MiningAssistent.INVISIBLE_OPTIONS);
             ConfigUtils.writeConfigBase(root, "Fixes", Fixes.OPTIONS);
