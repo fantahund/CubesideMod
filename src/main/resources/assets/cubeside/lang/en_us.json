@@ -16,6 +16,7 @@
     "options.cubeside.actionbarshadow": "Removes the text shadow in the ActionBar above the hotbar",
     "options.cubeside.kickbynotvalidmessage": "Kick when verifying messages.",
 
+    "options.cubeside.keepentityhitbox": "Keep entity hitbox status after restart",
     "options.cubeside.rainbowentityhitbox": "Rainbow entity hitboxes",
     "options.cubeside.rainbowentityhitboxcolorlist": "Rainbow entity hitbox colors",
     "options.cubeside.entityhitboxvisibility": "Entity Hitbox visibility",
