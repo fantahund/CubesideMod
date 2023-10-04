@@ -29,7 +29,7 @@ public abstract class InGameHudMixin {
         return instance.drawText(textRenderer, this.overlayMessage, -n / 2, -4, color, Configs.Generic.ActionBarShadow.getBooleanValue());
     }
 
-    @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/option/GameOptions;debugEnabled:Z", opcode = Opcodes.GETFIELD, args = {"log=false"}))
+    @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/hud/InGameHud;debugHud:Lnet/minecraft/client/gui/hud/DebugHud;", opcode = Opcodes.GETFIELD, args = {"log=false"}))
     private void beforeRenderDebugScreen2(DrawContext context, float tickDelta, CallbackInfo ci) {
         chatInfoHud = chatInfoHud != null ? chatInfoHud : new ChatInfoHud();
         chatInfoHud.onRenderGameOverlayPost(context);

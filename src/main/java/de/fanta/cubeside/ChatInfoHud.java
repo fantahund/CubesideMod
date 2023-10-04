@@ -35,7 +35,7 @@ public class ChatInfoHud {
     }
 
     public void onRenderGameOverlayPost(DrawContext context) {
-        if (minecraft.options.debugEnabled) {
+        if (minecraft.getDebugHud().shouldShowDebugHud()) {
             return;
         }
         if (this.minecraft.currentScreen instanceof ChatScreen && Configs.Chat.DisplayChatInfo.getBooleanValue() && CubesideClientFabric.getChatInfo() != null) {
@@ -49,17 +49,15 @@ public class ChatInfoHud {
         MutableText currentChannelColorText = chatInfo.isPrivatChat() ? chatInfo.getColoredPrivatText() : chatInfo.getColoredChannelText();
         currentChannelText.append(currentChannelColorText);
 
-        MutableText currentResponseText = Text.literal(chatInfo.hasResponsePlayer() ? "Antwort an: " : "" );
+        MutableText currentResponseText = Text.literal(chatInfo.hasResponsePlayer() ? "Antwort an: " : "");
         MutableText currentResponseColorText = chatInfo.hasResponsePlayer() ? chatInfo.getColoredResponseText() : Text.empty();
         currentResponseText.append(currentResponseColorText);
 
         RenderSize result = new RenderSize(0, 0);
         int distance = 10;
-        double e = this.minecraft.options.getTextBackgroundOpacity().getValue();
-        int v = (int) (255.0 * 1.0 * e);
         int height = (int) (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2f));
 
-        context.fill(2, height - 2, getWith(getWith(0, currentResponseText.getString()), currentChannelText.getString()) + 8, !chatInfo.hasResponsePlayer() ? height + 10 : height + 20, v << 24);
+        context.fill(2, height - 2, getWith(getWith(0, currentResponseText.getString()), currentChannelText.getString()) + 8, !chatInfo.hasResponsePlayer() ? height + 10 : height + 20, minecraft.options.getTextBackgroundColor(Integer.MIN_VALUE));
 
         result.width = getWith(result.width, currentChannelText.getString());
         context.drawText(this.fontRenderer, currentChannelText, 5, (minecraft.getWindow().getScaledHeight() - (result.height + 70 / 2)), Color.WHITE.getRGB(), true);
