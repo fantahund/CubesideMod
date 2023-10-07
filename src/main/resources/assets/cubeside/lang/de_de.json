@@ -1,5 +1,6 @@
 {
     "category.cubeside.general": "Allgemein",
+    "options.cubeside.clearchatbyserverchange": "Chatverlauf Löschen beim Server Wechseln. (nur Server-Netzwerke)",
     "options.cubeside.chattimestamps": "Zeitstempel bei Chatnachrichten anzeigen",
     "options.cubeside.thirdpersonelytra": "Beim Fliegen mit der Elytra automatisch in die dritte Person wechseln",
     "options.cubeside.timestampcolor": "Ändert die Farbe des Zeitstempels",

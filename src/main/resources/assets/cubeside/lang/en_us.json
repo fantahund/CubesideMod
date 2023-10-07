@@ -1,5 +1,6 @@
 {
     "category.cubeside.general": "General",
+    "options.cubeside.clearchatbyserverchange": "Delete chat history when switching servers. (only Server-Networks)",
     "options.cubeside.chattimestamps": "Show timestamps on chat messages",
     "options.cubeside.thirdpersonelytra": "Automatically switch to third person when flying with the Elytra",
     "options.cubeside.timestampcolor": "Change the color of the timestamp",

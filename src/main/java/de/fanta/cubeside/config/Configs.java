@@ -59,6 +59,7 @@ public class Configs implements IConfigHandler {
     }
 
     public static class Chat {
+        public static final ConfigBoolean ClearChatByServerChange = new ConfigBoolean("ClearChatByServerChange", false, Text.translatable("options.cubeside.clearchatbyserverchange").getString());
         public static final ConfigBoolean ChatTimeStamps = new ConfigBoolean("ChatTimeStamps", false, Text.translatable("options.cubeside.chattimestamps").getString());
         public static final ConfigColor TimeStampColor = new ConfigColor("TimeStampColor", "#ffffff", Text.translatable("options.cubeside.timestampcolor").getString());
         public static final ConfigBoolean SaveMessagesToDatabase = new ConfigBoolean("SaveMessagesToDatabase", false, Text.translatable("options.cubeside.savemessagestodatabase").getString());
@@ -66,6 +67,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigInteger ChatMessageLimit = new ConfigInteger("ChatMessageLimit", 100, 1, 100000, true, Text.translatable("options.cubeside.chatlimit").getString());
         public static final ConfigBoolean DisplayChatInfo = new ConfigBoolean("DisplayChatInfo", true, Text.translatable("options.cubeside.displaychatinfo").getString());
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
+                ClearChatByServerChange,
                 ChatTimeStamps,
                 TimeStampColor,
                 SaveMessagesToDatabase,

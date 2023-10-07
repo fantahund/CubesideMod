@@ -41,6 +41,13 @@ public abstract class MixinChatHud implements ChatHudMethods {
     @Shadow
     private MinecraftClient client;
 
+    @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
+    private void clear(boolean clearHistory, CallbackInfo ci) {
+        if (!Configs.Chat.ClearChatByServerChange.getBooleanValue() && (this.client.getNetworkHandler() == null || this.client.getNetworkHandler().getWorld() != null)) {
+            ci.cancel();
+        }
+    }
+
     private static String getChatTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]");
         DATE.setTime(System.currentTimeMillis());
@@ -246,7 +253,6 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 componentIn = component;
             }
         }
-
 
         if (Configs.Chat.ChatTimeStamps.getBooleanValue()) {
             MutableText component = Text.literal("");
