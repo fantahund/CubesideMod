@@ -49,10 +49,11 @@ public class ChatInfo {
     }
 
     public MutableText getColoredChannelText() {
-        return currentChannelColor.getSiblings().isEmpty() ? Text.of(currentChannelName).copy() : currentChannelColor.getSiblings().get(currentChannelColor.getSiblings().size() - 1).copy().append(currentChannelName);
+        return currentChannelColor.getSiblings().isEmpty() ? currentChannelColor.copy().append(currentChannelName) : currentChannelColor.getSiblings().get(currentChannelColor.getSiblings().size() - 1).copy().append(currentChannelName);
     }
+
     public MutableText getColoredPrivatText() {
-        return currentPrivateChatPrefix.getSiblings().isEmpty() ? Text.of(currentPrivateChat).copy() : currentPrivateChatPrefix.getSiblings().get(currentPrivateChatPrefix.getSiblings().size() - 1).copy().append(currentPrivateChat);
+        return currentPrivateChatPrefix.getSiblings().isEmpty() ? currentPrivateChatPrefix.copy().append(currentPrivateChat) : currentPrivateChatPrefix.getSiblings().get(currentPrivateChatPrefix.getSiblings().size() - 1).copy().append(currentPrivateChat);
     }
 
     public boolean hasResponsePlayer() {
@@ -60,6 +61,6 @@ public class ChatInfo {
     }
 
     public MutableText getColoredResponseText() {
-        return currentResponsePartnerPrefix.getSiblings().isEmpty() ? Text.of(currentResponsePartner).copy() : currentResponsePartnerPrefix.getSiblings().get(currentResponsePartnerPrefix.getSiblings().size() - 1).copy().append(currentResponsePartner);
+        return currentResponsePartnerPrefix.getSiblings().isEmpty() ? currentResponsePartnerPrefix.copy().append(currentResponsePartner) : currentResponsePartnerPrefix.getSiblings().get(currentResponsePartnerPrefix.getSiblings().size() - 1).copy().append(currentResponsePartner);
     }
 }
