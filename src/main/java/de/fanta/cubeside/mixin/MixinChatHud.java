@@ -302,11 +302,6 @@ public abstract class MixinChatHud implements ChatHudMethods {
         this.addToMessageHistory(message);
     }
 
-    @ModifyConstant(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", constant = {@Constant(intValue = 100)})
-    private int replaceMessageLimit(int original) {
-        return Configs.Chat.ChatMessageLimit.getIntegerValue();
-    }
-
     public void playAFKSound() {
         if (client.player != null) {
             SoundEvent sound = SoundEvent.of(new Identifier(CubesideClientFabric.MODID, "afk"));

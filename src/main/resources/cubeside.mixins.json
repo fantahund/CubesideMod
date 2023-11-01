@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "de.fanta.cubeside.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "de.fanta.cubeside.MixinPlugin",
   "mixins": [
     "DurabilityViewerMixin",
     "InGameHudMixin",
@@ -24,11 +25,11 @@
     "MixinWorldRenderer",
     "MixinXaeroDisableCaveMap",
     "MixinXaeroForceFairPlay",
-    "SignBlockEntityRendererMixin"
-  ],
-  "client": [
+    "SignBlockEntityRendererMixin",
+    "MixinChatLimit",
     "MixinCustomHitBox"
   ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   }
