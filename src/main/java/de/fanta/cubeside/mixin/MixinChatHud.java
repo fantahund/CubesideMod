@@ -22,9 +22,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -109,16 +107,16 @@ public abstract class MixinChatHud implements ChatHudMethods {
             MutableText component = Text.literal("");
             if (args2.length == 2) {
                 MutableText name = Text.literal(args2[0]);
-                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592").result().get()));
                 MutableText accept = Text.literal("[Annehmen]");
-                accept.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept")));
+                accept.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d").result().get()).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept")));
                 MutableText deny = Text.literal(" [Ablehnen]");
-                deny.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny")));
+                deny.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139").result().get()).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny")));
 
                 if (args2[1].startsWith("fragt, ob er sich zu dir teleportieren darf.")) {
                     component.append(name);
                     MutableText message = Text.literal(" möchte sich zu dir teleportieren.\n");
-                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message);
                     component.append(accept);
                     component.append(deny);
@@ -135,7 +133,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 if (args2[1].startsWith("fragt, ob du dich zu ihm teleportieren möchtest.")) {
                     component.append(name);
                     MutableText message = Text.literal(" möchte, dass du dich zu ihm teleportierst.\n");
-                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message);
                     component.append(accept);
                     component.append(deny);
@@ -152,10 +150,10 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 if (args2[1].startsWith("hat deine Teleportierungsanfrage angenommen.")) {
                     component.append(name);
                     MutableText message = Text.literal(" hat deine Teleportierungsanfrage");
-                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message);
                     MutableText message2 = Text.literal(" angenommen.");
-                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")));
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d").result().get()));
                     component.append(message2);
                     componentIn = component;
                 }
@@ -163,25 +161,25 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 if (args2[1].startsWith("hat deine Teleportierungsanfrage abgelehnt.")) {
                     component.append(name);
                     MutableText message = Text.literal(" hat deine Teleportierungsanfrage");
-                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message);
                     MutableText message2 = Text.literal(" abgelehnt.");
-                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139").result().get()));
                     component.append(message2);
                     componentIn = component;
                 }
             }
             if (args5.length == 5) {
                 MutableText name = Text.literal(args6[4].replace(".", ""));
-                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592").result().get()));
 
                 if (tpamessage.startsWith("Du teleportierst dich zu")) {
                     MutableText message1 = Text.literal("Du wirst zu ");
-                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message1);
                     component.append(name);
                     MutableText message2 = Text.literal(" teleportiert.");
-                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message2);
                     componentIn = component;
                 }
@@ -189,28 +187,28 @@ public abstract class MixinChatHud implements ChatHudMethods {
 
             if (args6.length == 6) {
                 MutableText name = Text.literal(args6[4].replace(".", ""));
-                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592").result().get()));
                 if (tpamessage.startsWith("Eine Anfrage wurde an")) {
                     MutableText message1 = Text.literal("Du hast eine Anfrage an ");
-                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message1);
                     component.append(name);
                     MutableText message2 = Text.literal(" gesendet.");
-                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message2);
                     componentIn = component;
                 }
 
                 if (tpamessage.startsWith("Diese Anfrage wird nach")) {
                     MutableText message1 = Text.literal("Diese Anfrage wird in ");
-                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message1);
                     component.append(name);
                     MutableText seconds = Text.literal(" Sekunden ");
-                    seconds.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+                    seconds.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592").result().get()));
                     component.append(seconds);
                     MutableText message2 = Text.literal("ablaufen.");
-                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message2);
                     componentIn = component;
                 }
@@ -218,37 +216,37 @@ public abstract class MixinChatHud implements ChatHudMethods {
             }
             if (tpamessage.equals("Teleportation läuft...")) {
                 MutableText message = Text.literal("Teleportation läuft...");
-                message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                 component.append(message);
                 componentIn = component;
             }
 
             if (tpamessage.equals("Du hast die Teleportierungsanfrage abgelehnt.")) {
                 MutableText message1 = Text.literal("Du hast die Teleportierungsanfrage");
-                message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                 component.append(message1);
                 MutableText message2 = Text.literal(" abgelehnt.");
-                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
+                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139").result().get()));
                 component.append(message2);
                 componentIn = component;
             }
 
             if (tpamessage.equals("Du hast die Teleportierungsanfrage angenommen.")) {
                 MutableText message1 = Text.literal("Du hast die Teleportierungsanfrage");
-                message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                 component.append(message1);
                 MutableText message2 = Text.literal(" angenommen.");
-                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")));
+                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d").result().get()));
                 component.append(message2);
                 componentIn = component;
             }
 
             if (tpamessage.equals("Fehler: Du hast keine Teleportierungsanfragen.")) {
                 MutableText message = Text.literal("Fehler: ");
-                message.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
+                message.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139").result().get()));
                 component.append(message);
                 MutableText message2 = Text.literal("Du hast keine Teleportierungsanfrage.");
-                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                 component.append(message2);
                 componentIn = component;
             }

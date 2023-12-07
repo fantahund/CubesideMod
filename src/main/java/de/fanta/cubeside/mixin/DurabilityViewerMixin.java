@@ -43,7 +43,7 @@ public class DurabilityViewerMixin {
                 if (display.getType(ItemStack.LORE_KEY) == NbtElement.LIST_TYPE) {
                     NbtList nbtList = display.getList(ItemStack.LORE_KEY, NbtElement.STRING_TYPE);
                     String string = nbtList.getString(nbtList.size() - 1);
-                    MutableText mutableText = Text.Serializer.fromJson(string);
+                    MutableText mutableText = Text.Serialization.fromJson(string);
                     if (mutableText != null) {
                         String fullDurabilityString = mutableText.getString();
                         if (fullDurabilityString.startsWith("Haltbarkeit:")) {

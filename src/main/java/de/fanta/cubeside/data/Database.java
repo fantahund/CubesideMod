@@ -3,7 +3,6 @@ package de.fanta.cubeside.data;
 import de.fanta.cubeside.CubesideClientFabric;
 import net.minecraft.text.Text;
 import org.apache.commons.io.FileUtils;
-import org.joml.sampling.BestCandidateSampling;
 
 import java.io.File;
 import java.io.IOException;
@@ -91,7 +90,7 @@ public class Database {
             try (PreparedStatement statement = this.connection.prepareStatement(addMessageQuery)) {
                 statement.setLong(1, timestamp);
                 statement.setString(2, server);
-                statement.setString(3, Text.Serializer.toJson(message));
+                statement.setString(3, Text.Serialization.toJsonString(message));
 
                 statement.executeUpdate();
                 connection.commit();
@@ -110,7 +109,7 @@ public class Database {
             statement.setString(1, server);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Text message = Text.Serializer.fromJson(rs.getString(1));
+                Text message = Text.Serialization.fromJson(rs.getString(1));
                 messages.add(message);
             }
         } catch (SQLException e) {

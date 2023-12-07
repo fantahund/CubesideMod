@@ -9,7 +9,9 @@
     "InGameHudMixin",
     "LogicalZoomMixin",
     "MixinChatHud",
+    "MixinChatLimit",
     "MixinClientPlayNetHandler",
+    "MixinCustomHitBox",
     "MixinCustomPauseMenu",
     "MixinCustomTitleScreen",
     "MixinGameModeSelectionScreen",
@@ -25,9 +27,7 @@
     "MixinWorldRenderer",
     "MixinXaeroDisableCaveMap",
     "MixinXaeroForceFairPlay",
-    "SignBlockEntityRendererMixin",
-    "MixinChatLimit",
-    "MixinCustomHitBox"
+    "SignBlockEntityRendererMixin"
   ],
   "client": [],
   "injectors": {
