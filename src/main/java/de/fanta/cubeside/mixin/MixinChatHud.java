@@ -8,6 +8,7 @@ import de.fanta.cubeside.util.ChatUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.MessageIndicator;
+import net.minecraft.client.gui.screen.ReconfiguringScreen;
 import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -41,7 +42,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
 
     @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
     private void clear(boolean clearHistory, CallbackInfo ci) {
-        if (!Configs.Chat.ClearChatByServerChange.getBooleanValue() && (this.client.getNetworkHandler() == null || this.client.getNetworkHandler().getWorld() != null)) {
+        if (!Configs.Chat.ClearChatByServerChange.getBooleanValue() && (CubesideClientFabric.isInClearLevel())) {
             ci.cancel();
         }
     }

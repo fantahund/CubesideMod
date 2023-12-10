@@ -37,9 +37,13 @@ public class CubesideModChannelHandler implements ClientPlayNetworking.PlayChann
                 MutableText currentPrivateChatPrefix = Text.empty();
                 MutableText currentResponsePartnerPrefix = Text.empty();
                 try {
-                    currentChannelColor = (MutableText) packet.readText();
-                    currentPrivateChatPrefix = (MutableText) packet.readText();
-                    currentResponsePartnerPrefix = (MutableText) packet.readText();
+                    String currentChannelColorString = packet.readString();
+                    String currentPrivateChatPrefixString = packet.readString();
+                    String currentResponsePartnerPrefixString = packet.readString();
+
+                    currentChannelColor = Text.Serialization.fromJson(currentChannelColorString);
+                    currentPrivateChatPrefix = Text.Serialization.fromJson(currentPrivateChatPrefixString);
+                    currentResponsePartnerPrefix = Text.Serialization.fromJson(currentResponsePartnerPrefixString);
                 } catch (IndexOutOfBoundsException ignored) {
                 }
 

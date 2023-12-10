@@ -27,9 +27,9 @@
     "MixinWorldRenderer",
     "MixinXaeroDisableCaveMap",
     "MixinXaeroForceFairPlay",
-    "SignBlockEntityRendererMixin"
+    "SignBlockEntityRendererMixin",
+    "MinecraftClientMixin"
   ],
-  "client": [],
   "injectors": {
     "defaultRequire": 1
   }
