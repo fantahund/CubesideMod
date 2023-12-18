@@ -1,5 +1,6 @@
 package de.fanta.cubeside.data;
 
+import com.google.gson.JsonParseException;
 import de.fanta.cubeside.CubesideClientFabric;
 import net.minecraft.text.Text;
 import org.apache.commons.io.FileUtils;
@@ -109,8 +110,11 @@ public class Database {
             statement.setString(1, server);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Text message = Text.Serialization.fromJson(rs.getString(1));
-                messages.add(message);
+                try {
+                    Text message = Text.Serialization.fromJson(rs.getString(1));
+                    messages.add(message);
+                } catch (JsonParseException ignore) {
+                }
             }
         } catch (SQLException e) {
             CubesideClientFabric.LOGGER.error("Could not load messages for server " + server, e);

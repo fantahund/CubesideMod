@@ -12,6 +12,7 @@ apply plugin: "com.github.johnrengelman.shadow"
 
 defaultTasks('clean', 'build', 'publishToMavenLocal')
 
+archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
@@ -101,6 +102,25 @@ remapJar {
 
 artifacts {
     archives shadowJar
+}
+
+tasks.publish.dependsOn build
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId archivesBaseName
+
+            // add all the jars that should be included when publishing to maven
+            //artifact(jar)             { builtBy remapJar }
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            url "$projectDir/../../CommonMaven"
+        }
+    }
 }
 
 modrinth {

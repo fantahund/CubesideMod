@@ -1,2 +1,1 @@
-- Better Mod Compatibility
-- Feather Client Compatibility
+- Fix AFK Check Command add Skull to Lore Tabomplete

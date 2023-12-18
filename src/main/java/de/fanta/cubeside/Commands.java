@@ -11,6 +11,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Team;
+import net.minecraft.server.dedicated.gui.PlayerListGui;
 import net.minecraft.world.GameMode;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class Commands {
                                 })
                                 .suggests((context, builder) -> {
                                     ClientPlayNetworkHandler clientPlayNetworkHandler = context.getSource().getPlayer().networkHandler;
-                                    List<PlayerListEntry> list = ENTRY_ORDERING.sortedCopy(clientPlayNetworkHandler.getPlayerList());
+                                    List<PlayerListEntry> list = ENTRY_ORDERING.sortedCopy(clientPlayNetworkHandler.getListedPlayerListEntries());
                                     for (PlayerListEntry playerListEntry : list) {
                                         builder.suggest(playerListEntry.getProfile().getName());
                                     }
@@ -78,11 +79,11 @@ public class Commands {
                                 return 1;
                             }
                             ClientPlayNetworkHandler clientPlayNetworkHandler = context.getSource().getPlayer().networkHandler;
-                            List<PlayerListEntry> list = ENTRY_ORDERING.sortedCopy(clientPlayNetworkHandler.getPlayerList());
+                            List<PlayerListEntry> list = ENTRY_ORDERING.sortedCopy(clientPlayNetworkHandler.getListedPlayerListEntries());
                             for (PlayerListEntry playerListEntry : list) {
                                 if (playerListEntry != null) {
                                     String playername = playerListEntry.getProfile().getName();
-                                    if (!Objects.equals(playername, MinecraftClient.getInstance().player.getName().getString()) && !Configs.PermissionSettings.AdminList.getStrings().contains(playername)) {
+                                    if (!Objects.equals(playername, MinecraftClient.getInstance().getGameProfile().getName()) && !Configs.PermissionSettings.AdminList.getStrings().contains(playername)) {
                                         playerList.add(playername);
                                     }
                                 }

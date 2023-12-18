@@ -22,9 +22,9 @@
   "mixins": [ "cubeside.mixins.json" ],
   "accessWidener" : "cubeside.accesswidener",
   "depends": {
-    "fabricloader": ">=0.14.6",
+    "fabricloader": ">=0.15.0",
     "fabric": "*",
     "minecraft": "*",
-    "malilib": ">=0.13.1"
+    "malilib": ">=0.18.0"
   }
 }
