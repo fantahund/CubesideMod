@@ -57,6 +57,8 @@ dependencies {
 
     modImplementation include("fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version_out}:${project.malilib_version}")
 
+    include("foundationgames:EnhancedBlockEntities:${project.enhancedBlockEntities_version}")
+
     shade 'com.h2database:h2:2.1.214'
 
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"

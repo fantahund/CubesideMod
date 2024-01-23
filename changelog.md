@@ -1,1 +1,1 @@
-- Fix AFK Check Command add Skull to Lore Tabomplete
+- EnhancedBlockEntities added. As there is currently no update for 1.20.4 available. As soon as an official update is available, this will be removed again.
