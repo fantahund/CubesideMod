@@ -29,22 +29,13 @@ public class Database {
     private final String deleteOldCommandsQuery;
 
     private final ExecutorService executor;
+    private final String deleteNewestMessageQuery;
 
     public Database() {
         executor = Executors.newSingleThreadExecutor();
-        File oldDatabase = new File("chat.h2.db");
-        File moveToLocation = new File(CubesideClientFabric.getConfigDirectory(), "chat.h2.db");
-        if (oldDatabase.exists() && !moveToLocation.exists()) {
-            try {
-                FileUtils.moveFile(oldDatabase, moveToLocation);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
         try {
             Class.forName("org.h2.Driver");
-            String dbUrl = "jdbc:h2:" + CubesideClientFabric.getConfigDirectory() + "/chat";
+            String dbUrl = "jdbc:h2:" + CubesideClientFabric.getConfigDirectory() + "/chatNew";
             this.connection = DriverManager.getConnection(dbUrl);
 
             createTablesIfNotExist();
@@ -52,12 +43,16 @@ public class Database {
             throw new RuntimeException("Could not initialize chat database", e);
         }
 
-        addMessageQuery = "INSERT INTO `messages` VALUES (?, ?, ?)";
-        getMessagesQuery = "SELECT `message` FROM `messages` WHERE server = ? ORDER BY `timestamp`";
+        //addMessageQuery = "INSERT INTO `messages` VALUES (?, ?, ?)";
+        addMessageQuery = "INSERT INTO messages(message, server, timestamp) VALUES (?, ?, ?)";
+        getMessagesQuery = "SELECT `message` FROM `messages` WHERE server = ? ORDER BY `id`";
         deleteOldMessagesQuery = "DELETE FROM `messages` WHERE `timestamp` <= ?";
+        //deleteNewestMessageQuery = "DELETE FROM `messages` ORDER BY id DESC LIMIT 1";
+        deleteNewestMessageQuery = "DELETE FROM `messages` WHERE id = (SELECT MAX(id) FROM `messages`)";
 
-        addCommandQuery = "INSERT INTO `commands` VALUES (?, ?, ?)";
-        getCommandsQuery = "SELECT `command` FROM `commands` WHERE server = ? ORDER BY `timestamp`";
+        //addCommandQuery = "INSERT INTO `commands` VALUES (?, ?, ?)";
+        addCommandQuery = "INSERT INTO commands(command, server, timestamp) VALUES (?, ?, ?)";
+        getCommandsQuery = "SELECT `command` FROM `commands` WHERE server = ? ORDER BY `id`";
         deleteOldCommandsQuery = "DELETE FROM `commands` WHERE `timestamp` <= ?";
     }
 
@@ -66,19 +61,22 @@ public class Database {
             return;
         }
         PreparedStatement messageStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `messages` (" +
-                "`timestamp` BIGINT," +
+                "`id` INT NOT NULL AUTO_INCREMENT," +
+                "`message` TEXT," +
                 "`server` TEXT," +
-                "`message` TEXT" +
+                "`timestamp` BIGINT," +
+                "PRIMARY KEY (id)" +
                 ")");
 
         messageStatement.executeUpdate();
 
         PreparedStatement commandStatement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS `commands` (" +
-                "`timestamp` BIGINT," +
+                "`id` INT NOT NULL AUTO_INCREMENT," +
+                "`command` TEXT," +
                 "`server` TEXT," +
-                "`command` TEXT" +
+                "`timestamp` BIGINT," +
+                "PRIMARY KEY (id)" +
                 ")");
-
         commandStatement.executeUpdate();
     }
 
@@ -89,9 +87,9 @@ public class Database {
         long timestamp = System.currentTimeMillis();
         executor.execute(() -> {
             try (PreparedStatement statement = this.connection.prepareStatement(addMessageQuery)) {
-                statement.setLong(1, timestamp);
+                statement.setString(1, Text.Serialization.toJsonString(message));
                 statement.setString(2, server);
-                statement.setString(3, Text.Serialization.toJsonString(message));
+                statement.setLong(3, timestamp);
 
                 statement.executeUpdate();
                 connection.commit();
@@ -129,9 +127,9 @@ public class Database {
         long timestamp = System.currentTimeMillis();
         executor.execute(() -> {
             try (PreparedStatement statement = this.connection.prepareStatement(addCommandQuery)) {
-                statement.setLong(1, timestamp);
+                statement.setString(1, command);
                 statement.setString(2, server);
-                statement.setString(3, command);
+                statement.setLong(3, timestamp);
 
                 statement.executeUpdate();
                 connection.commit();
@@ -187,6 +185,20 @@ public class Database {
                 connection.commit();
             } catch (SQLException e) {
                 CubesideClientFabric.LOGGER.error("Could not delete old Commands from database", e);
+            }
+        });
+    }
+
+    public void deleteNewestMessage() {
+        if (CubesideClientFabric.databaseinuse) {
+            return;
+        }
+        executor.execute(() -> {
+            try (PreparedStatement statement = this.connection.prepareStatement(deleteNewestMessageQuery)) {
+                statement.executeUpdate();
+                connection.commit();
+            } catch (SQLException e) {
+                CubesideClientFabric.LOGGER.error("Could not delete Oldest Message from database", e);
             }
         });
     }

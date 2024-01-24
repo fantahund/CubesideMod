@@ -3,3 +3,7 @@ accessible class net/minecraft/client/option/SimpleOption$Callbacks
 extendable class net/minecraft/client/option/SimpleOption$SliderCallbacks
 accessible    field    net/minecraft/item/ShovelItem    PATH_STATES    Ljava/util/Map;
 accessible    field    net/minecraft/item/AxeItem    STRIPPED_BLOCKS    Ljava/util/Map;
+accessible field net/minecraft/client/gui/hud/ChatHud hasUnreadNewMessages Z
+accessible field net/minecraft/client/gui/hud/ChatHud hasUnreadNewMessages Z
+accessible field net/minecraft/client/gui/hud/ChatHud messages Ljava/util/List;
+accessible field net/minecraft/client/gui/hud/ChatHud visibleMessages Ljava/util/List;

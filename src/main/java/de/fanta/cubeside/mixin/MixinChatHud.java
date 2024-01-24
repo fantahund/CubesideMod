@@ -7,21 +7,25 @@ import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
-import net.minecraft.client.gui.screen.ReconfiguringScreen;
+import net.minecraft.client.util.ChatMessages;
 import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -30,12 +34,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 @Mixin(ChatHud.class)
 public abstract class MixinChatHud implements ChatHudMethods {
 
+    @Unique
     private static final Database database = CubesideClientFabric.getDatabase();
+    @Unique
     private static final Date DATE = new Date();
+    @Unique
+    private Text lastMessage;
+
+    @Unique
+    private Text lastEditMessage;
+    @Unique
+    private int count = 1;
     @Final
     @Shadow
     private MinecraftClient client;
@@ -47,6 +61,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
         }
     }
 
+    @Unique
     private static String getChatTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]");
         DATE.setTime(System.currentTimeMillis());
@@ -69,12 +84,54 @@ public abstract class MixinChatHud implements ChatHudMethods {
     @Shadow
     protected abstract void logChatMessage(Text message, @Nullable MessageIndicator indicator);
 
+    @Shadow
+    @Final
+    public List<ChatHudLine.Visible> visibleMessages;
+
+    @Shadow
+    public abstract int getWidth();
+
+    @Shadow
+    public abstract double getChatScale();
+
+    @Shadow @Final public List<ChatHudLine> messages;
+
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
     private Text modifyMessages(Text componentIn) {
         if (CubesideClientFabric.isLoadingMessages()) {
             CubesideClientFabric.messageQueue.add(componentIn);
             return Text.empty();
         }
+
+
+        if (Configs.Chat.CountDuplicateMessages.getBooleanValue()) {
+            if (lastMessage != null && lastMessage.equals(componentIn)) {
+                count++;
+                lastMessage = componentIn;
+
+                MutableText text = lastMessage.copy();
+                MutableText countText = Text.literal(String.format(Configs.Chat.CountDuplicateMessagesFormat.getStringValue(), count));
+                countText.setStyle(Style.EMPTY.withColor(TextColor.parse(Configs.Chat.CountDuplicateMessagesColor.getColor().toHexString()).result().get()));
+                text.append(countText);
+                componentIn = text;
+
+                if (lastEditMessage != null) {
+                    int with = MathHelper.floor((double) this.getWidth() / this.getChatScale());
+                    List<OrderedText> list = ChatMessages.breakRenderedChatMessageLines(lastEditMessage, with, this.client.textRenderer);
+
+                    for (int i = 1; i <= list.size(); i++) {
+                        this.visibleMessages.remove(0);
+                    }
+                    database.deleteNewestMessage();
+                }
+
+            } else {
+                lastMessage = componentIn;
+                count = 1;
+            }
+        }
+
+
         if (Configs.PermissionSettings.AutoChat.getBooleanValue()) {
             String s = componentIn.toString();
             String[] arr = s.split(" ");
@@ -259,12 +316,15 @@ public abstract class MixinChatHud implements ChatHudMethods {
             timestamp.setStyle(Style.EMPTY.withColor(Configs.Chat.TimeStampColor.getColor().intValue));
             component.append(timestamp);
             component.append(componentIn);
-            addMessagetoDatabase(component);
-            return component;
+            addMessageToDatabase(component);
+            componentIn = component;
         } else {
-            addMessagetoDatabase(componentIn);
+            addMessageToDatabase(componentIn);
         }
 
+        if (Configs.Chat.CountDuplicateMessages.getBooleanValue()) {
+            lastEditMessage = componentIn;
+        }
         return componentIn;
     }
 
@@ -292,15 +352,16 @@ public abstract class MixinChatHud implements ChatHudMethods {
     }
 
     @Override
-    public void addStoredChatMessage(Text message) {
+    public void cubesideMod$addStoredChatMessage(Text message) {
         this.addMessage(message, null, 0, new MessageIndicator(10631423, null, null, null), false);
     }
 
     @Override
-    public void addStoredCommand(String message) {
+    public void cubesideMod$addStoredCommand(String message) {
         this.addToMessageHistory(message);
     }
 
+    @Unique
     public void playAFKSound() {
         if (client.player != null) {
             SoundEvent sound = SoundEvent.of(new Identifier(CubesideClientFabric.MODID, "afk"));
@@ -308,7 +369,8 @@ public abstract class MixinChatHud implements ChatHudMethods {
         }
     }
 
-    public void addMessagetoDatabase(Text component) {
+    @Unique
+    public void addMessageToDatabase(Text component) {
         if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
             if (client.getCurrentServerEntry() != null) {
                 if (!CubesideClientFabric.databaseinuse) {

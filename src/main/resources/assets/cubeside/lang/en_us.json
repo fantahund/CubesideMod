@@ -66,5 +66,9 @@
     "key.cubeside.editsign": "Toggle Sign Edit",
     "options.cubeside.woodstriping": "Wood striping at right click with axe",
     "options.cubeside.creategrasspath": "Create grass path at right click with shovel",
-    "options.cubeside.singedit": "Edit sign with right click"
+    "options.cubeside.singedit": "Edit sign with right click",
+
+    "options.cubeside.countduplicatemessages": "Duplicate messages are summarized, and the count is displayed after the message",
+    "options.cubeside.countduplicatemessagesformat": "Duplicate messages count format",
+    "options.cubeside.countduplicatemessagescolor": "Duplicate messages count color"
 }

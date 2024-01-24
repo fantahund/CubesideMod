@@ -59,7 +59,7 @@ dependencies {
 
     include("foundationgames:EnhancedBlockEntities:${project.enhancedBlockEntities_version}")
 
-    shade 'com.h2database:h2:2.1.214'
+    shade 'com.h2database:h2:2.2.224'
 
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"
 

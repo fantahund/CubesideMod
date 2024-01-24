@@ -66,6 +66,10 @@ public class Configs implements IConfigHandler {
         public static final ConfigInteger DaysTheMessagesAreStored = new ConfigInteger("DaysTheMessagesAreStored", 10, 1, 30, true, Text.translatable("options.cubeside.daysthemessagesarestored").getString());
         public static final ConfigInteger ChatMessageLimit = new ConfigInteger("ChatMessageLimit", 100, 1, 100000, true, Text.translatable("options.cubeside.chatlimit").getString());
         public static final ConfigBoolean DisplayChatInfo = new ConfigBoolean("DisplayChatInfo", true, Text.translatable("options.cubeside.displaychatinfo").getString());
+        public static final ConfigBoolean CountDuplicateMessages = new ConfigBoolean("CountDuplicateMessages", false, Text.translatable("options.cubeside.countduplicatemessages").getString());
+        public static final ConfigString CountDuplicateMessagesFormat = new ConfigString("CountDuplicateMessagesFormat", " (%sx)", Text.translatable("options.cubeside.countduplicatemessagesformat").getString());
+        public static final ConfigColor CountDuplicateMessagesColor = new ConfigColor("CountDuplicateMessagesColor", "#ffffff", Text.translatable("options.cubeside.countduplicatemessagescolor").getString());
+
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 ClearChatByServerChange,
                 ChatTimeStamps,
@@ -73,7 +77,10 @@ public class Configs implements IConfigHandler {
                 SaveMessagesToDatabase,
                 DaysTheMessagesAreStored,
                 ChatMessageLimit,
-                DisplayChatInfo
+                DisplayChatInfo,
+                CountDuplicateMessages,
+                CountDuplicateMessagesFormat,
+                CountDuplicateMessagesColor
         );
     }
 
