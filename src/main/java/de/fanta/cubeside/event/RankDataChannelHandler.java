@@ -11,9 +11,9 @@ import net.minecraft.util.Identifier;
 
 import java.nio.charset.Charset;
 
-public class RankDataChannelHandler implements ClientPlayNetworking.PlayChannelHandler {
+public class RankDataChannelHandler { //implements ClientPlayNetworking.PlayChannelHandler {
 
-    public static final Identifier CHANNEL_IDENTIFIER = new Identifier("cubesidemod", "rank");
+    /*public static final Identifier CHANNEL_IDENTIFIER = new Identifier("cubesidemod", "rank");
 
     public RankDataChannelHandler() {
         ClientPlayNetworking.registerGlobalReceiver(CHANNEL_IDENTIFIER, this);
@@ -27,5 +27,5 @@ public class RankDataChannelHandler implements ClientPlayNetworking.PlayChannelH
         } catch (DecoderException e) {
             CubesideClientFabric.LOGGER.warn("Unable to decode rank data", e);
         }
-    }
+    }*/
 }

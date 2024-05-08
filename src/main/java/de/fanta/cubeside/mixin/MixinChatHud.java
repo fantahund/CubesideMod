@@ -10,7 +10,6 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.client.util.ChatMessages;
-import net.minecraft.network.message.MessageSignatureData;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.ClickEvent;
@@ -21,7 +20,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -54,13 +52,6 @@ public abstract class MixinChatHud implements ChatHudMethods {
     @Shadow
     private MinecraftClient client;
 
-    @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
-    private void clear(boolean clearHistory, CallbackInfo ci) {
-        if (!Configs.Chat.ClearChatByServerChange.getBooleanValue() && (CubesideClientFabric.isInClearLevel())) {
-            ci.cancel();
-        }
-    }
-
     @Unique
     private static String getChatTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]");
@@ -68,13 +59,10 @@ public abstract class MixinChatHud implements ChatHudMethods {
         return sdf.format(DATE);
     }
 
-    @Shadow
-    protected abstract void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh);
-
-    @Redirect(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;logChatMessage(Lnet/minecraft/text/Text;Lnet/minecraft/client/gui/hud/MessageIndicator;)V"))
-    private void addMessage(ChatHud instance, Text message, MessageIndicator indicator) {
+    @Redirect(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;logChatMessage(Lnet/minecraft/client/gui/hud/ChatHudLine;)V"))
+    private void addMessage(ChatHud instance, ChatHudLine message) {
         if (!CubesideClientFabric.isLoadingMessages()) {
-            logChatMessage(message, indicator);
+            logChatMessage(message);
         }
     }
 
@@ -82,7 +70,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
     public abstract void addToMessageHistory(String message);
 
     @Shadow
-    protected abstract void logChatMessage(Text message, @Nullable MessageIndicator indicator);
+    public abstract void logChatMessage(ChatHudLine message);
 
     @Shadow
     @Final
@@ -94,7 +82,11 @@ public abstract class MixinChatHud implements ChatHudMethods {
     @Shadow
     public abstract double getChatScale();
 
-    @Shadow @Final public List<ChatHudLine> messages;
+    @Shadow
+    @Final
+    public List<ChatHudLine> messages;
+
+    @Shadow public abstract void addVisibleMessage(ChatHudLine message);
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
     private Text modifyMessages(Text componentIn) {
@@ -181,7 +173,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
 
                     if (Configs.Generic.TpaSound.getBooleanValue()) {
                         if (client.player != null) {
-                            client.player.playSound(SoundEvent.of(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                            client.player.playSoundToPlayer(SoundEvent.of(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
                         }
                     }
 
@@ -198,7 +190,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
 
                     if (Configs.Generic.TpaSound.getBooleanValue()) {
                         if (client.player != null) {
-                            client.player.playSound(SoundEvent.of(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                            client.player.playSoundToPlayer(SoundEvent.of(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
                         }
                     }
 
@@ -353,7 +345,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
 
     @Override
     public void cubesideMod$addStoredChatMessage(Text message) {
-        this.addMessage(message, null, 0, new MessageIndicator(10631423, null, null, null), false);
+        this.addVisibleMessage(new ChatHudLine(0, message, null, new MessageIndicator(10631423, null, Text.literal("*"), null)));
     }
 
     @Override
@@ -365,7 +357,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
     public void playAFKSound() {
         if (client.player != null) {
             SoundEvent sound = SoundEvent.of(new Identifier(CubesideClientFabric.MODID, "afk"));
-            client.player.playSound(sound, SoundCategory.PLAYERS, 0.2f, 1.0f);
+            client.player.playSoundToPlayer(sound, SoundCategory.PLAYERS, 0.2f, 1.0f);
         }
     }
 

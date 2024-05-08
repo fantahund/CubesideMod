@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.4-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
     id "com.github.johnrengelman.shadow" version "8.1.1"
     id "com.modrinth.minotaur" version "2.4.3"
@@ -57,7 +57,7 @@ dependencies {
 
     modImplementation include("fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version_out}:${project.malilib_version}")
 
-    include("foundationgames:EnhancedBlockEntities:${project.enhancedBlockEntities_version}")
+    //include("foundationgames:EnhancedBlockEntities:${project.enhancedBlockEntities_version}")
 
     shade 'com.h2database:h2:2.2.224'
 
@@ -90,7 +90,7 @@ loom {
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
-    it.options.release = 17
+    it.options.release = 21
 }
 
 shadowJar {

@@ -1,17 +1,16 @@
 package de.fanta.cubeside.mixin;
 
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.LoreComponent;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
@@ -23,46 +22,38 @@ public class DurabilityViewerMixin {
         ItemStack itemStack = instance.getEquippedStack(slot);
         if (slot == EquipmentSlot.HEAD || slot == EquipmentSlot.CHEST || slot == EquipmentSlot.LEGS || slot == EquipmentSlot.FEET) {
             if (itemStack.getItem() == Items.POLISHED_BLACKSTONE_BUTTON) {
-                itemStack = getItemStackfromNBT(itemStack, slot);
+                itemStack = getItemStackFromNBT(itemStack, slot);
             }
         }
         return itemStack;
     }
 
-    private static ItemStack getItemStackfromNBT(ItemStack itemStack, EquipmentSlot slot) {
-        if (itemStack.hasNbt()) {
-            NbtCompound nbt = itemStack.getNbt();
-            NbtCompound display = null;
+    @Unique
+    private static ItemStack getItemStackFromNBT(ItemStack itemStack, EquipmentSlot slot) {
+        LoreComponent loreComponent = itemStack.get(DataComponentTypes.LORE);
+        if (loreComponent != null) {
             int durablility = -1;
             int maxDurablility = -1;
-            if (nbt.get("display") != null) {
-                display = (NbtCompound) nbt.get("display");
-            }
 
-            if (display != null) {
-                if (display.getType(ItemStack.LORE_KEY) == NbtElement.LIST_TYPE) {
-                    NbtList nbtList = display.getList(ItemStack.LORE_KEY, NbtElement.STRING_TYPE);
-                    String string = nbtList.getString(nbtList.size() - 1);
-                    MutableText mutableText = Text.Serialization.fromJson(string);
-                    if (mutableText != null) {
-                        String fullDurabilityString = mutableText.getString();
-                        if (fullDurabilityString.startsWith("Haltbarkeit:")) {
-                            String[] splitFull = fullDurabilityString.split(" ", 2);
-                            if (splitFull.length == 2) {
-                                String durabilityString = Text.literal(splitFull[1]).getString();
-                                String[] splitDurability = durabilityString.split("/", 2);
-                                if (splitDurability.length == 2) {
-                                    try {
-                                        durablility = Integer.parseInt(splitDurability[0]);
-                                        maxDurablility = Integer.parseInt(splitDurability[1]);
-                                    } catch (NumberFormatException ignore) {
-                                    }
-                                }
+            Text mutableText = loreComponent.lines().getLast();
+            if (mutableText != null) {
+                String fullDurabilityString = mutableText.getString();
+                if (fullDurabilityString.startsWith("Haltbarkeit:")) {
+                    String[] splitFull = fullDurabilityString.split(" ", 2);
+                    if (splitFull.length == 2) {
+                        String durabilityString = Text.literal(splitFull[1]).getString();
+                        String[] splitDurability = durabilityString.split("/", 2);
+                        if (splitDurability.length == 2) {
+                            try {
+                                durablility = Integer.parseInt(splitDurability[0]);
+                                maxDurablility = Integer.parseInt(splitDurability[1]);
+                            } catch (NumberFormatException ignore) {
                             }
                         }
                     }
                 }
             }
+
 
             if (durablility == -1 || maxDurablility == -1) {
                 return itemStack;

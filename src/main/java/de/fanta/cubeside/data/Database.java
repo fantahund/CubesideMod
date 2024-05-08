@@ -1,8 +1,13 @@
 package de.fanta.cubeside.data;
 
 import com.google.gson.JsonParseException;
+import com.mojang.serialization.JsonOps;
 import de.fanta.cubeside.CubesideClientFabric;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
+import net.minecraft.world.PersistentStateManager;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -87,7 +92,8 @@ public class Database {
         long timestamp = System.currentTimeMillis();
         executor.execute(() -> {
             try (PreparedStatement statement = this.connection.prepareStatement(addMessageQuery)) {
-                statement.setString(1, Text.Serialization.toJsonString(message));
+                //statement.setString(1, Text.Serialization.toJsonString(message));
+                statement.setString(1, Text.Serialization.toJsonString(message, DynamicRegistryManager.EMPTY));
                 statement.setString(2, server);
                 statement.setLong(3, timestamp);
 
@@ -109,7 +115,7 @@ public class Database {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 try {
-                    Text message = Text.Serialization.fromJson(rs.getString(1));
+                    Text message = Text.Serialization.fromJson(rs.getString(1), DynamicRegistryManager.EMPTY);
                     messages.add(message);
                 } catch (JsonParseException ignore) {
                 }

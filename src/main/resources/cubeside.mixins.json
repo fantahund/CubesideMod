@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "de.fanta.cubeside.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "plugin": "de.fanta.cubeside.MixinPlugin",
   "mixins": [
     "DurabilityViewerMixin",
@@ -27,10 +27,12 @@
     "MixinWorldRenderer",
     "MixinXaeroDisableCaveMap",
     "MixinXaeroForceFairPlay",
-    "SignBlockEntityRendererMixin",
-    "MinecraftClientMixin"
+    "SignBlockEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "client": [
+    "CommandHistoryManangerMixin"
+  ]
 }

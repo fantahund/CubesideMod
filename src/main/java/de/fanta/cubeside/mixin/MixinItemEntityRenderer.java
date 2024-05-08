@@ -42,9 +42,6 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
     @Final
     private ItemRenderer itemRenderer;
 
-    @Shadow
-    protected abstract int getRenderedAmount(ItemStack stack);
-
     private MixinItemEntityRenderer(EntityRendererFactory.Context dispatcher) {
         super(dispatcher);
     }
@@ -73,7 +70,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
             boolean hasDepthInGui = bakedModel.hasDepth();
 
             // decide how many item layers to render
-            int renderCount = this.getRenderedAmount(itemStack);
+            int renderCount = getRenderedAmount(itemStack.getCount());
 
             // Helper for manipulating data on the current ItemEntity
             ItemEntityRotator rotator = (ItemEntityRotator) dropped;
@@ -85,7 +82,7 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
             boolean renderBlockFlat = false;
             if (dropped.getStack().getItem() instanceof BlockItem && !(dropped.getStack().getItem() instanceof AliasedBlockItem)) {
                 Block b = ((BlockItem) dropped.getStack().getItem()).getBlock();
-                VoxelShape shape = b.getOutlineShape(b.getDefaultState(), dropped.getWorld(), dropped.getBlockPos(), ShapeContext.absent());
+                VoxelShape shape = b.getDefaultState().getOutlineShape(dropped.getWorld(), dropped.getBlockPos(), ShapeContext.absent());
 
                 // Only blocks with a collision box of <.5 should be rendered flat
                 if (shape.getMax(Direction.Axis.Y) <= .5) {
@@ -233,6 +230,17 @@ public abstract class MixinItemEntityRenderer extends EntityRenderer<ItemEntity>
             matrix.pop();
             super.render(dropped, f, partialTicks, matrix, vertexConsumerProvider, i);
             callback.cancel();
+        }
+    }
+    private static int getRenderedAmount(int stackSize) {
+        if (stackSize <= 1) {
+            return 1;
+        } else if (stackSize <= 16) {
+            return 2;
+        } else if (stackSize <= 32) {
+            return 3;
+        } else {
+            return stackSize <= 48 ? 4 : 5;
         }
     }
 }

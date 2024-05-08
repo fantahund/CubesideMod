@@ -53,6 +53,7 @@ public class Events {
 
                     if (!connect) {
                         CubesideClientFabric.setLoadingMessages(true);
+                        client.inGameHud.getChatHud().clear(true);
                         messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredChatMessage);
                         CubesideClientFabric.LOGGER.log(Level.INFO, (long) messages.size() + " messages loaded.");
                         commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredCommand);

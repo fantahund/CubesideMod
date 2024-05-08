@@ -14,9 +14,9 @@ import net.minecraft.util.Identifier;
 
 import java.awt.*;
 
-public class CubesideModChannelHandler implements ClientPlayNetworking.PlayChannelHandler {
+public class CubesideModChannelHandler {//implements ClientPlayNetworking.PlayChannelHandler {
 
-    public static final Identifier CHANNEL_IDENTIFIER = new Identifier("cubesidemod", "data");
+    /*public static final Identifier CHANNEL_IDENTIFIER = new Identifier("cubesidemod", "data");
 
     public CubesideModChannelHandler() {
         ClientPlayNetworking.registerGlobalReceiver(CHANNEL_IDENTIFIER, this);
@@ -59,6 +59,6 @@ public class CubesideModChannelHandler implements ClientPlayNetworking.PlayChann
         } catch (Exception e) {
             CubesideClientFabric.LOGGER.warn("Unable to read CubesideMod data", e);
         }
-    }
+    }*/
 }
 

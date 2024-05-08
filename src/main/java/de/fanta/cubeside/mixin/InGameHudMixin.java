@@ -23,13 +23,13 @@ public abstract class InGameHudMixin {
     @Shadow
     private Text overlayMessage;
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I", ordinal = 0))
+    @Redirect(method = "renderOverlayMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I", ordinal = 0))
     public int render(DrawContext instance, TextRenderer textRenderer, Text text, int x, int y, int color) {
         int n = textRenderer.getWidth(this.overlayMessage);
         return instance.drawText(textRenderer, this.overlayMessage, -n / 2, -4, color, Configs.Generic.ActionBarShadow.getBooleanValue());
     }
 
-    @Inject(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/hud/InGameHud;debugHud:Lnet/minecraft/client/gui/hud/DebugHud;", opcode = Opcodes.GETFIELD, args = {"log=false"}))
+    @Inject(method = "renderChat", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/hud/InGameHud;chatHud:Lnet/minecraft/client/gui/hud/ChatHud;", opcode = Opcodes.GETFIELD, args = {"log=false"}))
     private void beforeRenderDebugScreen2(DrawContext context, float tickDelta, CallbackInfo ci) {
         chatInfoHud = chatInfoHud != null ? chatInfoHud : new ChatInfoHud();
         chatInfoHud.onRenderGameOverlayPost(context);

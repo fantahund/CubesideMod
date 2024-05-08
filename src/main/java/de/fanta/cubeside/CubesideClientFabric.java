@@ -52,7 +52,6 @@ public class CubesideClientFabric implements ClientModInitializer {
     private static ChatInfo chatInfo;
 
     private static File configDirectory;
-    private static boolean inClearLevel = false;
 
     @Override
     public void onInitializeClient() {
@@ -78,8 +77,8 @@ public class CubesideClientFabric implements ClientModInitializer {
         logicalZoom.initLogicalZoom();
 
         permissionHandler = new PermissionHandler();
-        new RankDataChannelHandler();
-        new CubesideModChannelHandler();
+        //new RankDataChannelHandler();
+        //new CubesideModChannelHandler();
 
         LOGGER.info(MODID + "Mod Loaded");
         commands = new Commands();
@@ -156,13 +155,5 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     public static File getConfigDirectory() {
         return configDirectory;
-    }
-
-    public static boolean isInClearLevel() {
-        return inClearLevel;
-    }
-
-    public static void setInClearLevel(boolean value) {
-        inClearLevel = value;
     }
 }

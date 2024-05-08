@@ -9,8 +9,13 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 @Mixin(ChatHud.class)
 public class MixinChatLimit {
 
-    @ModifyConstant(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;ILnet/minecraft/client/gui/hud/MessageIndicator;Z)V", constant = {@Constant(intValue = 100)})
+    @ModifyConstant(method = "addMessage(Lnet/minecraft/client/gui/hud/ChatHudLine;)V", constant = {@Constant(intValue = 100)})
     private int replaceMessageLimit(int original) {
+        return Configs.Chat.ChatMessageLimit.getIntegerValue();
+    }
+
+    @ModifyConstant(method = "addVisibleMessage(Lnet/minecraft/client/gui/hud/ChatHudLine;)V", constant = {@Constant(intValue = 100)})
+    private int replaceVisibleMessageLimit(int original) {
         return Configs.Chat.ChatMessageLimit.getIntegerValue();
     }
 

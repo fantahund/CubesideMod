@@ -45,6 +45,7 @@ public abstract class MixinWorldRenderer {
         float finalGreen = green;
         float finalBlue = blue;
         float finalAlpha = alpha;
+
         shape.forEachEdge((minX, minY, minZ, maxX, maxY, maxZ) -> {
             float k = (float) (maxX - minX);
             float l = (float) (maxY - minY);
@@ -53,8 +54,8 @@ public abstract class MixinWorldRenderer {
             k /= n;
             l /= n;
             m /= n;
-            vertexConsumer.vertex(entry.getPositionMatrix(), (float) (minX + offsetX), (float) (minY + offsetY), (float) (minZ + offsetZ)).color(finalRed, finalGreen, finalBlue, finalAlpha).normal(entry.getNormalMatrix(), k, l, m).next();
-            vertexConsumer.vertex(entry.getPositionMatrix(), (float) (maxX + offsetX), (float) (maxY + offsetY), (float) (maxZ + offsetZ)).color(finalRed, finalGreen, finalBlue, finalAlpha).normal(entry.getNormalMatrix(), k, l, m).next();
+            vertexConsumer.vertex(entry, (float) (minX + offsetX), (float) (minY + offsetY), (float) (minZ + offsetZ)).color(finalRed, finalGreen, finalBlue, finalAlpha).normal(entry, k, l, m).next();
+            vertexConsumer.vertex(entry, (float) (maxX + offsetX), (float) (maxY + offsetY), (float) (maxZ + offsetZ)).color(finalRed, finalGreen, finalBlue, finalAlpha).normal(entry, k, l, m).next();
         });
     }
 }

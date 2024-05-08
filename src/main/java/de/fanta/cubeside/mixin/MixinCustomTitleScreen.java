@@ -30,20 +30,20 @@ public abstract class MixinCustomTitleScreen extends Screen {
     @Inject(at = @At("TAIL"), method = "init")
     private void init(CallbackInfo ci) {
         selectedEntry = new ServerInfo("Cubeside", "Cubeside.de", ServerInfo.ServerType.OTHER);
-        MultiplayerServerListPinger serverListPinger = new MultiplayerServerListPinger();
+        /*MultiplayerServerListPinger serverListPinger = new MultiplayerServerListPinger();
         try {
             serverListPinger.add(selectedEntry, () -> {});
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
-        serverListPinger.tick();
+        serverListPinger.tick();*/
     }
 
     @Inject(at = @At("TAIL"), method = "initWidgetsNormal")
     private void addCustomButton(int y, int spacingY, CallbackInfo ci) {
         this.addDrawableChild(ButtonWidget.builder(Text.translatable("custombutton.cubeside.joincubeside"), button -> {
             if (selectedEntry != null) {
-                ConnectScreen.connect(this, MinecraftClient.getInstance(), new ServerAddress("cubeside.de", 25565), selectedEntry, false);
+                ConnectScreen.connect(this, MinecraftClient.getInstance(), new ServerAddress("cubeside.de", 25565), selectedEntry, false, null);
             }
         }).dimensions(this.width / 2 - 100 + 205, y + 14, 80, 20).build());
     }

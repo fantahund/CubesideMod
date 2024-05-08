@@ -73,14 +73,22 @@ public abstract class MixinCustomHitBox {
 
         if (Configs.HitBox.EntityHitBoxDirection.getBooleanValue()) {
             if (entity instanceof LivingEntity) {
-                WorldRenderer.drawBox(matrices, vertices, box.minX, entity.getStandingEyeHeight() - 0.01F, box.minZ, box.maxX, entity.getStandingEyeHeight() + 0.01F, box.maxZ, 1.0F, 0.0F, 0.0F, 1.0F);
+                float j = 0.01F;
+                WorldRenderer.drawBox(matrices, vertices, box.minX, (double)(entity.getStandingEyeHeight() - 0.01F), box.minZ, box.maxX, (double)(entity.getStandingEyeHeight() + 0.01F), box.maxZ, 1.0F, 0.0F, 0.0F, 1.0F);
             }
 
-            Vec3d vec3d = entity.getRotationVec(tickDelta);
-            Matrix4f matrix4f = matrices.peek().getPositionMatrix();
-            Matrix3f matrix3f = matrices.peek().getNormalMatrix();
-            vertices.vertex(matrix4f, 0.0F, entity.getStandingEyeHeight(), 0.0F).color(0, 0, 255, 255).normal(matrix3f, (float) vec3d.x, (float) vec3d.y, (float) vec3d.z).next();
-            vertices.vertex(matrix4f, (float) (vec3d.x * 2.0), (float) ((double) entity.getStandingEyeHeight() + vec3d.y * 2.0), (float) (vec3d.z * 2.0)).color(0, 0, 255, 255).normal(matrix3f, (float) vec3d.x, (float) vec3d.y, (float) vec3d.z).next();
+            Entity entity2 = entity.getVehicle();
+            if (entity2 != null) {
+                float k = Math.min(entity2.getWidth(), entity.getWidth()) / 2.0F;
+                float l = 0.0625F;
+                Vec3d vec3d = entity2.getPassengerRidingPos(entity).subtract(entity.getPos());
+                WorldRenderer.drawBox(matrices, vertices, vec3d.x - (double)k, vec3d.y, vec3d.z - (double)k, vec3d.x + (double)k, vec3d.y + 0.0625, vec3d.z + (double)k, 1.0F, 1.0F, 0.0F, 1.0F);
+            }
+
+            Vec3d vec3d2 = entity.getRotationVec(tickDelta);
+            MatrixStack.Entry entry = matrices.peek();
+            vertices.vertex(entry, 0.0F, entity.getStandingEyeHeight(), 0.0F).color(0, 0, 255, 255).normal(entry, (float)vec3d2.x, (float)vec3d2.y, (float)vec3d2.z).next();
+            vertices.vertex(entry, (float)(vec3d2.x * 2.0), (float)((double)entity.getStandingEyeHeight() + vec3d2.y * 2.0), (float)(vec3d2.z * 2.0)).color(0, 0, 255, 255).normal(entry, (float)vec3d2.x, (float)vec3d2.y, (float)vec3d2.z).next();
         }
     }
 

@@ -20,22 +20,16 @@ public class MixinSliderControl {
 
 
     @Mutable
-    @Shadow
-    @Final
-    private int interval;
+    @Shadow @Final private int min;
 
     @Mutable
-    @Shadow
-    @Final
-    private int max;
+    @Shadow @Final private int max;
 
     @Mutable
-    @Shadow
-    @Final
-    private int min;
+    @Shadow @Final private int interval;
 
     @Inject(at = @At("RETURN"), method = "<init>")
-    private void init(Option<Integer> option, int min, int max, int interval, ControlValueFormatter mode, CallbackInfo info) {
+    private void init(Option option, int min, int max, int interval, ControlValueFormatter mode, CallbackInfo ci) {
         if (option.getName().getContent() instanceof TranslatableTextContent content && content.getKey().equals("options.gamma")) {
             this.min = (int) (CubesideClientFabric.minGamma * 100);
             this.max = (int) (CubesideClientFabric.maxGamma * 100);
