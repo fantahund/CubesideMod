@@ -18,8 +18,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
 
-    private static ChatInfoHud chatInfoHud;
-
     @Shadow
     private Text overlayMessage;
 
@@ -29,10 +27,8 @@ public abstract class InGameHudMixin {
         return instance.drawText(textRenderer, this.overlayMessage, -n / 2, -4, color, Configs.Generic.ActionBarShadow.getBooleanValue());
     }
 
-    @Inject(method = "renderChat", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/hud/InGameHud;chatHud:Lnet/minecraft/client/gui/hud/ChatHud;", opcode = Opcodes.GETFIELD, args = {"log=false"}))
-    private void beforeRenderDebugScreen2(DrawContext context, float tickDelta, CallbackInfo ci) {
-        chatInfoHud = chatInfoHud != null ? chatInfoHud : new ChatInfoHud();
-        chatInfoHud.onRenderChatInfoHud(context);
+    @Inject(method = "renderMainHud", at = @At(value = "RETURN", opcode = Opcodes.GETFIELD, args = {"log=false"}))
+    private void beforeRenderDebugScreen(DrawContext context, float tickDelta, CallbackInfo ci) {
         FlashColorScreen.onClientTick(context);
     }
 }

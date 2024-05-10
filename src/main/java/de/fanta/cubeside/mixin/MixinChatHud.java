@@ -1,11 +1,13 @@
 package de.fanta.cubeside.mixin;
 
+import de.fanta.cubeside.ChatInfoHud;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
@@ -20,6 +22,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,11 +46,12 @@ public abstract class MixinChatHud implements ChatHudMethods {
     private static final Date DATE = new Date();
     @Unique
     private Text lastMessage;
-
     @Unique
     private Text lastEditMessage;
     @Unique
     private int count = 1;
+    @Unique
+    private static ChatInfoHud chatInfoHud;
     @Final
     @Shadow
     private MinecraftClient client;
@@ -87,6 +91,14 @@ public abstract class MixinChatHud implements ChatHudMethods {
     public List<ChatHudLine> messages;
 
     @Shadow public abstract void addVisibleMessage(ChatHudLine message);
+
+    @Inject(method = "render", at = @At(value = "RETURN"))
+    private void renderChatHudInfo(DrawContext context, int currentTick, int mouseX, int mouseY, boolean focused, CallbackInfo ci) {
+        if (focused) {
+            chatInfoHud = chatInfoHud != null ? chatInfoHud : new ChatInfoHud();
+            chatInfoHud.onRenderChatInfoHud(context);
+        }
+    }
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
     private Text modifyMessages(Text componentIn) {
