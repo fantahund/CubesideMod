@@ -2,26 +2,22 @@ package de.fanta.cubeside;
 
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.Database;
-import de.fanta.cubeside.event.CubesideModChannelHandler;
 import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.permission.PermissionHandler;
 import de.fanta.cubeside.util.ChatInfo;
 import fi.dy.masa.malilib.util.FileUtils;
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.text.Text;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Environment(EnvType.CLIENT)
 public class CubesideClientFabric implements ClientModInitializer {
@@ -30,7 +26,7 @@ public class CubesideClientFabric implements ClientModInitializer {
     public static final String PREFIX = "§9[§aCubeside§9] ";
     public static final Logger LOGGER = LogManager.getLogger("CubesideMod");
     private static Database DATABASE;
-    //GAMA
+    // GAMA
     public static double minGamma = -1.5;
     public static double maxGamma = 12.0;
 
@@ -48,7 +44,7 @@ public class CubesideClientFabric implements ClientModInitializer {
     private static boolean xaeroFairPlay;
 
     private static long time;
-    
+
     private static ChatInfo chatInfo;
 
     private static File configDirectory;
@@ -77,8 +73,8 @@ public class CubesideClientFabric implements ClientModInitializer {
         logicalZoom.initLogicalZoom();
 
         permissionHandler = new PermissionHandler();
-        //new RankDataChannelHandler();
-        //new CubesideModChannelHandler();
+        new RankDataChannelHandler();
+        // new CubesideModChannelHandler();
 
         LOGGER.info(MODID + "Mod Loaded");
         commands = new Commands();
