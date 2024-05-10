@@ -2,6 +2,7 @@ package de.fanta.cubeside;
 
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.Database;
+import de.fanta.cubeside.event.CubesideModChannelHandler;
 import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.permission.PermissionHandler;
 import de.fanta.cubeside.util.ChatInfo;
@@ -74,7 +75,7 @@ public class CubesideClientFabric implements ClientModInitializer {
 
         permissionHandler = new PermissionHandler();
         new RankDataChannelHandler();
-        // new CubesideModChannelHandler();
+        new CubesideModChannelHandler();
 
         LOGGER.info(MODID + "Mod Loaded");
         commands = new Commands();

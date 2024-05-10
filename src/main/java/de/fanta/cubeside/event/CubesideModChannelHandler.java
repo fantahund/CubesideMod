@@ -1,64 +1,40 @@
 package de.fanta.cubeside.event;
 
 import de.fanta.cubeside.CubesideClientFabric;
-import de.fanta.cubeside.util.ChatInfo;
+import de.fanta.cubeside.packets.CubesideDataS2C;
+import de.fanta.cubeside.packets.CubesideDataS2C.ScreenFlashInfo;
 import de.fanta.cubeside.util.FlashColorScreen;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
-import java.awt.*;
-
-public class CubesideModChannelHandler {//implements ClientPlayNetworking.PlayChannelHandler {
-
-    /*public static final Identifier CHANNEL_IDENTIFIER = new Identifier("cubesidemod", "data");
+public class CubesideModChannelHandler implements ClientPlayNetworking.PlayPayloadHandler<CubesideDataS2C>, ClientConfigurationNetworking.ConfigurationPayloadHandler<CubesideDataS2C> {
 
     public CubesideModChannelHandler() {
-        ClientPlayNetworking.registerGlobalReceiver(CHANNEL_IDENTIFIER, this);
+        PayloadTypeRegistry.playS2C().register(CubesideDataS2C.PACKET_ID, CubesideDataS2C.PACKET_CODEC);
+        PayloadTypeRegistry.configurationS2C().register(CubesideDataS2C.PACKET_ID, CubesideDataS2C.PACKET_CODEC);
+
+        ClientPlayNetworking.registerGlobalReceiver(CubesideDataS2C.PACKET_ID, this);
+        ClientConfigurationNetworking.registerGlobalReceiver(CubesideDataS2C.PACKET_ID, this);
     }
 
     @Override
-    public void receive(MinecraftClient client, ClientPlayNetworkHandler networkHandler, PacketByteBuf packet, PacketSender sender) {
-        int globalChatDataChannelID = 0;
-        int challengeFlashScreenDataChannelID = 1;
-        try {
-            int cubesideDateChannel = packet.readByte();
-            int cubesideDateChannelVersion = packet.readByte();
-            if (cubesideDateChannel == globalChatDataChannelID && cubesideDateChannelVersion == 0) {
-                String currentChannelName = packet.readString();
-                String currentPrivateChat = packet.readString();
-                String currentResponsePartner = packet.readString();
-                MutableText currentChannelColor = Text.empty();
-                MutableText currentPrivateChatPrefix = Text.empty();
-                MutableText currentResponsePartnerPrefix = Text.empty();
-                try {
-                    String currentChannelColorString = packet.readString();
-                    String currentPrivateChatPrefixString = packet.readString();
-                    String currentResponsePartnerPrefixString = packet.readString();
+    public void receive(CubesideDataS2C payload, ClientConfigurationNetworking.Context context) {
+        receive(payload);
+    }
 
-                    currentChannelColor = Text.Serialization.fromJson(currentChannelColorString);
-                    currentPrivateChatPrefix = Text.Serialization.fromJson(currentPrivateChatPrefixString);
-                    currentResponsePartnerPrefix = Text.Serialization.fromJson(currentResponsePartnerPrefixString);
-                } catch (IndexOutOfBoundsException ignored) {
-                }
+    @Override
+    public void receive(CubesideDataS2C payload, ClientPlayNetworking.Context context) {
+        receive(payload);
+    }
 
-                ChatInfo chatInfo = new ChatInfo(currentChannelName, currentPrivateChat, currentResponsePartner, currentChannelColor, currentPrivateChatPrefix, currentResponsePartnerPrefix);
-                CubesideClientFabric.setChatInfo(chatInfo);
-            }
-
-            if (cubesideDateChannel == challengeFlashScreenDataChannelID && cubesideDateChannelVersion == 0) {
-                int color = packet.readInt();
-                int duration = packet.readInt();
-                FlashColorScreen.flashColoredScreen(duration, new Color(color));
-            }
-        } catch (Exception e) {
-            CubesideClientFabric.LOGGER.warn("Unable to read CubesideMod data", e);
+    public void receive(CubesideDataS2C data) {
+        if (data.getChatInfo() != null) {
+            CubesideClientFabric.setChatInfo(data.getChatInfo());
         }
-    }*/
+        if (data.getScreenFlashInfo() != null) {
+            ScreenFlashInfo screenFlash = data.getScreenFlashInfo();
+            FlashColorScreen.flashColoredScreen(screenFlash.duration(), screenFlash.color());
+        }
+    }
 }
-
