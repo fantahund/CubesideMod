@@ -31,11 +31,8 @@ public class ChatInfoHud {
         }
     }
 
-    public void onRenderGameOverlayPost(DrawContext context) {
-        if (minecraft.getDebugHud().shouldShowDebugHud()) {
-            return;
-        }
-        if (this.minecraft.currentScreen instanceof ChatScreen && Configs.Chat.DisplayChatInfo.getBooleanValue() && CubesideClientFabric.getChatInfo() != null) {
+    public void onRenderChatInfoHud(DrawContext context) {
+        if (Configs.Chat.DisplayChatInfo.getBooleanValue() && CubesideClientFabric.getChatInfo() != null) {
             GlStateManager._clearColor(1.0f, 1.0f, 1.0f, 1.0f);
             renderChatInfoHud(context, CubesideClientFabric.getChatInfo());
         }

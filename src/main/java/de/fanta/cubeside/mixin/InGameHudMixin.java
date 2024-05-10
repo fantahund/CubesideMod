@@ -32,7 +32,7 @@ public abstract class InGameHudMixin {
     @Inject(method = "renderChat", at = @At(value = "FIELD", target = "Lnet/minecraft/client/gui/hud/InGameHud;chatHud:Lnet/minecraft/client/gui/hud/ChatHud;", opcode = Opcodes.GETFIELD, args = {"log=false"}))
     private void beforeRenderDebugScreen2(DrawContext context, float tickDelta, CallbackInfo ci) {
         chatInfoHud = chatInfoHud != null ? chatInfoHud : new ChatInfoHud();
-        chatInfoHud.onRenderGameOverlayPost(context);
+        chatInfoHud.onRenderChatInfoHud(context);
         FlashColorScreen.onClientTick(context);
     }
 }
