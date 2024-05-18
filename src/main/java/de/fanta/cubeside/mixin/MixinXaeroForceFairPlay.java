@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Pseudo;
 
 @Pseudo
-@Mixin(targets = "xaero.minimap.XaeroMinimap", remap = false)
+@Mixin(targets = "xaero.common.HudMod", remap = false)
 public abstract class MixinXaeroForceFairPlay {
 
     /**

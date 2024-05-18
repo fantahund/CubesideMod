@@ -1,1 +1,1 @@
-- There is now a function that summarizes duplicate messages.
+- Fix XaeroFairPlayMixin
