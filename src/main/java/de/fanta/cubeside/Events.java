@@ -4,6 +4,7 @@ import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import de.fanta.cubeside.util.SoundThread;
+import de.iani.cubesideutils.fabric.permission.PermissionHandler;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -74,7 +75,6 @@ public class Events {
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
                 connect = false;
-                CubesideClientFabric.setRank(null);
             }
             CubesideClientFabric.setChatInfo(null);
         });
@@ -113,7 +113,7 @@ public class Events {
                 }
 
                 while (KeyBinds.AUTO_CHAT.wasPressed()) {
-                    if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
+                    if (PermissionHandler.hasPermission("cubeside.autochat")) {
                         if (Configs.PermissionSettings.AutoChat.getBooleanValue()) {
                             Configs.PermissionSettings.AutoChat.setBooleanValue(false);
                             mc.player.sendMessage(Text.of("§cAuto Chat deaktiviert"), true);

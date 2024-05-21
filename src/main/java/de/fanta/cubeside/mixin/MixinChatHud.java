@@ -6,6 +6,7 @@ import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
+import de.iani.cubesideutils.fabric.permission.PermissionHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.ChatHud;
@@ -143,7 +144,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
             if (arr.length >= 16) {
                 if (arr[7].equals("literal{From") && arr[8].equals("}[style={color=light_purple}],") && (arr[16].contains("style={color=white}") || arr[16].contains("style={color=green}"))) {
                     if (client.player != null) {
-                        if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
+                        if (PermissionHandler.hasPermission("cubeside.autochat")) {
                             client.player.networkHandler.sendCommand("r " + Configs.PermissionSettings.AutoChatAntwort.getStringValue());
                         } else {
                             ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");

@@ -1,6 +1,7 @@
 package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.CubesideClientFabric;
+import de.iani.cubesideutils.fabric.permission.PermissionHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Pseudo;
@@ -15,7 +16,7 @@ public abstract class MixinXaeroForceFairPlay {
      */
     @Overwrite(remap = false)
     public boolean isFairPlay() {
-        if (CubesideClientFabric.hasPermission("xareomap")) {
+        if (PermissionHandler.hasPermission("xareomap")) {
             return true;
         } else {
             return CubesideClientFabric.isXaeroFairPlay();
