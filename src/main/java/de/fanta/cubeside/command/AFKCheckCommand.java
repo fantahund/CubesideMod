@@ -16,7 +16,7 @@ import net.minecraft.world.GameMode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;///
+import java.util.Objects;
 
 public class AFKCheckCommand extends SubCommand {
     private static boolean teleport = false;
@@ -51,16 +51,16 @@ public class AFKCheckCommand extends SubCommand {
                 }
 
                 teleport = true;
-                String teleportPlayer = playerList.get(0);
-                MinecraftClient.getInstance().player.networkHandler.sendCommand("tt p " + teleportPlayer);
+                String teleportPlayer = playerList.getFirst();
+                sender.getPlayer().networkHandler.sendCommand("tt p " + teleportPlayer);
                 ChatUtils.sendNormalMessage("Du wurdest zu " + teleportPlayer + " teleportiert.");
                 playerList.remove(teleportPlayer);
                 break;
             case "next":
                 if (teleport) {
                     if (!playerList.isEmpty()) {
-                        String portPlayer = playerList.get(0);
-                        MinecraftClient.getInstance().player.networkHandler.sendCommand("tt p " + portPlayer);
+                        String portPlayer = playerList.getFirst();
+                        sender.getPlayer().networkHandler.sendCommand("tt p " + portPlayer);
                         ChatUtils.sendNormalMessage("Du wurdest zu " + portPlayer + " teleportiert.");
                         playerList.remove(portPlayer);
                     } else {
