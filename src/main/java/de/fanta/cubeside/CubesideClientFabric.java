@@ -4,7 +4,6 @@ import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.event.CubesideModChannelHandler;
 import de.fanta.cubeside.event.RankDataChannelHandler;
-import de.fanta.cubeside.permission.PermissionHandler;
 import de.fanta.cubeside.util.ChatInfo;
 import fi.dy.masa.malilib.util.FileUtils;
 import java.io.File;
@@ -34,9 +33,6 @@ public class CubesideClientFabric implements ClientModInitializer {
     public static double brightnessSliderInterval = 0.05;
 
     public static Commands commands;
-    private static PermissionHandler permissionHandler;
-
-    private static String rank;
 
     private static boolean loadingMessages;
     public static boolean databaseinuse = false;
@@ -73,7 +69,6 @@ public class CubesideClientFabric implements ClientModInitializer {
         LogicalZoom logicalZoom = new LogicalZoom();
         logicalZoom.initLogicalZoom();
 
-        permissionHandler = new PermissionHandler();
         new RankDataChannelHandler();
         new CubesideModChannelHandler();
 
@@ -93,18 +88,6 @@ public class CubesideClientFabric implements ClientModInitializer {
 
         time = 0;
         this.restartTask(50);
-    }
-
-    public String getRank() {
-        return rank;
-    }
-
-    public static void setRank(String setrank) {
-        rank = setrank;
-    }
-
-    public static boolean hasPermission(String permission) {
-        return permissionHandler.hasPermission(rank, permission);
     }
 
     public static Database getDatabase() {

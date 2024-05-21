@@ -1,7 +1,6 @@
 package de.fanta.cubeside.event;
 
 import de.fanta.cubeside.CubesideClientFabric;
-import de.fanta.cubeside.packets.CubesideRankInfoS2C;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
