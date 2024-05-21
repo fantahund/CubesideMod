@@ -6,13 +6,13 @@ import java.util.Map;
 public class PermissionHandler {
 
     private static final int PLAYER = 0;
-    private static final int VIP = 1;
-    private static final int VETERAN = 1;
-    private static final int CREATOR = 1;
-    private static final int BUDDY = 2;
-    private static final int STAFF = 3;
-    private static final int ADMIN = 4;
-    private static final int OWNER = 5;
+    private static final int VIP = 100;
+    private static final int CREATOR = 100;
+    private static final int VETERAN = 1500;
+    private static final int BUDDY = 2000;
+    private static final int STAFF = 5000;
+    private static final int ADMIN = 8000;
+    private static final int OWNER = 10000;
 
     private static final Map<String, Integer> RANK_PRIORITIES;
 
@@ -20,8 +20,8 @@ public class PermissionHandler {
         RANK_PRIORITIES = Map.of(
                 "player", PLAYER,
                 "vip", VIP,
-                "veteran", VETERAN,
                 "creator", CREATOR,
+                "veteran", VETERAN,
                 "buddy", BUDDY,
                 "staff", STAFF,
                 "admin", ADMIN,
@@ -38,11 +38,12 @@ public class PermissionHandler {
         //VIP
 
         //VETERAN
+        minRequiredPermission.put("cubeside.addskulltolore", BUDDY);
 
         //CREATOR
 
         //BUDDY
-        minRequiredPermission.put("cubeside.addskulltolore", BUDDY);
+
 
         //STAFF
         minRequiredPermission.put("cubeside.autochat", STAFF);

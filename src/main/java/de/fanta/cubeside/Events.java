@@ -178,7 +178,9 @@ public class Events {
             }
         });
 
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> CubesideClientFabric.commands.register(dispatcher));
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            CubesideClientFabric.commands.register(dispatcher);
+        });
 
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> MiningAssistent.render(context.matrixStack()));
 

@@ -56,6 +56,7 @@ dependencies {
     modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
     modImplementation include("fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version_out}:${project.malilib_version}")
+    modImplementation include("de.cubeside.cubesideutils.fabric:CubesideUtilsFabricClient:1.0.0")
 
     //include("foundationgames:EnhancedBlockEntities:${project.enhancedBlockEntities_version}")
 
