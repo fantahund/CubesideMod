@@ -3,7 +3,6 @@ package de.fanta.cubeside;
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.event.CubesideModChannelHandler;
-import de.fanta.cubeside.event.RankDataChannelHandler;
 import de.fanta.cubeside.util.ChatInfo;
 import fi.dy.masa.malilib.util.FileUtils;
 import java.io.File;
@@ -69,7 +68,6 @@ public class CubesideClientFabric implements ClientModInitializer {
         LogicalZoom logicalZoom = new LogicalZoom();
         logicalZoom.initLogicalZoom();
 
-        new RankDataChannelHandler();
         new CubesideModChannelHandler();
 
         LOGGER.info(MODID + "Mod Loaded");
