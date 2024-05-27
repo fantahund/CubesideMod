@@ -58,7 +58,7 @@ dependencies {
     modImplementation include("fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version_out}:${project.malilib_version}")
     modImplementation include("de.cubeside.cubesideutils.fabric:CubesideUtilsFabricClient:1.0.1-SNAPSHOT")
 
-    //include("foundationgames:EnhancedBlockEntities:${project.enhancedBlockEntities_version}")
+    include("foundationgames:EnhancedBlockEntities:${project.enhancedBlockEntities_version}")
 
     shade 'com.h2database:h2:2.2.224'
 

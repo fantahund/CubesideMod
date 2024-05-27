@@ -25,6 +25,7 @@ public class MixinPlugin implements IMixinConfigPlugin {
         CONDITIONS.put("de.fanta.cubeside.mixin.MixinXaeroDisableCaveMap", () -> FabricLoader.getInstance().isModLoaded("xaerominimap") || FabricLoader.getInstance().isModLoaded("xaerominimapfair"));
         CONDITIONS.put("de.fanta.cubeside.mixin.MixinXaeroForceFairPlay", () -> FabricLoader.getInstance().isModLoaded("xaerominimap") || FabricLoader.getInstance().isModLoaded("xaerominimapfair"));
         CONDITIONS.put("de.fanta.cubeside.mixin.MixinChatLimit", () -> !containsFeather());
+        CONDITIONS.put("de.fanta.cubeside.mixin.MixinKeyboard", () -> !FabricLoader.getInstance().isModLoaded("rebind_all_the_keys"));
     }
 
     @Override
