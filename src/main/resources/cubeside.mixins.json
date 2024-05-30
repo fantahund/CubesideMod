@@ -27,7 +27,8 @@
     "MixinWorldRenderer",
     "MixinXaeroDisableCaveMap",
     "MixinXaeroForceFairPlay",
-    "SignBlockEntityRendererMixin"
+    "SignBlockEntityRendererMixin",
+    "MixinItemStack"
   ],
   "injectors": {
     "defaultRequire": 1

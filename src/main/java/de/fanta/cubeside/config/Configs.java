@@ -41,6 +41,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean WoodStriping = new ConfigBoolean("WoodStriping", true, Text.translatable("options.cubeside.woodstriping").getString());
         public static final ConfigBoolean CreateGrassPath = new ConfigBoolean("CreateGrassPath", true, Text.translatable("options.cubeside.creategrasspath").getString());
         public static final ConfigBoolean SignEdit = new ConfigBoolean("SingEdit", true, Text.translatable("options.cubeside.singedit").getString());
+        public static final ConfigBoolean ShowAdditionalRepairCosts = new ConfigBoolean("ShowAdditionalRepairCosts", false, Text.translatable("options.cubeside.showadditionalrepaircosts").getString());
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 ThirdPersonElytra,
@@ -54,7 +55,8 @@ public class Configs implements IConfigHandler {
                 ActionBarShadow,
                 WoodStriping,
                 CreateGrassPath,
-                SignEdit
+                SignEdit,
+                ShowAdditionalRepairCosts
         );
     }
 
