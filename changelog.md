@@ -1,1 +1,3 @@
-- Fix XaeroFairPlayMixin
+- New CommandAPI
+- BugFixes
+- Add EnhancedBlockEntities for 1.20.6

@@ -4,6 +4,7 @@ import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.event.CubesideModChannelHandler;
 import de.fanta.cubeside.util.ChatInfo;
+import de.iani.cubesideutils.fabric.scheduler.Scheduler;
 import fi.dy.masa.malilib.util.FileUtils;
 import java.io.File;
 import java.sql.SQLException;
@@ -67,7 +68,6 @@ public class CubesideClientFabric implements ClientModInitializer {
 
         LogicalZoom logicalZoom = new LogicalZoom();
         logicalZoom.initLogicalZoom();
-
         new CubesideModChannelHandler();
 
         LOGGER.info(MODID + "Mod Loaded");
@@ -85,7 +85,7 @@ public class CubesideClientFabric implements ClientModInitializer {
         xaeroFairPlay = FabricLoader.getInstance().isModLoaded("xaerominimapfair");
 
         time = 0;
-        this.restartTask(50);
+        this.restartTask(1);
     }
 
     public static Database getDatabase() {
@@ -104,19 +104,8 @@ public class CubesideClientFabric implements ClientModInitializer {
         return xaeroFairPlay;
     }
 
-    public void restartTask(long l) {
-        Thread timer = new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(l);
-                    time++;
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    break;
-                }
-            }
-        });
-        timer.start();
+    public void restartTask(int l) {
+        Scheduler.scheduleSyncRepeatingTask(() -> time++, 0, l);
     }
 
     public static long getTime() {
