@@ -6,8 +6,12 @@ import net.minecraft.text.Text;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.collection.FindOptions;
 import org.dizitart.no2.common.SortOrder;
+import org.dizitart.no2.common.mapper.JacksonMapperModule;
+import org.dizitart.no2.exceptions.TransactionException;
 import org.dizitart.no2.mvstore.MVStoreModule;
 import org.dizitart.no2.repository.ObjectRepository;
+import org.dizitart.no2.transaction.Session;
+import org.dizitart.no2.transaction.Transaction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,12 +22,12 @@ public class ChatDatabase {
     private static Nitrite database;
     private static ObjectRepository<ChatRepo> chatRepo;
     private static ObjectRepository<CommandRepo> commandRepo;
-    private static int currentMessageId = 0;
-    private static int currentCommandId = 0;
+    private int currentMessageId = 0;
+    private int currentCommandId = 0;
 
     public ChatDatabase(String server) {
         storeModule = MVStoreModule.withConfig().filePath(new File(CubesideClientFabric.getConfigDirectory(), "/chatStorage/" + server.toLowerCase() + ".db")).compress(true).build();
-        database = Nitrite.builder().loadModule(storeModule).openOrCreate();
+        database = Nitrite.builder().loadModule(storeModule).loadModule(new JacksonMapperModule()).openOrCreate();
 
         chatRepo = database.getRepository(ChatRepo.class);
         commandRepo = database.getRepository(CommandRepo.class);
@@ -31,21 +35,27 @@ public class ChatDatabase {
         List<ChatRepo> chatRepos = chatRepo.find(FindOptions.orderBy("id", SortOrder.Descending)).toList();
         if (chatRepos != null && !chatRepos.isEmpty()) {
             currentMessageId = chatRepos.getLast().getMessageID() + 1;
+            System.out.println("MessageID: " + currentMessageId);
         }
 
         List<CommandRepo> commandRepos = commandRepo.find(FindOptions.orderBy("id", SortOrder.Descending)).toList();
         if (commandRepos != null && !commandRepos.isEmpty()) {
-            currentMessageId = commandRepos.getFirst().getCommandID() + 1;
+            currentMessageId = commandRepos.getLast().getCommandID() + 1;
+            System.out.println("CommandID: " + currentCommandId);
         }
     }
 
     public void addMessageEntry(String message) {
-        ChatRepo entry = new ChatRepo(currentMessageId++, message, System.currentTimeMillis());
+        int id = this.currentMessageId++;
+        System.out.println("Add Message with id: " + id);
+        ChatRepo entry = new ChatRepo(id, message, System.currentTimeMillis());
         chatRepo.insert(entry);
     }
 
     public void addCommandEntry(String command) {
-        CommandRepo entry = new CommandRepo(currentCommandId++, command, System.currentTimeMillis());
+        int id = this.currentCommandId++;
+        System.out.println("Add Command with id: " + id);
+        CommandRepo entry = new CommandRepo(id, command, System.currentTimeMillis());
         commandRepo.insert(entry);
     }
 

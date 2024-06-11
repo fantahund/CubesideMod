@@ -50,13 +50,13 @@ public class Events {
             if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue() && !CubesideClientFabric.databaseinuse) {
                 if (handler.getServerInfo() != null) {
                     String server = handler.getServerInfo().address.toLowerCase();
-                    //CubesideClientFabric.setChatDatabase(new ChatDatabase(server));
+                    CubesideClientFabric.setChatDatabase(new ChatDatabase(server));
 
-                    List<Text> messages = CubesideClientFabric.getDatabase().loadMessages(server);
-                    List<String> commands = CubesideClientFabric.getDatabase().loadCommands(server);
+                    //List<Text> messages = CubesideClientFabric.getDatabase().loadMessages(server);
+                    //List<String> commands = CubesideClientFabric.getDatabase().loadCommands(server);
 
-                    //List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages();
-                    //List<String> commands = CubesideClientFabric.getChatDatabase().loadCommands();
+                    List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages();
+                    List<String> commands = CubesideClientFabric.getChatDatabase().loadCommands();
 
                     if (!connect) {
                         CubesideClientFabric.setLoadingMessages(true);

@@ -64,6 +64,7 @@ dependencies {
 
     shade 'org.dizitart:nitrite'
     shade 'org.dizitart:nitrite-mvstore-adapter'
+    implementation shade('org.dizitart:nitrite-jackson-mapper')
     shade 'com.h2database:h2:2.2.224'
 
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"
