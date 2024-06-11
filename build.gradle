@@ -60,6 +60,10 @@ dependencies {
 
     include("foundationgames:EnhancedBlockEntities:${project.enhancedBlockEntities_version}")
 
+    implementation shade(platform("org.dizitart:nitrite-bom:4.2.1"))
+
+    shade 'org.dizitart:nitrite'
+    shade 'org.dizitart:nitrite-mvstore-adapter'
     shade 'com.h2database:h2:2.2.224'
 
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"

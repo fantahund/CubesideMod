@@ -3,6 +3,7 @@ package de.fanta.cubeside.mixin;
 import de.fanta.cubeside.ChatInfoHud;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
+import de.fanta.cubeside.data.ChatDatabase;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
@@ -13,6 +14,7 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.client.util.ChatMessages;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.ClickEvent;
@@ -353,6 +355,11 @@ public abstract class MixinChatHud implements ChatHudMethods {
                     database.addCommand(message, client.getCurrentServerEntry().address.toLowerCase());
                 }
             }
+
+            ChatDatabase chatDatabase = CubesideClientFabric.getChatDatabase();
+            if (chatDatabase != null) {
+                chatDatabase.addCommandEntry(message);
+            }
         }
     }
 
@@ -381,6 +388,11 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 if (!CubesideClientFabric.databaseinuse) {
                     database.addMessage(component, client.getCurrentServerEntry().address.toLowerCase());
                 }
+            }
+
+            ChatDatabase chatDatabase = CubesideClientFabric.getChatDatabase();
+            if (chatDatabase != null) {
+                chatDatabase.addMessageEntry(Text.Serialization.toJsonString(component, DynamicRegistryManager.EMPTY));
             }
         }
     }

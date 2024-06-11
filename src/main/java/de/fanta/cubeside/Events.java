@@ -1,6 +1,7 @@
 package de.fanta.cubeside;
 
 import de.fanta.cubeside.config.Configs;
+import de.fanta.cubeside.data.ChatDatabase;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import de.fanta.cubeside.util.SoundThread;
@@ -49,8 +50,13 @@ public class Events {
             if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue() && !CubesideClientFabric.databaseinuse) {
                 if (handler.getServerInfo() != null) {
                     String server = handler.getServerInfo().address.toLowerCase();
+                    //CubesideClientFabric.setChatDatabase(new ChatDatabase(server));
+
                     List<Text> messages = CubesideClientFabric.getDatabase().loadMessages(server);
                     List<String> commands = CubesideClientFabric.getDatabase().loadCommands(server);
+
+                    //List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages();
+                    //List<String> commands = CubesideClientFabric.getChatDatabase().loadCommands();
 
                     if (!connect) {
                         CubesideClientFabric.setLoadingMessages(true);
@@ -73,6 +79,12 @@ public class Events {
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            ChatDatabase chatDatabase = CubesideClientFabric.getChatDatabase();
+            if (chatDatabase != null) {
+                chatDatabase.close();
+                CubesideClientFabric.setChatDatabase(null);
+            }
+
             if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
                 connect = false;
             }

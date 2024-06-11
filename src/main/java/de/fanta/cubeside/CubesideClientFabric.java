@@ -1,6 +1,7 @@
 package de.fanta.cubeside;
 
 import de.fanta.cubeside.config.Configs;
+import de.fanta.cubeside.data.ChatDatabase;
 import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.event.CubesideModChannelHandler;
 import de.fanta.cubeside.util.ChatInfo;
@@ -18,6 +19,8 @@ import net.minecraft.text.Text;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.dizitart.no2.Nitrite;
+import org.dizitart.no2.mvstore.MVStoreModule;
 
 @Environment(EnvType.CLIENT)
 public class CubesideClientFabric implements ClientModInitializer {
@@ -45,12 +48,17 @@ public class CubesideClientFabric implements ClientModInitializer {
     private static ChatInfo chatInfo;
 
     private static File configDirectory;
+    private static ChatDatabase chatDatabase;
 
     @Override
     public void onInitializeClient() {
         configDirectory = new File(FileUtils.getConfigDirectory().getPath() + "/CubesideMod");
         if (!configDirectory.isDirectory()) {
             configDirectory.mkdirs();
+        }
+        File chatStorage = new File(configDirectory, "/chatStorage");
+        if (!chatStorage.isDirectory()) {
+            chatStorage.mkdir();
         }
         try {
             DATABASE = new Database();
@@ -122,5 +130,13 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     public static File getConfigDirectory() {
         return configDirectory;
+    }
+
+    public static ChatDatabase getChatDatabase() {
+        return chatDatabase;
+    }
+
+    public static void setChatDatabase(ChatDatabase chatDatabase) {
+        CubesideClientFabric.chatDatabase = chatDatabase;
     }
 }
