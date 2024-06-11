@@ -7,7 +7,6 @@ import de.fanta.cubeside.util.ChatInfo;
 import de.iani.cubesideutils.fabric.scheduler.Scheduler;
 import fi.dy.masa.malilib.util.FileUtils;
 import java.io.File;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.api.ClientModInitializer;
@@ -15,7 +14,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

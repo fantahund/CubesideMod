@@ -1,6 +1,5 @@
 package de.fanta.cubeside.util.ChatSkullAPI;
 
-
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.util.ChatUtils;
 

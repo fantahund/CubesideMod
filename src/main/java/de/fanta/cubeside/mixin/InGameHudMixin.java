@@ -1,6 +1,5 @@
 package de.fanta.cubeside.mixin;
 
-import de.fanta.cubeside.ChatInfoHud;
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.FlashColorScreen;
 import net.minecraft.client.font.TextRenderer;
