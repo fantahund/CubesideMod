@@ -39,13 +39,11 @@ public class ChatDatabase {
         List<ChatRepo> chatRepos = chatRepo.find(FindOptions.orderBy("id", SortOrder.Descending)).toList();
         if (chatRepos != null && !chatRepos.isEmpty()) {
             currentMessageId = chatRepos.getLast().getMessageID() + 1;
-            System.out.println("MessageID: " + currentMessageId);
         }
 
         List<CommandRepo> commandRepos = commandRepo.find(FindOptions.orderBy("id", SortOrder.Descending)).toList();
         if (commandRepos != null && !commandRepos.isEmpty()) {
             currentCommandId = commandRepos.getLast().getCommandID() + 1;
-            System.out.println("CommandID: " + currentCommandId);
         }
     }
 
