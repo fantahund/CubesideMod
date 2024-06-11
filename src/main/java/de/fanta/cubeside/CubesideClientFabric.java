@@ -2,7 +2,6 @@ package de.fanta.cubeside;
 
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.ChatDatabase;
-import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.event.CubesideModChannelHandler;
 import de.fanta.cubeside.util.ChatInfo;
 import de.iani.cubesideutils.fabric.scheduler.Scheduler;
@@ -19,8 +18,6 @@ import net.minecraft.text.Text;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.dizitart.no2.Nitrite;
-import org.dizitart.no2.mvstore.MVStoreModule;
 
 @Environment(EnvType.CLIENT)
 public class CubesideClientFabric implements ClientModInitializer {
@@ -28,7 +25,6 @@ public class CubesideClientFabric implements ClientModInitializer {
     public static final String MODID = "cubeside";
     public static final String PREFIX = "§9[§aCubeside§9] ";
     public static final Logger LOGGER = LogManager.getLogger("CubesideMod");
-    private static Database DATABASE;
     // GAMA
     public static double minGamma = -1.5;
     public static double maxGamma = 12.0;
@@ -60,12 +56,6 @@ public class CubesideClientFabric implements ClientModInitializer {
         if (!chatStorage.isDirectory()) {
             chatStorage.mkdir();
         }
-        try {
-            DATABASE = new Database();
-        } catch (Exception e) {
-            LOGGER.log(Level.INFO, "Du hast scheinbar mehrere Minecraft Instanzen am laufen. Chat & Commands werden nicht gespeichert oder geladen!", e);
-            databaseinuse = true;
-        }
         Configs.loadFromFile();
 
         KeyBinds keyBinds = new KeyBinds();
@@ -81,23 +71,10 @@ public class CubesideClientFabric implements ClientModInitializer {
         LOGGER.info(MODID + "Mod Loaded");
         commands = new Commands();
 
-        if (!databaseinuse) {
-            try {
-                getDatabase().deleteOldMessages(Configs.Chat.DaysTheMessagesAreStored.getIntegerValue());
-                getDatabase().deleteOldCommands(Configs.Chat.DaysTheMessagesAreStored.getIntegerValue());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
         xaeroFairPlay = FabricLoader.getInstance().isModLoaded("xaerominimapfair");
 
         time = 0;
         this.restartTask(1);
-    }
-
-    public static Database getDatabase() {
-        return DATABASE;
     }
 
     public static void setLoadingMessages(boolean setloadingMessages) {

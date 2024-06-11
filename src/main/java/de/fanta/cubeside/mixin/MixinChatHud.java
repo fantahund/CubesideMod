@@ -4,7 +4,6 @@ import de.fanta.cubeside.ChatInfoHud;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.data.ChatDatabase;
-import de.fanta.cubeside.data.Database;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import de.iani.cubesideutils.fabric.permission.PermissionHandler;
@@ -25,7 +24,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -42,9 +40,6 @@ import java.util.List;
 
 @Mixin(ChatHud.class)
 public abstract class MixinChatHud implements ChatHudMethods {
-
-    @Unique
-    private static final Database database = CubesideClientFabric.getDatabase();
     @Unique
     private static final Date DATE = new Date();
     @Unique
@@ -129,7 +124,8 @@ public abstract class MixinChatHud implements ChatHudMethods {
                     for (int i = 1; i <= list.size(); i++) {
                         this.visibleMessages.remove(0);
                     }
-                    database.deleteNewestMessage();
+                    //database.deleteNewestMessage();
+                    CubesideClientFabric.getChatDatabase().deleteNewestMessage();
                 }
 
             } else {
@@ -350,12 +346,6 @@ public abstract class MixinChatHud implements ChatHudMethods {
             return;
         }
         if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
-            if (client.getCurrentServerEntry() != null) {
-                if (!CubesideClientFabric.databaseinuse) {
-                    database.addCommand(message, client.getCurrentServerEntry().address.toLowerCase());
-                }
-            }
-
             ChatDatabase chatDatabase = CubesideClientFabric.getChatDatabase();
             if (chatDatabase != null) {
                 chatDatabase.addCommandEntry(message);
@@ -384,12 +374,6 @@ public abstract class MixinChatHud implements ChatHudMethods {
     @Unique
     public void addMessageToDatabase(Text component) {
         if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
-            if (client.getCurrentServerEntry() != null) {
-                if (!CubesideClientFabric.databaseinuse) {
-                    database.addMessage(component, client.getCurrentServerEntry().address.toLowerCase());
-                }
-            }
-
             ChatDatabase chatDatabase = CubesideClientFabric.getChatDatabase();
             if (chatDatabase != null) {
                 chatDatabase.addMessageEntry(Text.Serialization.toJsonString(component, DynamicRegistryManager.EMPTY));

@@ -1,17 +1,16 @@
 package de.fanta.cubeside.data;
 
 import de.fanta.cubeside.CubesideClientFabric;
+import de.fanta.cubeside.config.Configs;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.text.Text;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.collection.FindOptions;
 import org.dizitart.no2.common.SortOrder;
 import org.dizitart.no2.common.mapper.JacksonMapperModule;
-import org.dizitart.no2.exceptions.TransactionException;
 import org.dizitart.no2.mvstore.MVStoreModule;
+import org.dizitart.no2.repository.Cursor;
 import org.dizitart.no2.repository.ObjectRepository;
-import org.dizitart.no2.transaction.Session;
-import org.dizitart.no2.transaction.Transaction;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,15 +21,20 @@ public class ChatDatabase {
     private static Nitrite database;
     private static ObjectRepository<ChatRepo> chatRepo;
     private static ObjectRepository<CommandRepo> commandRepo;
+    private final String server;
     private int currentMessageId = 0;
     private int currentCommandId = 0;
 
     public ChatDatabase(String server) {
+        this.server = server;
         storeModule = MVStoreModule.withConfig().filePath(new File(CubesideClientFabric.getConfigDirectory(), "/chatStorage/" + server.toLowerCase() + ".db")).compress(true).build();
         database = Nitrite.builder().loadModule(storeModule).loadModule(new JacksonMapperModule()).openOrCreate();
 
         chatRepo = database.getRepository(ChatRepo.class);
         commandRepo = database.getRepository(CommandRepo.class);
+
+        deleteOldMessages(Configs.Chat.DaysTheMessagesAreStored.getIntegerValue());
+        deleteOldCommands(Configs.Chat.DaysTheMessagesAreStored.getIntegerValue());
 
         List<ChatRepo> chatRepos = chatRepo.find(FindOptions.orderBy("id", SortOrder.Descending)).toList();
         if (chatRepos != null && !chatRepos.isEmpty()) {
@@ -40,21 +44,19 @@ public class ChatDatabase {
 
         List<CommandRepo> commandRepos = commandRepo.find(FindOptions.orderBy("id", SortOrder.Descending)).toList();
         if (commandRepos != null && !commandRepos.isEmpty()) {
-            currentMessageId = commandRepos.getLast().getCommandID() + 1;
+            currentCommandId = commandRepos.getLast().getCommandID() + 1;
             System.out.println("CommandID: " + currentCommandId);
         }
     }
 
     public void addMessageEntry(String message) {
         int id = this.currentMessageId++;
-        System.out.println("Add Message with id: " + id);
         ChatRepo entry = new ChatRepo(id, message, System.currentTimeMillis());
         chatRepo.insert(entry);
     }
 
     public void addCommandEntry(String command) {
         int id = this.currentCommandId++;
-        System.out.println("Add Command with id: " + id);
         CommandRepo entry = new CommandRepo(id, command, System.currentTimeMillis());
         commandRepo.insert(entry);
     }
@@ -79,5 +81,40 @@ public class ChatDatabase {
             entries.add(entry.getCommand());
         }
         return entries;
+    }
+
+    public void deleteNewestMessage() {
+        List<ChatRepo> cursor = chatRepo.find(FindOptions.orderBy("id", SortOrder.Descending)).toList();
+        if (!cursor.isEmpty()) {
+            ChatRepo lastEntry = cursor.getLast();
+            if (lastEntry != null) {
+                chatRepo.remove(lastEntry);
+                currentMessageId = lastEntry.getMessageID();
+            }
+        }
+    }
+
+    private void deleteOldMessages(int days) {
+        int count = 0;
+        Cursor<ChatRepo> cursor = chatRepo.find();
+        for (ChatRepo entry : cursor) {
+            if (entry.getTimestamp() <= System.currentTimeMillis() - days * 24 * 60 * 60 * 1000L) {
+                chatRepo.remove(entry);
+                count++;
+            }
+        }
+        CubesideClientFabric.LOGGER.info(count + " commands were deleted from server " + server);
+    }
+
+    private void deleteOldCommands(int days) {
+        int count = 0;
+        Cursor<CommandRepo> cursor = commandRepo.find();
+        for (CommandRepo entry : cursor) {
+            if (entry.getTimestamp() <= System.currentTimeMillis() - days * 24 * 60 * 60 * 1000L) {
+                commandRepo.remove(entry);
+                count++;
+            }
+        }
+        CubesideClientFabric.LOGGER.info(count + " messages were deleted from server " + server);
     }
 }

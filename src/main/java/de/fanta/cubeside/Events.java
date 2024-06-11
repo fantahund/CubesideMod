@@ -49,16 +49,15 @@ public class Events {
         ClientPlayConnectionEvents.INIT.register((handler, client) -> {
             if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue() && !CubesideClientFabric.databaseinuse) {
                 if (handler.getServerInfo() != null) {
-                    String server = handler.getServerInfo().address.toLowerCase();
-                    CubesideClientFabric.setChatDatabase(new ChatDatabase(server));
-
-                    //List<Text> messages = CubesideClientFabric.getDatabase().loadMessages(server);
-                    //List<String> commands = CubesideClientFabric.getDatabase().loadCommands(server);
-
-                    List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages();
-                    List<String> commands = CubesideClientFabric.getChatDatabase().loadCommands();
-
                     if (!connect) {
+                        String server = handler.getServerInfo().address.toLowerCase();
+                        CubesideClientFabric.setChatDatabase(new ChatDatabase(server));
+
+                        //List<Text> messages = CubesideClientFabric.getDatabase().loadMessages(server);
+                        //List<String> commands = CubesideClientFabric.getDatabase().loadCommands(server);
+
+                        List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages();
+                        List<String> commands = CubesideClientFabric.getChatDatabase().loadCommands();
                         CubesideClientFabric.setLoadingMessages(true);
                         client.inGameHud.getChatHud().clear(true);
                         messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredChatMessage);
