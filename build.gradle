@@ -12,7 +12,7 @@ apply plugin: "io.github.goooler.shadow"
 
 defaultTasks('clean', 'build', 'publishToMavenLocal')
 
-archivesBaseName = project.archives_base_name
+archivesBaseName = project.archives_base_name + "-" + project.minecraft_version
 version = project.mod_version
 group = project.maven_group
 
