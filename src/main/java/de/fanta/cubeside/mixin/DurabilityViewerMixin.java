@@ -3,7 +3,6 @@ package de.fanta.cubeside.mixin;
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
-import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -56,72 +55,61 @@ public class DurabilityViewerMixin {
                 }
             }
 
-
             if (durablility == -1 || maxDurablility == -1) {
                 return itemStack;
             }
 
             ItemStack stack = null;
-
-            if (slot == EquipmentSlot.HEAD) {
-                if (maxDurablility == 55) {
-                    stack = new ItemStack(Items.LEATHER_HELMET);
-                } else if (maxDurablility == 77) {
-                    stack = new ItemStack(Items.GOLDEN_HELMET);
-                } else if (maxDurablility == 165) {
-                    stack = new ItemStack(Items.IRON_HELMET);
-                } else if (maxDurablility == 363) {
-                    stack = new ItemStack(Items.DIAMOND_HELMET);
-                } else if (maxDurablility == 407) {
-                    stack = new ItemStack(Items.NETHERITE_HELMET);
-                } else if (maxDurablility == 275) {
-                    stack = new ItemStack(Items.TURTLE_HELMET);
+            switch (slot) {
+                case EquipmentSlot.HEAD -> {
+                    switch (maxDurablility) {
+                        case 55 -> stack = new ItemStack(Items.LEATHER_HELMET);
+                        case 77 -> stack = new ItemStack(Items.GOLDEN_HELMET);
+                        case 165 -> stack = new ItemStack(Items.IRON_HELMET);
+                        case 363 -> stack = new ItemStack(Items.DIAMOND_HELMET);
+                        case 407 -> stack = new ItemStack(Items.NETHERITE_HELMET);
+                        case 275 -> stack = new ItemStack(Items.TURTLE_HELMET);
+                    }
                 }
-            } else if (slot == EquipmentSlot.CHEST) {
-                if (maxDurablility == 80) {
-                    stack = new ItemStack(Items.LEATHER_CHESTPLATE);
-                } else if (maxDurablility == 112) {
-                    stack = new ItemStack(Items.GOLDEN_CHESTPLATE);
-                } else if (maxDurablility == 240) {
-                    stack = new ItemStack(Items.IRON_CHESTPLATE);
-                } else if (maxDurablility == 528) {
-                    stack = new ItemStack(Items.DIAMOND_CHESTPLATE);
-                } else if (maxDurablility == 592) {
-                    stack = new ItemStack(Items.NETHERITE_CHESTPLATE);
+                case EquipmentSlot.CHEST -> {
+                    switch (maxDurablility) {
+                        case 80 -> stack = new ItemStack(Items.LEATHER_CHESTPLATE);
+                        case 112 -> stack = new ItemStack(Items.GOLDEN_CHESTPLATE);
+                        case 240 -> stack = new ItemStack(Items.IRON_CHESTPLATE);
+                        case 528 -> stack = new ItemStack(Items.DIAMOND_CHESTPLATE);
+                        case 592 -> stack = new ItemStack(Items.NETHERITE_CHESTPLATE);
+                    }
                 }
-            } else if (slot == EquipmentSlot.LEGS) {
-                if (maxDurablility == 75) {
-                    stack = new ItemStack(Items.LEATHER_LEGGINGS);
-                } else if (maxDurablility == 105) {
-                    stack = new ItemStack(Items.GOLDEN_LEGGINGS);
-                } else if (maxDurablility == 225) {
-                    stack = new ItemStack(Items.IRON_LEGGINGS);
-                } else if (maxDurablility == 495) {
-                    stack = new ItemStack(Items.DIAMOND_LEGGINGS);
-                } else if (maxDurablility == 555) {
-                    stack = new ItemStack(Items.NETHERITE_LEGGINGS);
+                case EquipmentSlot.LEGS -> {
+                    switch (maxDurablility) {
+                        case 75 -> stack = new ItemStack(Items.LEATHER_LEGGINGS);
+                        case 105 -> stack = new ItemStack(Items.GOLDEN_LEGGINGS);
+                        case 225 -> stack = new ItemStack(Items.IRON_LEGGINGS);
+                        case 495 -> stack = new ItemStack(Items.DIAMOND_LEGGINGS);
+                        case 555 -> stack = new ItemStack(Items.NETHERITE_LEGGINGS);
+                    }
                 }
-            } else if (slot == EquipmentSlot.FEET) {
-                if (maxDurablility == 65) {
-                    stack = new ItemStack(Items.LEATHER_BOOTS);
-                } else if (maxDurablility == 91) {
-                    stack = new ItemStack(Items.GOLDEN_BOOTS);
-                } else if (maxDurablility == 195) {
-                    stack = new ItemStack(Items.IRON_BOOTS);
-                } else if (maxDurablility == 429) {
-                    stack = new ItemStack(Items.DIAMOND_BOOTS);
-                } else if (maxDurablility == 481) {
-                    stack = new ItemStack(Items.NETHERITE_BOOTS);
+                case EquipmentSlot.FEET -> {
+                    switch (maxDurablility) {
+                        case 65 -> stack = new ItemStack(Items.LEATHER_BOOTS);
+                        case 91 -> stack = new ItemStack(Items.GOLDEN_BOOTS);
+                        case 195 -> stack = new ItemStack(Items.IRON_BOOTS);
+                        case 429 -> stack = new ItemStack(Items.DIAMOND_BOOTS);
+                        case 481 -> stack = new ItemStack(Items.NETHERITE_BOOTS);
+                    }
                 }
             }
 
-            if (stack != null) {
-                stack.setDamage(maxDurablility - durablility);
-                if (itemStack.hasEnchantments()) {
-                    stack.apply(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true, UnaryOperator.identity()); //TODO 1.21 ???
-
-                }
+            if (stack == null) {
+                return itemStack;
             }
+
+            stack.setDamage(maxDurablility - durablility);
+            if (itemStack.hasEnchantments()) {
+                stack.apply(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true, UnaryOperator.identity()); //TODO 1.21 ???
+
+            }
+
             return stack;
         }
         return itemStack;
