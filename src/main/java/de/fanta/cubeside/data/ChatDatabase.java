@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatDatabase {
-    private static MVStoreModule storeModule;
     private static Nitrite database;
     private static ObjectRepository<ChatRepo> chatRepo;
     private static ObjectRepository<CommandRepo> commandRepo;
@@ -27,7 +26,7 @@ public class ChatDatabase {
 
     public ChatDatabase(String server) {
         this.server = server;
-        storeModule = MVStoreModule.withConfig().filePath(new File(CubesideClientFabric.getConfigDirectory(), "/chatStorage/" + server.toLowerCase() + ".db")).compress(true).build();
+        MVStoreModule storeModule = MVStoreModule.withConfig().filePath(new File(CubesideClientFabric.getConfigDirectory(), "/chatStorage/" + server.toLowerCase() + ".db")).compress(true).build();
         database = Nitrite.builder().loadModule(storeModule).loadModule(new JacksonMapperModule()).openOrCreate();
 
         chatRepo = database.getRepository(ChatRepo.class);
@@ -51,12 +50,14 @@ public class ChatDatabase {
         int id = this.currentMessageId++;
         ChatRepo entry = new ChatRepo(id, message, System.currentTimeMillis());
         chatRepo.insert(entry);
+        database.commit();
     }
 
     public void addCommandEntry(String command) {
         int id = this.currentCommandId++;
         CommandRepo entry = new CommandRepo(id, command, System.currentTimeMillis());
         commandRepo.insert(entry);
+        database.commit();
     }
 
     public void close() {
@@ -88,6 +89,7 @@ public class ChatDatabase {
             if (lastEntry != null) {
                 chatRepo.remove(lastEntry);
                 currentMessageId = lastEntry.getMessageID();
+                database.commit();
             }
         }
     }
@@ -101,6 +103,7 @@ public class ChatDatabase {
                 count++;
             }
         }
+        database.commit();
         CubesideClientFabric.LOGGER.info(count + " commands were deleted from server " + server);
     }
 
@@ -113,6 +116,11 @@ public class ChatDatabase {
                 count++;
             }
         }
+        database.commit();
         CubesideClientFabric.LOGGER.info(count + " messages were deleted from server " + server);
+    }
+
+    public String getServer() {
+        return server;
     }
 }
