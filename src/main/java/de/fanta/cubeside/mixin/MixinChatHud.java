@@ -88,7 +88,8 @@ public abstract class MixinChatHud implements ChatHudMethods {
     @Final
     public List<ChatHudLine> messages;
 
-    @Shadow public abstract void addVisibleMessage(ChatHudLine message);
+    @Shadow
+    public abstract void addVisibleMessage(ChatHudLine message);
 
     @Inject(method = "render", at = @At(value = "RETURN"))
     private void renderChatHudInfo(DrawContext context, int currentTick, int mouseX, int mouseY, boolean focused, CallbackInfo ci) {
@@ -124,8 +125,9 @@ public abstract class MixinChatHud implements ChatHudMethods {
                     for (int i = 1; i <= list.size(); i++) {
                         this.visibleMessages.remove(0);
                     }
-                    //database.deleteNewestMessage();
-                    CubesideClientFabric.getChatDatabase().deleteNewestMessage();
+                    if (CubesideClientFabric.getChatDatabase() != null) {
+                        CubesideClientFabric.getChatDatabase().deleteNewestMessage();
+                    }
                 }
 
             } else {
@@ -184,7 +186,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
 
                     if (Configs.Generic.TpaSound.getBooleanValue()) {
                         if (client.player != null) {
-                            client.player.playSoundToPlayer(SoundEvent.of(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                            client.player.playSoundToPlayer(SoundEvent.of(Identifier.of("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
                         }
                     }
 
@@ -201,7 +203,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
 
                     if (Configs.Generic.TpaSound.getBooleanValue()) {
                         if (client.player != null) {
-                            client.player.playSoundToPlayer(SoundEvent.of(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                            client.player.playSoundToPlayer(SoundEvent.of(Identifier.of("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
                         }
                     }
 
@@ -366,7 +368,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
     @Unique
     public void playAFKSound() {
         if (client.player != null) {
-            SoundEvent sound = SoundEvent.of(new Identifier(CubesideClientFabric.MODID, "afk"));
+            SoundEvent sound = SoundEvent.of(Identifier.of(CubesideClientFabric.MODID, "afk"));
             client.player.playSoundToPlayer(sound, SoundCategory.PLAYERS, 0.2f, 1.0f);
         }
     }

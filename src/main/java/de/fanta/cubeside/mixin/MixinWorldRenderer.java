@@ -54,8 +54,8 @@ public abstract class MixinWorldRenderer {
             k /= n;
             l /= n;
             m /= n;
-            vertexConsumer.vertex(entry, (float) (minX + offsetX), (float) (minY + offsetY), (float) (minZ + offsetZ)).color(finalRed, finalGreen, finalBlue, finalAlpha).normal(entry, k, l, m).next();
-            vertexConsumer.vertex(entry, (float) (maxX + offsetX), (float) (maxY + offsetY), (float) (maxZ + offsetZ)).color(finalRed, finalGreen, finalBlue, finalAlpha).normal(entry, k, l, m).next();
+            vertexConsumer.vertex(entry, (float) (minX + offsetX), (float) (minY + offsetY), (float) (minZ + offsetZ)).color(finalRed, finalGreen, finalBlue, finalAlpha).normal(entry, k, l, m);
+            vertexConsumer.vertex(entry, (float) (maxX + offsetX), (float) (maxY + offsetY), (float) (maxZ + offsetZ)).color(finalRed, finalGreen, finalBlue, finalAlpha).normal(entry, k, l, m);
         });
     }
 }

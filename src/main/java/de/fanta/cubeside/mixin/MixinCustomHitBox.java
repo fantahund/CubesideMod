@@ -32,7 +32,7 @@ public abstract class MixinCustomHitBox {
      * @reason Make HitBoxes fancy
      */
     @Overwrite
-    private static void renderHitbox(MatrixStack matrices, VertexConsumer vertices, Entity entity, float tickDelta) {
+    private static void renderHitbox(MatrixStack matrices, VertexConsumer vertices, Entity entity, float tickDelta, float red, float green, float blue) {
         Color color;
         if (Configs.HitBox.RainbowEntityHitBox.getBooleanValue()) {
             List<Color4f> color4fList = Configs.HitBox.RainbowEntityHitBoxColorList.getColors();
@@ -85,8 +85,8 @@ public abstract class MixinCustomHitBox {
 
             Vec3d vec3d2 = entity.getRotationVec(tickDelta);
             MatrixStack.Entry entry = matrices.peek();
-            vertices.vertex(entry, 0.0F, entity.getStandingEyeHeight(), 0.0F).color(0, 0, 255, 255).normal(entry, (float)vec3d2.x, (float)vec3d2.y, (float)vec3d2.z).next();
-            vertices.vertex(entry, (float)(vec3d2.x * 2.0), (float)((double)entity.getStandingEyeHeight() + vec3d2.y * 2.0), (float)(vec3d2.z * 2.0)).color(0, 0, 255, 255).normal(entry, (float)vec3d2.x, (float)vec3d2.y, (float)vec3d2.z).next();
+            vertices.vertex(entry, 0.0F, entity.getStandingEyeHeight(), 0.0F).color(0, 0, 255, 255).normal(entry, (float)vec3d2.x, (float)vec3d2.y, (float)vec3d2.z);
+            vertices.vertex(entry, (float)(vec3d2.x * 2.0), (float)((double)entity.getStandingEyeHeight() + vec3d2.y * 2.0), (float)(vec3d2.z * 2.0)).color(0, 0, 255, 255).normal(entry, (float)vec3d2.x, (float)vec3d2.y, (float)vec3d2.z);
         }
     }
 

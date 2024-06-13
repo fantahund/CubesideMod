@@ -29,7 +29,6 @@ public class SearchScreen extends Screen {
     private static final int PADDING = 5;
     private static final int TEXT_MARGIN = 10;
     private static final Collection<ButtonWidget> buttonCache = new ArrayList<>();
-    private static final Identifier SCROLLER_TEXTURE = new Identifier("widget/scroller");
 
     public SearchScreen(Screen parent) {
         super(Text.literal("Chat Log (" + CubesideClientFabric.getChatDatabase().getServer() + ")"));

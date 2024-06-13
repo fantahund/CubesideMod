@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
+import java.util.function.UnaryOperator;
+
 @Mixin(GuiItemDurability.class)
 public class DurabilityViewerMixin {
 
@@ -116,7 +118,8 @@ public class DurabilityViewerMixin {
             if (stack != null) {
                 stack.setDamage(maxDurablility - durablility);
                 if (itemStack.hasEnchantments()) {
-                    stack.addEnchantment(Enchantments.UNBREAKING, 1);
+                    stack.apply(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, true, UnaryOperator.identity()); //TODO 1.21 ???
+
                 }
             }
             return stack;

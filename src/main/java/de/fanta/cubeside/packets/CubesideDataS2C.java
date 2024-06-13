@@ -12,7 +12,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class CubesideDataS2C implements CustomPayload {
-    public static final Id<CubesideDataS2C> PACKET_ID = new Id<>(new Identifier("cubesidemod", "data"));
+    public static final Id<CubesideDataS2C> PACKET_ID = new Id<>(Identifier.of("cubesidemod", "data"));
     public static final PacketCodec<PacketByteBuf, CubesideDataS2C> PACKET_CODEC = PacketCodec.of(CubesideDataS2C::write, CubesideDataS2C::new);
 
     private ChatInfo chatInfo;
