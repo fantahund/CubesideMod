@@ -19,6 +19,8 @@
     "MixinGammaSimpleOption",
     "MixinItemEntity",
     "MixinItemEntityRenderer",
+    "MixinItemRenderer",
+    "MixinItemStack",
     "MixinKeyboard",
     "MixinOptionImpl",
     "MixinRemoveChristmasChest",
@@ -27,8 +29,7 @@
     "MixinWorldRenderer",
     "MixinXaeroDisableCaveMap",
     "MixinXaeroForceFairPlay",
-    "SignBlockEntityRendererMixin",
-    "MixinItemStack"
+    "SignBlockEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

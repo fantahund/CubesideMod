@@ -1,6 +1,8 @@
 package de.fanta.cubeside.mixin;
 
+import de.fanta.cubeside.util.ItemUtils;
 import de.guntram.mcmod.durabilityviewer.client.gui.GuiItemDurability;
+import de.iani.cubesideutils.Pair;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.entity.EquipmentSlot;
@@ -33,27 +35,9 @@ public class DurabilityViewerMixin {
     private static ItemStack getItemStackFromNBT(ItemStack itemStack, EquipmentSlot slot) {
         LoreComponent loreComponent = itemStack.get(DataComponentTypes.LORE);
         if (loreComponent != null) {
-            int durablility = -1;
-            int maxDurablility = -1;
-
-            Text mutableText = loreComponent.lines().getLast();
-            if (mutableText != null) {
-                String fullDurabilityString = mutableText.getString();
-                if (fullDurabilityString.startsWith("Haltbarkeit:")) {
-                    String[] splitFull = fullDurabilityString.split(" ", 2);
-                    if (splitFull.length == 2) {
-                        String durabilityString = Text.literal(splitFull[1]).getString();
-                        String[] splitDurability = durabilityString.split("/", 2);
-                        if (splitDurability.length == 2) {
-                            try {
-                                durablility = Integer.parseInt(splitDurability[0]);
-                                maxDurablility = Integer.parseInt(splitDurability[1]);
-                            } catch (NumberFormatException ignore) {
-                            }
-                        }
-                    }
-                }
-            }
+            Pair<Integer, Integer> damageValues = ItemUtils.getDamageValuesFormCustomItem(loreComponent);
+            int durablility = damageValues.first;
+            int maxDurablility = damageValues.second;
 
             if (durablility == -1 || maxDurablility == -1) {
                 return itemStack;

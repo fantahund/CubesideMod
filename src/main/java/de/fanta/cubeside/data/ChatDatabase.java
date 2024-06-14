@@ -23,6 +23,7 @@ public class ChatDatabase {
     private final String server;
     private int currentMessageId = 0;
     private int currentCommandId = 0;
+    private ChatRepo lastEntry;
 
     public ChatDatabase(String server) {
         this.server = server;
@@ -49,6 +50,7 @@ public class ChatDatabase {
     public void addMessageEntry(String message) {
         int id = this.currentMessageId++;
         ChatRepo entry = new ChatRepo(id, message, System.currentTimeMillis());
+        lastEntry = entry;
         chatRepo.insert(entry);
         database.commit();
     }
@@ -83,14 +85,10 @@ public class ChatDatabase {
     }
 
     public void deleteNewestMessage() {
-        List<ChatRepo> cursor = chatRepo.find(FindOptions.orderBy("id", SortOrder.Descending)).toList();
-        if (!cursor.isEmpty()) {
-            ChatRepo lastEntry = cursor.getLast();
-            if (lastEntry != null) {
-                chatRepo.remove(lastEntry);
-                currentMessageId = lastEntry.getMessageID();
-                database.commit();
-            }
+        if (lastEntry != null) {
+            chatRepo.remove(lastEntry);
+            currentMessageId = lastEntry.getMessageID();
+            database.commit();
         }
     }
 
