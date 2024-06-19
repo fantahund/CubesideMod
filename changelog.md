@@ -1,1 +1,1 @@
-- if a server name has invalid characters, these are now removed for the database name!
+- Fix error when taking screenshots!
