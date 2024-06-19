@@ -13,6 +13,7 @@ import net.minecraft.client.gui.hud.ChatHud;
 import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.client.util.ChatMessages;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -378,7 +379,10 @@ public abstract class MixinChatHud implements ChatHudMethods {
         if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
             ChatDatabase chatDatabase = CubesideClientFabric.getChatDatabase();
             if (chatDatabase != null) {
-                chatDatabase.addMessageEntry(Text.Serialization.toJsonString(component, DynamicRegistryManager.EMPTY));
+                ClientWorld world = client.world;
+                if (world != null) {
+                    chatDatabase.addMessageEntry(Text.Serialization.toJsonString(component, world.getRegistryManager()));
+                }
             }
         }
     }

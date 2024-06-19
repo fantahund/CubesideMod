@@ -53,7 +53,7 @@ public class Events {
                         String server = handler.getServerInfo().address.toLowerCase();
                         CubesideClientFabric.setChatDatabase(new ChatDatabase(server));
 
-                        List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages();
+                        List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages(handler.getRegistryManager());
                         List<String> commands = CubesideClientFabric.getChatDatabase().loadCommands();
                         CubesideClientFabric.setLoadingMessages(true);
                         client.inGameHud.getChatHud().clear(true);

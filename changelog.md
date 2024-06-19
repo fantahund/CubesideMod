@@ -1,3 +1,1 @@
-- New CommandAPI
-- BugFixes
-- Add EnhancedBlockEntities for 1.20.6
+- Crash bug fixed when loading saved messages. 

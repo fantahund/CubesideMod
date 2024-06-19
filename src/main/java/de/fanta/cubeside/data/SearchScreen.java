@@ -7,6 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -30,10 +31,10 @@ public class SearchScreen extends Screen {
     private static final int TEXT_MARGIN = 10;
     private static final Collection<ButtonWidget> buttonCache = new ArrayList<>();
 
-    public SearchScreen(Screen parent) {
+    public SearchScreen(Screen parent, DynamicRegistryManager manager) {
         super(Text.literal("Chat Log (" + CubesideClientFabric.getChatDatabase().getServer() + ")"));
         this.parent = parent;
-        allEntries = CubesideClientFabric.getChatDatabase().loadMessages();
+        allEntries = CubesideClientFabric.getChatDatabase().loadMessages(manager);
         filteredEntries = new ArrayList<>(allEntries);
     }
 

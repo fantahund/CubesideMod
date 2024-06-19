@@ -1,5 +1,6 @@
 package de.fanta.cubeside.data;
 
+import com.google.gson.JsonParseException;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -68,10 +69,13 @@ public class ChatDatabase {
         }
     }
 
-    public List<Text> loadMessages() {
+    public List<Text> loadMessages(DynamicRegistryManager manager) {
         List<Text> entries = new ArrayList<>();
         for (ChatRepo entry : chatRepo.find(FindOptions.orderBy("id", SortOrder.Descending))) {
-            entries.add(Text.Serialization.fromJson(entry.getMessage(), DynamicRegistryManager.EMPTY));
+            try {
+                entries.add(Text.Serialization.fromJson(entry.getMessage(), manager));
+            } catch (JsonParseException ignore) {
+            }
         }
         return entries;
     }
