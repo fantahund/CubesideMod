@@ -1,1 +1,1 @@
-- Crash bug fixed when loading saved messages. 
+- if a server name has invalid characters, these are now removed for the database name!
