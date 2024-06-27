@@ -27,8 +27,6 @@
     "MixinRenderEntity",
     "MixinSliderControl",
     "MixinWorldRenderer",
-    "MixinXaeroDisableCaveMap",
-    "MixinXaeroForceFairPlay",
     "SignBlockEntityRendererMixin"
   ],
   "injectors": {

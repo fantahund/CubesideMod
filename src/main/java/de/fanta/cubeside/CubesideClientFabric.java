@@ -6,13 +6,14 @@ import de.fanta.cubeside.event.CubesideModChannelHandler;
 import de.fanta.cubeside.util.ChatInfo;
 import de.iani.cubesideutils.fabric.scheduler.Scheduler;
 import fi.dy.masa.malilib.util.FileUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,8 +35,6 @@ public class CubesideClientFabric implements ClientModInitializer {
     private static boolean loadingMessages;
     public static boolean databaseinuse = false;
     public static List<Text> messageQueue = new ArrayList<>();
-
-    private static boolean xaeroFairPlay;
 
     private static long time;
 
@@ -69,8 +68,6 @@ public class CubesideClientFabric implements ClientModInitializer {
         LOGGER.info(MODID + "Mod Loaded");
         commands = new Commands();
 
-        xaeroFairPlay = FabricLoader.getInstance().isModLoaded("xaerominimapfair");
-
         time = 0;
         this.restartTask(1);
     }
@@ -81,10 +78,6 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     public static boolean isLoadingMessages() {
         return loadingMessages;
-    }
-
-    public static boolean isXaeroFairPlay() {
-        return xaeroFairPlay;
     }
 
     public void restartTask(int l) {

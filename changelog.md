@@ -1,1 +1,1 @@
-- Fix error when taking screenshots!
+- Remove XaeroForceFairPlay
