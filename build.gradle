@@ -64,7 +64,7 @@ dependencies {
     shade 'org.dizitart:nitrite-mvstore-adapter'
     implementation shade('org.dizitart:nitrite-jackson-mapper')
 
-    modImplementation "maven.modrinth:sodium:${project.sodium_version}"
+    modImplementation "net.caffeinemc:sodium-fabric:${project.sodium_version}"
 
     implementation "org.joml:joml:1.10.2" // Needed for Sodium
 

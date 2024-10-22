@@ -12,6 +12,7 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -45,8 +46,8 @@ public class MixinGammaSimpleOption {
     @Mutable
     Consumer<Double> changeCallback;
 
-    @Inject(at = @At("RETURN"), method = "<init>")
-    private void init(CallbackInfo info) throws Exception {
+    @Inject(at = @At("RETURN"), method = "<init>(Ljava/lang/String;Lnet/minecraft/client/option/SimpleOption$TooltipFactory;Lnet/minecraft/client/option/SimpleOption$ValueTextGetter;Lnet/minecraft/client/option/SimpleOption$Callbacks;Lcom/mojang/serialization/Codec;Ljava/lang/Object;Ljava/util/function/Consumer;)V")
+    private void init(CallbackInfo info) {
         TextContent content = this.text.getContent();
         if (!(content instanceof TranslatableTextContent translatableTextContent))
             return;
@@ -61,6 +62,7 @@ public class MixinGammaSimpleOption {
         this.changeCallback = this::changeCallback;
     }
 
+    @Unique
     private Text textGetter(Double gamma) {
         long brightness = Math.round(gamma * 100);
         return Text.translatable("options.gamma").append(": ").append(
@@ -69,6 +71,7 @@ public class MixinGammaSimpleOption {
                 Text.literal(String.valueOf(brightness)));
     }
 
+    @Unique
     private void changeCallback(Double gamma) {
         MinecraftClient.getInstance().options.getGamma().setValue(gamma);
     }

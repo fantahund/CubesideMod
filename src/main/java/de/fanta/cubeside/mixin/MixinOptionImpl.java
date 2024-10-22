@@ -31,8 +31,7 @@ public class MixinOptionImpl<S, T> {
     private OptionBinding<S, T> binding;
 
     @Inject(at = @At("RETURN"), method = "<init>")
-    private void init(OptionStorage storage, Text name, Text tooltip, OptionBinding binding, Function control, EnumSet flags, OptionImpact impact, BooleanSupplier enabled, CallbackInfo ci) {
-        System.out.println(name.getString());
+    private void init(OptionStorage storage, Text name, Function tooltip, OptionBinding binding, Function control, EnumSet flags, OptionImpact impact, BooleanSupplier enabled, CallbackInfo ci) {
         if (name.getContent() instanceof TranslatableTextContent content && content.getKey().equals("options.gamma")) {
             this.binding = (OptionBinding<S, T>) new GenericBinding<>((opt, val) -> MinecraftClient.getInstance().options.getGamma().setValue((Integer) val * 0.01D), binding::getValue);
         }
