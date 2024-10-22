@@ -28,8 +28,8 @@ public abstract class MixinItemRenderer {
     @Final
     private MatrixStack matrices;
 
-    @Inject(method = "drawItemInSlot(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At("RETURN"))
-    private void renderGuiItemOverlay(TextRenderer textRenderer, ItemStack stack, int x, int y, String countOverride, CallbackInfo ci) {
+    @Inject(method = "drawItemBar", at = @At("RETURN"))
+    private void renderGuiItemOverlay(ItemStack stack, int x, int y, CallbackInfo ci) {
         if (stack.isEmpty()) {
             return;
         }

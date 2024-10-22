@@ -4,13 +4,10 @@ import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ColorUtils;
 import fi.dy.masa.malilib.util.Color4f;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.shape.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 import java.awt.*;
 import java.util.List;
@@ -18,12 +15,9 @@ import java.util.List;
 @Mixin(WorldRenderer.class)
 public abstract class MixinWorldRenderer {
 
-    /**
-     * @author fantahund
-     * @reason Make BlockHitBoxFancy
-     */
-    @Overwrite
-    private static void drawCuboidShapeOutline(MatrixStack matrices, VertexConsumer vertexConsumer, VoxelShape shape, double offsetX, double offsetY, double offsetZ, float red, float green, float blue, float alpha) {
+
+    @ModifyConstant(method = "renderTargetBlockOutline(Lnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;Lnet/minecraft/client/util/math/MatrixStack;Z)V", constant = @Constant(intValue = -16777216), expect = 2)
+    private int replaceColor(int original) {
         Color color;
         if (Configs.HitBox.RainbowBlockHitBox.getBooleanValue()) {
             List<Color4f> color4fList = Configs.HitBox.RainbowBlockHitBoxColorList.getColors();
@@ -35,27 +29,6 @@ public abstract class MixinWorldRenderer {
             Color4f color4f = Configs.HitBox.BlockHitBoxColor.getColor();
             color = new Color(color4f.r, color4f.g, color4f.b);
         }
-        red = color.getRed() / 255F;
-        green = color.getGreen() / 255f;
-        blue = color.getBlue() / 255f;
-        alpha = (float) Configs.HitBox.BlockHitBoxVisibility.getDoubleValue();
-
-        MatrixStack.Entry entry = matrices.peek();
-        float finalRed = red;
-        float finalGreen = green;
-        float finalBlue = blue;
-        float finalAlpha = alpha;
-
-        shape.forEachEdge((minX, minY, minZ, maxX, maxY, maxZ) -> {
-            float k = (float) (maxX - minX);
-            float l = (float) (maxY - minY);
-            float m = (float) (maxZ - minZ);
-            float n = MathHelper.sqrt(k * k + l * l + m * m);
-            k /= n;
-            l /= n;
-            m /= n;
-            vertexConsumer.vertex(entry, (float) (minX + offsetX), (float) (minY + offsetY), (float) (minZ + offsetZ)).color(finalRed, finalGreen, finalBlue, finalAlpha).normal(entry, k, l, m);
-            vertexConsumer.vertex(entry, (float) (maxX + offsetX), (float) (maxY + offsetY), (float) (maxZ + offsetZ)).color(finalRed, finalGreen, finalBlue, finalAlpha).normal(entry, k, l, m);
-        });
+        return color.getRGB();
     }
 }

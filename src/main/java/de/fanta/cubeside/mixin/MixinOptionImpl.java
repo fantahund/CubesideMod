@@ -1,12 +1,10 @@
 package de.fanta.cubeside.mixin;
 
-import me.jellysquid.mods.sodium.client.gui.options.OptionFlag;
-import me.jellysquid.mods.sodium.client.gui.options.OptionImpact;
-import me.jellysquid.mods.sodium.client.gui.options.OptionImpl;
-import me.jellysquid.mods.sodium.client.gui.options.binding.GenericBinding;
-import me.jellysquid.mods.sodium.client.gui.options.binding.OptionBinding;
-import me.jellysquid.mods.sodium.client.gui.options.control.Control;
-import me.jellysquid.mods.sodium.client.gui.options.storage.OptionStorage;
+import net.caffeinemc.mods.sodium.client.gui.options.OptionImpact;
+import net.caffeinemc.mods.sodium.client.gui.options.OptionImpl;
+import net.caffeinemc.mods.sodium.client.gui.options.binding.GenericBinding;
+import net.caffeinemc.mods.sodium.client.gui.options.binding.OptionBinding;
+import net.caffeinemc.mods.sodium.client.gui.options.storage.OptionStorage;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
@@ -20,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.EnumSet;
+import java.util.function.BooleanSupplier;
 import java.util.function.Function;
 
 @Pseudo
@@ -32,9 +31,10 @@ public class MixinOptionImpl<S, T> {
     private OptionBinding<S, T> binding;
 
     @Inject(at = @At("RETURN"), method = "<init>")
-    private void init(OptionStorage<S> storage, Text name, Text tooltip, OptionBinding<S, T> binding, Function<OptionImpl<S, T>, Control<T>> control, EnumSet<OptionFlag> flags, OptionImpact impact, boolean enabled, CallbackInfo info) {
+    private void init(OptionStorage storage, Text name, Text tooltip, OptionBinding binding, Function control, EnumSet flags, OptionImpact impact, BooleanSupplier enabled, CallbackInfo ci) {
+        System.out.println(name.getString());
         if (name.getContent() instanceof TranslatableTextContent content && content.getKey().equals("options.gamma")) {
-            this.binding = new GenericBinding<>((opt, val) -> MinecraftClient.getInstance().options.getGamma().setValue((Integer) val * 0.01D), binding::getValue);
+            this.binding = (OptionBinding<S, T>) new GenericBinding<>((opt, val) -> MinecraftClient.getInstance().options.getGamma().setValue((Integer) val * 0.01D), binding::getValue);
         }
     }
 }

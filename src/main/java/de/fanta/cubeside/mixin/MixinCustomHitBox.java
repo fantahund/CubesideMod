@@ -5,7 +5,7 @@ import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ColorUtils;
 import fi.dy.masa.malilib.util.Color4f;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.render.VertexRendering;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -46,7 +46,7 @@ public abstract class MixinCustomHitBox {
         }
 
         Box box = entity.getBoundingBox().offset(-entity.getX(), -entity.getY(), -entity.getZ());
-        WorldRenderer.drawBox(matrices, vertices, box, color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, (float) Configs.HitBox.EntityHitBoxVisibility.getDoubleValue());
+        VertexRendering.drawBox(matrices, vertices, box, color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, (float) Configs.HitBox.EntityHitBoxVisibility.getDoubleValue());
 
         if (entity instanceof EnderDragonEntity enderDragon) {
             double d = -MathHelper.lerp(tickDelta, enderDragon.lastRenderX, enderDragon.getX());
@@ -64,7 +64,7 @@ public abstract class MixinCustomHitBox {
                         color = new Color(64, 255, 0);
                     }
                 }
-                WorldRenderer.drawBox(matrices, vertices, enderDragonPart.getBoundingBox().offset(-enderDragonPart.getX(), -enderDragonPart.getY(), -enderDragonPart.getZ()), color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, (float) Configs.HitBox.EntityHitBoxVisibility.getDoubleValue());
+                VertexRendering.drawBox(matrices, vertices, enderDragonPart.getBoundingBox().offset(-enderDragonPart.getX(), -enderDragonPart.getY(), -enderDragonPart.getZ()), color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F, (float) Configs.HitBox.EntityHitBoxVisibility.getDoubleValue());
                 matrices.pop();
             }
         }
@@ -72,7 +72,7 @@ public abstract class MixinCustomHitBox {
         if (Configs.HitBox.EntityHitBoxDirection.getBooleanValue()) {
             if (entity instanceof LivingEntity) {
                 float j = 0.01F;
-                WorldRenderer.drawBox(matrices, vertices, box.minX, (double)(entity.getStandingEyeHeight() - 0.01F), box.minZ, box.maxX, (double)(entity.getStandingEyeHeight() + 0.01F), box.maxZ, 1.0F, 0.0F, 0.0F, 1.0F);
+                VertexRendering.drawBox(matrices, vertices, box.minX, (double) (entity.getStandingEyeHeight() - 0.01F), box.minZ, box.maxX, (double) (entity.getStandingEyeHeight() + 0.01F), box.maxZ, 1.0F, 0.0F, 0.0F, 1.0F);
             }
 
             Entity entity2 = entity.getVehicle();
@@ -80,13 +80,13 @@ public abstract class MixinCustomHitBox {
                 float k = Math.min(entity2.getWidth(), entity.getWidth()) / 2.0F;
                 float l = 0.0625F;
                 Vec3d vec3d = entity2.getPassengerRidingPos(entity).subtract(entity.getPos());
-                WorldRenderer.drawBox(matrices, vertices, vec3d.x - (double)k, vec3d.y, vec3d.z - (double)k, vec3d.x + (double)k, vec3d.y + 0.0625, vec3d.z + (double)k, 1.0F, 1.0F, 0.0F, 1.0F);
+                VertexRendering.drawBox(matrices, vertices, vec3d.x - (double) k, vec3d.y, vec3d.z - (double) k, vec3d.x + (double) k, vec3d.y + 0.0625, vec3d.z + (double) k, 1.0F, 1.0F, 0.0F, 1.0F);
             }
 
             Vec3d vec3d2 = entity.getRotationVec(tickDelta);
             MatrixStack.Entry entry = matrices.peek();
-            vertices.vertex(entry, 0.0F, entity.getStandingEyeHeight(), 0.0F).color(0, 0, 255, 255).normal(entry, (float)vec3d2.x, (float)vec3d2.y, (float)vec3d2.z);
-            vertices.vertex(entry, (float)(vec3d2.x * 2.0), (float)((double)entity.getStandingEyeHeight() + vec3d2.y * 2.0), (float)(vec3d2.z * 2.0)).color(0, 0, 255, 255).normal(entry, (float)vec3d2.x, (float)vec3d2.y, (float)vec3d2.z);
+            vertices.vertex(entry, 0.0F, entity.getStandingEyeHeight(), 0.0F).color(0, 0, 255, 255).normal(entry, (float) vec3d2.x, (float) vec3d2.y, (float) vec3d2.z);
+            vertices.vertex(entry, (float) (vec3d2.x * 2.0), (float) ((double) entity.getStandingEyeHeight() + vec3d2.y * 2.0), (float) (vec3d2.z * 2.0)).color(0, 0, 255, 255).normal(entry, (float) vec3d2.x, (float) vec3d2.y, (float) vec3d2.z);
         }
     }
 

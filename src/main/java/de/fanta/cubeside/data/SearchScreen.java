@@ -11,7 +11,6 @@ import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
@@ -74,7 +73,7 @@ public class SearchScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.applyBlur(delta);
+        this.applyBlur();
         this.renderDarkening(context);
 
         buttonCache.forEach(this::remove);

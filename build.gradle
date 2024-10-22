@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.6-SNAPSHOT'
+    id 'fabric-loom' version '1.8-SNAPSHOT'
     id 'maven-publish'
     id "io.github.goooler.shadow" version "8.1.7"
     id "com.modrinth.minotaur" version "2.4.3"
@@ -86,6 +86,9 @@ processResources {
 
 loom {
     accessWidenerPath = file("src/main/resources/cubeside.accesswidener")
+    mixin {
+        setUseLegacyMixinAp(false)
+    }
 }
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is

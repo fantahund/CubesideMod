@@ -17,8 +17,6 @@
     "MixinGameModeSelectionScreen",
     "MixinGameModeSwitch",
     "MixinGammaSimpleOption",
-    "MixinItemEntity",
-    "MixinItemEntityRenderer",
     "MixinItemRenderer",
     "MixinItemStack",
     "MixinKeyboard",

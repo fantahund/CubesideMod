@@ -23,7 +23,6 @@ import net.minecraft.client.realms.dto.RealmsServerList;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShovelItem;
-import net.minecraft.item.ToolItem;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
@@ -112,7 +111,7 @@ public class Events {
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             if (mc.player != null) {
                 if (Configs.Generic.ThirdPersonElytra.getBooleanValue()) {
-                    if (mc.player.isFallFlying()) {
+                    if (mc.player.isGliding()) {
                         if (!flyingLastTick) {
                             flyingLastTick = true;
                             lastmode = mc.options.getPerspective();
@@ -131,7 +130,7 @@ public class Events {
                         Identifier location = Identifier.of(CubesideClientFabric.MODID, "alarm");
                         sound = SoundEvent.of(location);
                     }
-                    if (mc.player.isFallFlying() && mc.player.getY() <= mc.world.getBottomY()) {
+                    if (mc.player.isGliding() && mc.player.getY() <= mc.world.getBottomY()) {
                         if (soundThread == null) {
                             soundThread = SoundThread.of(1944, sound, mc.player);
                             soundThread.start();
@@ -219,7 +218,7 @@ public class Events {
             BlockPos blockPos = hitResult.getBlockPos();
             BlockState blockState = world.getBlockState(blockPos);
 
-            if (!Configs.Generic.WoodStriping.getBooleanValue() && itemInHand.getItem() instanceof ToolItem && AxeItem.STRIPPED_BLOCKS.containsKey(blockState.getBlock())) {
+            if (!Configs.Generic.WoodStriping.getBooleanValue() && itemInHand.getItem() instanceof AxeItem && AxeItem.STRIPPED_BLOCKS.containsKey(blockState.getBlock())) {
                 return ActionResult.FAIL;
             }
 
