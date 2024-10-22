@@ -13,7 +13,7 @@ public class LogicalZoom {
     private static boolean originalSmoothCameraEnabled;
     private static final MinecraftClient mc = MinecraftClient.getInstance();
 
-    public static final double zoomLevel = 0.23;
+    public static final float zoomLevel = 0.23F;
 
     public void initLogicalZoom() {
         keyBinding = new KeyBinding("key.logical_zoom.zoom", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, "key.categories.cubeside");
