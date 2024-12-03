@@ -1,23 +1,19 @@
 package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.config.Configs;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ChestBlockEntityRenderer.class)
 public abstract class MixinRemoveChristmasChest {
-    @Shadow
-    private boolean christmas;
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    public void ChestBlockEntityRenderer(BlockEntityRendererFactory.Context ctx, CallbackInfo ci) {
+    @Inject(method = "isAroundChristmas", at = @At("TAIL"), cancellable = true)
+    private static void setChristmas(CallbackInfoReturnable<Boolean> cir) {
         if (Configs.Fun.DisableChristmasChest.getBooleanValue()) {
-            this.christmas = false;
+            cir.setReturnValue(false);
         }
     }
 }

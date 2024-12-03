@@ -2,6 +2,7 @@ package de.fanta.cubeside.mixin;
 
 import de.fanta.cubeside.config.Configs;
 import java.util.List;
+import java.util.function.Consumer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.ItemEnchantmentsComponent;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(ItemStack.class)
 public class MixinItemStack {
     @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/component/ComponentType;Lnet/minecraft/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/item/tooltip/TooltipType;)V", ordinal = 4), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void addMoreTooltip(Item.TooltipContext context, PlayerEntity player, TooltipType type, CallbackInfoReturnable<List<Text>> ci, List<Text> list) {
+    private void addMoreTooltip(Item.TooltipContext context, PlayerEntity player, TooltipType type, CallbackInfoReturnable<List<Text>> cir, boolean bl, List list, Consumer consumer) {
         if (Configs.Generic.ShowAdditionalRepairCosts.getBooleanValue()) {
             ItemStack stack = (ItemStack) (Object) this;
             Integer repairCost = stack.getComponents().get(DataComponentTypes.REPAIR_COST);

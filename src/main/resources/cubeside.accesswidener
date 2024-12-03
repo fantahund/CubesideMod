@@ -4,11 +4,9 @@ extendable class net/minecraft/client/option/SimpleOption$SliderCallbacks
 accessible    field    net/minecraft/item/ShovelItem    PATH_STATES    Ljava/util/Map;
 accessible    field    net/minecraft/item/AxeItem    STRIPPED_BLOCKS    Ljava/util/Map;
 accessible field net/minecraft/client/gui/hud/ChatHud hasUnreadNewMessages Z
-accessible field net/minecraft/client/gui/hud/ChatHud hasUnreadNewMessages Z
 accessible field net/minecraft/client/gui/hud/ChatHud messages Ljava/util/List;
 accessible field net/minecraft/client/gui/hud/ChatHud visibleMessages Ljava/util/List;
 accessible field net/minecraft/component/type/ItemEnchantmentsComponent showInTooltip Z
 accessible method net/minecraft/client/gui/hud/ChatHud logChatMessage (Lnet/minecraft/client/gui/hud/ChatHudLine;)V
 accessible method net/minecraft/client/gui/hud/ChatHud addMessage (Lnet/minecraft/client/gui/hud/ChatHudLine;)V
-accessible method net/minecraft/client/render/entity/ItemEntityRenderer getRenderedAmount (I)I
 accessible method net/minecraft/client/gui/hud/ChatHud addVisibleMessage (Lnet/minecraft/client/gui/hud/ChatHudLine;)V
