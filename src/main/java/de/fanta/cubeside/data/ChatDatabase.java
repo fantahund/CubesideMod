@@ -28,7 +28,7 @@ public class ChatDatabase {
 
     public ChatDatabase(String server) {
         this.server = server;
-        MVStoreModule storeModule = MVStoreModule.withConfig().filePath(new File(CubesideClientFabric.getConfigDirectory(), "/chatStorage/" + server.toLowerCase() + ".db")).compress(true).build();
+        MVStoreModule storeModule = MVStoreModule.withConfig().filePath(new File(CubesideClientFabric.getConfigDirectory(), "/chatStorage/" + server.toLowerCase() + "_1_" + ".db")).compress(true).build();
         database = Nitrite.builder().loadModule(storeModule).loadModule(new JacksonMapperModule()).openOrCreate();
 
         chatRepo = database.getRepository(ChatRepo.class);
