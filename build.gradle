@@ -87,7 +87,7 @@ loom {
 def targetJavaVersion = 21
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 21 || JavaVersion.current().isJava10Compatible()) {
+    if (targetJavaVersion >= 21 || JavaVersion.current().isCompatibleWith(JavaVersion.VERSION_21)) {
         it.options.release = targetJavaVersion
     }
 }
@@ -123,6 +123,7 @@ shadowJar {
     relocate 'org.dizitart', 'de.fanta.cubeside.libs.nitrite'
     relocate 'com.h2database', 'de.fanta.cubeside.libs.h2database'
     minimize()
+    minimizeJar.set(true)
 }
 
 remapJar {
