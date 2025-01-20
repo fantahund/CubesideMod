@@ -62,6 +62,7 @@ public class DurabilityViewerMixin {
                         case 240 -> stack = new ItemStack(Items.IRON_CHESTPLATE);
                         case 528 -> stack = new ItemStack(Items.DIAMOND_CHESTPLATE);
                         case 592 -> stack = new ItemStack(Items.NETHERITE_CHESTPLATE);
+                        case 342 -> stack = new ItemStack(Items.ELYTRA);
                     }
                 }
                 case EquipmentSlot.LEGS -> {

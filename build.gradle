@@ -28,6 +28,7 @@ repositories {
     }
     maven {url "https://minecraft.guntram.de/maven/"}
     maven { url = "https://plugins.gradle.org/m2/" }
+    maven { url = 'https://maven.fallenbreath.me/releases' }
     mavenCentral()
     mavenLocal()
 }
@@ -48,7 +49,7 @@ dependencies {
 
     modApi("com.terraformersmc:modmenu:${project.modmenu_version}")
 
-    modImplementation include("fi.dy.masa.malilib:malilib-fabric-${project.minecraft_version_out}:${project.malilib_version}")
+    modImplementation include("com.github.sakura-ryoko:malilib:${project.malilib_version}")
     modImplementation "de.cubeside.cubesideutils.fabric:CubesideUtilsFabricClient:${project.cubeside_utils_version}"
 
     implementation(platform("org.dizitart:nitrite-bom:4.3.0"))
@@ -57,10 +58,10 @@ dependencies {
     implementation('org.dizitart:nitrite-jackson-mapper')
     implementation('com.h2database:h2-mvstore:2.3.232')
 
-    modImplementation "net.caffeinemc:fabric:${project.sodium_version}"
+    modImplementation "net.caffeinemc:sodium-fabric:${project.sodium_version}"
     implementation "org.joml:joml:1.10.2" // Needed for Sodium
 
-    modImplementation "de.guntram.mcmod:durabilityviewer:${project.durabilityviewer_version}"
+    modImplementation "de.guntram.mcmod:DurabilityViewer:${project.durabilityviewer_version}"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.0.1" // Needed for DurabilityViewer
     modImplementation "dev.emi:trinkets:3.0.0" // Needed for DurabilityViewer
 
