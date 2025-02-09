@@ -6,6 +6,10 @@ import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import de.fanta.cubeside.util.SoundThread;
 import de.iani.cubesideutils.fabric.permission.PermissionHandler;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -31,11 +35,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.Level;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
 
 public class Events {
 
@@ -73,20 +72,32 @@ public class Events {
                             worldName = worldName.substring(0, portSepLoc);
                         }
                     }
-                    CubesideClientFabric.setChatDatabase(new ChatDatabase(scrubNameFile(worldName)));
 
-                    List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages(handler.getRegistryManager());
-                    List<String> commands = CubesideClientFabric.getChatDatabase().loadCommands();
-                    CubesideClientFabric.setLoadingMessages(true);
-                    client.inGameHud.getChatHud().clear(true);
-                    messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredChatMessage);
-                    CubesideClientFabric.LOGGER.log(Level.INFO, (long) messages.size() + " messages loaded.");
-                    commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredCommand);
-                    CubesideClientFabric.LOGGER.log(Level.INFO, (long) commands.size() + " commands loaded.");
-                    CubesideClientFabric.setLoadingMessages(false);
+                    String finalWorldName = scrubNameFile(worldName);
                     connect = true;
-                    CubesideClientFabric.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
-                    CubesideClientFabric.messageQueue.clear();
+                    CubesideClientFabric.setLoadingMessages(true);
+
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            CubesideClientFabric.setChatDatabase(new ChatDatabase(finalWorldName));
+
+                            List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages(handler.getRegistryManager());
+                            List<String> commands = CubesideClientFabric.getChatDatabase().loadCommands();
+
+                            MinecraftClient.getInstance().execute(() -> {
+                                client.inGameHud.getChatHud().clear(true);
+                                messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredChatMessage);
+                                CubesideClientFabric.LOGGER.log(Level.INFO, (long) messages.size() + " messages loaded.");
+                                commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredCommand);
+                                CubesideClientFabric.LOGGER.log(Level.INFO, (long) commands.size() + " commands loaded.");
+                                CubesideClientFabric.setLoadingMessages(false);
+
+                                CubesideClientFabric.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
+                                CubesideClientFabric.messageQueue.clear();
+                            });
+                        }
+                    }.start();
                 }
 
                 if (Configs.HitBox.KeepEntityHitBox.getBooleanValue()) {
@@ -280,7 +291,9 @@ public class Events {
     }
 
     public static String scrubNameFile(String input) {
-        if (input == null) return "";
+        if (input == null) {
+            return "";
+        }
 
         return input
                 .replace("<", "~less~")
