@@ -80,22 +80,32 @@ public class Events {
                     new Thread() {
                         @Override
                         public void run() {
-                            CubesideClientFabric.setChatDatabase(new ChatDatabase(finalWorldName));
+                            List<Text> messages = null;
+                            List<String> commands = null;
+                            try {
+                                CubesideClientFabric.setChatDatabase(new ChatDatabase(finalWorldName));
 
-                            List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages(handler.getRegistryManager());
-                            List<String> commands = CubesideClientFabric.getChatDatabase().loadCommands();
+                                messages = CubesideClientFabric.getChatDatabase().loadMessages(handler.getRegistryManager());
+                                commands = CubesideClientFabric.getChatDatabase().loadCommands();
+                            } finally {
+                                List<Text> finalMessages = messages;
+                                List<String> finalCommands = commands;
+                                MinecraftClient.getInstance().execute(() -> {
+                                    client.inGameHud.getChatHud().clear(true);
+                                    if (finalMessages != null) {
+                                        finalMessages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredChatMessage);
+                                        CubesideClientFabric.LOGGER.log(Level.INFO, (long) finalMessages.size() + " messages loaded.");
+                                    }
+                                    if (finalCommands != null) {
+                                        finalCommands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredCommand);
+                                        CubesideClientFabric.LOGGER.log(Level.INFO, (long) finalCommands.size() + " commands loaded.");
+                                    }
+                                    CubesideClientFabric.setLoadingMessages(false);
 
-                            MinecraftClient.getInstance().execute(() -> {
-                                client.inGameHud.getChatHud().clear(true);
-                                messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredChatMessage);
-                                CubesideClientFabric.LOGGER.log(Level.INFO, (long) messages.size() + " messages loaded.");
-                                commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredCommand);
-                                CubesideClientFabric.LOGGER.log(Level.INFO, (long) commands.size() + " commands loaded.");
-                                CubesideClientFabric.setLoadingMessages(false);
-
-                                CubesideClientFabric.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
-                                CubesideClientFabric.messageQueue.clear();
-                            });
+                                    CubesideClientFabric.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
+                                    CubesideClientFabric.messageQueue.clear();
+                                });
+                            }
                         }
                     }.start();
                 }
