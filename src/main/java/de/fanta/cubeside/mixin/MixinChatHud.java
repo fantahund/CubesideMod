@@ -1,6 +1,5 @@
 package de.fanta.cubeside.mixin;
 
-import com.google.gson.JsonParseException;
 import de.fanta.cubeside.ChatInfoHud;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
@@ -8,6 +7,9 @@ import de.fanta.cubeside.data.ChatDatabase;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import de.iani.cubesideutils.fabric.permission.PermissionHandler;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.ChatHud;
@@ -15,7 +17,6 @@ import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.client.util.ChatMessages;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.ClickEvent;
@@ -36,10 +37,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
 
 @Mixin(ChatHud.class)
 public abstract class MixinChatHud implements ChatHudMethods {
@@ -109,7 +106,6 @@ public abstract class MixinChatHud implements ChatHudMethods {
             return Text.empty();
         }
 
-
         if (Configs.Chat.CountDuplicateMessages.getBooleanValue()) {
             if (lastMessage != null && lastMessage.equals(componentIn)) {
                 count++;
@@ -122,14 +118,18 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 componentIn = text;
 
                 if (lastEditMessage != null) {
-                    int with = MathHelper.floor((double) this.getWidth() / this.getChatScale());
+                    int with = MathHelper.floor(this.getWidth() / this.getChatScale());
                     List<OrderedText> list = ChatMessages.breakRenderedChatMessageLines(lastEditMessage, with, this.client.textRenderer);
 
                     for (int i = 1; i <= list.size(); i++) {
                         this.visibleMessages.remove(0);
                     }
                     if (CubesideClientFabric.getChatDatabase() != null) {
-                        CubesideClientFabric.getChatDatabase().deleteNewestMessage();
+                        try {
+                            CubesideClientFabric.getChatDatabase().deleteNewestMessage();
+                        } catch (Throwable e) {
+                            CubesideClientFabric.LOGGER.log(Level.WARN, "Could not delete latest message from Database " + e.getMessage());
+                        }
                     }
                 }
 
@@ -138,7 +138,6 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 count = 1;
             }
         }
-
 
         if (Configs.PermissionSettings.AutoChat.getBooleanValue()) {
             String s = componentIn.toString();
@@ -353,7 +352,11 @@ public abstract class MixinChatHud implements ChatHudMethods {
         if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
             ChatDatabase chatDatabase = CubesideClientFabric.getChatDatabase();
             if (chatDatabase != null) {
-                chatDatabase.addCommandEntry(message);
+                try {
+                    chatDatabase.addCommandEntry(message);
+                } catch (Throwable e) {
+                    CubesideClientFabric.LOGGER.log(Level.WARN, "Command can not save to Database " + e.getMessage());
+                }
             }
         }
     }
@@ -385,7 +388,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 if (world != null) {
                     try {
                         chatDatabase.addMessageEntry(Text.Serialization.toJsonString(component, world.getRegistryManager()));
-                    } catch (JsonParseException e) {
+                    } catch (Throwable e) {
                         CubesideClientFabric.LOGGER.log(Level.WARN, "Message can not save to Database " + e.getMessage());
                     }
                 }
@@ -393,4 +396,3 @@ public abstract class MixinChatHud implements ChatHudMethods {
         }
     }
 }
-
