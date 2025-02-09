@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "de.fanta.cubeside.MixinPlugin",
   "mixins": [
-    "DurabilityViewerMixin",
     "InGameHudMixin",
     "LogicalZoomMixin",
     "MixinChatHud",
