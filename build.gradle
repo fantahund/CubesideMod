@@ -58,8 +58,7 @@ dependencies {
     implementation('org.dizitart:nitrite-jackson-mapper')
     implementation('com.h2database:h2-mvstore:2.3.232')
 
-    modImplementation "net.caffeinemc:sodium-fabric:${project.sodium_version}"
-    implementation "org.joml:joml:1.10.2" // Needed for Sodium
+    modImplementation "maven.modrinth:sodium:${project.sodium_version}"
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
