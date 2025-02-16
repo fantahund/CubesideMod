@@ -3,88 +3,204 @@ package de.fanta.cubeside.data;
 import com.google.gson.JsonParseException;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UTFDataFormatException;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.text.Text;
+import org.apache.logging.log4j.Level;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.collection.FindOptions;
 import org.dizitart.no2.common.SortOrder;
 import org.dizitart.no2.common.mapper.JacksonMapperModule;
-import org.dizitart.no2.filters.FluentFilter;
 import org.dizitart.no2.mvstore.MVStoreModule;
 import org.dizitart.no2.repository.ObjectRepository;
 
 public class ChatDatabase {
-    private static Nitrite database;
-    private static ObjectRepository<ChatRepo> chatRepo;
-    private static ObjectRepository<CommandRepo> commandRepo;
     private final String server;
-    private int currentMessageId = 0;
-    private int currentCommandId = 0;
-    private ChatRepo lastEntry;
+    private final DynamicRegistryManager registry;
 
-    public ChatDatabase(String server) {
+    private File dbFile;
+    private ArrayList<ChatMessage> chatMessages;
+    private ArrayList<ChatMessage> commands;
+    private boolean markNextMessageDeleted;
+
+    private DataOutputStream dataOut;
+
+    public ChatDatabase(String server, DynamicRegistryManager registry) {
         long time = System.nanoTime();
         this.server = server;
-        MVStoreModule storeModule = MVStoreModule.withConfig().filePath(new File(CubesideClientFabric.getConfigDirectory(), "/chatStorage/" + server.toLowerCase() + "_1_" + ".db")).compress(true).build();
-        database = Nitrite.builder().loadModule(storeModule).loadModule(new JacksonMapperModule()).openOrCreate();
+        this.registry = registry;
 
-        chatRepo = database.getRepository(ChatRepo.class);
-        commandRepo = database.getRepository(CommandRepo.class);
+        chatMessages = new ArrayList<>();
+        commands = new ArrayList<>();
 
+        long minTime = System.currentTimeMillis() - Configs.Chat.DaysTheMessagesAreStored.getIntegerValue() * 24L * 60 * 60 * 1000L;
+
+        dbFile = new File(CubesideClientFabric.getConfigDirectory(), "/chatStorage/" + server.toLowerCase() + ".dat");
+        if (dbFile.isFile()) {
+            try (DataInputStream dataIn = new DataInputStream(new BufferedInputStream(new FileInputStream(dbFile)))) {
+                while (true) {
+                    int type = dataIn.readByte();
+                    if (type == 0) {
+                        if (dataIn.readBoolean()) {
+                            if (!chatMessages.isEmpty()) {
+                                chatMessages.removeLast();
+                            }
+                        }
+                        String msg = dataIn.readUTF();
+                        long msgtime = dataIn.readLong();
+                        if (msgtime >= minTime) {
+                            chatMessages.addLast(new ChatMessage(msg, msgtime));
+                        }
+                    } else if (type == 1) {
+                        String msg = dataIn.readUTF();
+                        long msgtime = dataIn.readLong();
+                        if (msgtime >= minTime) {
+                            commands.addLast(new ChatMessage(msg, msgtime));
+                        }
+                    }
+                }
+            } catch (EOFException ignored) {
+            } catch (IOException e) {
+                CubesideClientFabric.LOGGER.log(Level.ERROR, "Could not load chat messages", e);
+                dbFile = null;
+            }
+        }
         long delta = System.nanoTime() - time;
-        CubesideClientFabric.LOGGER.info("Init chatdatabase for " + server + " in " + (delta / 1000) + " micros");
+        CubesideClientFabric.LOGGER.info("Loaded " + chatMessages.size() + " + " + commands.size() + " chatmessages for " + server + " in " + (delta / 1000) + " micros");
 
-        deleteOldMessages(Configs.Chat.DaysTheMessagesAreStored.getIntegerValue());
-        deleteOldCommands(Configs.Chat.DaysTheMessagesAreStored.getIntegerValue());
+        File oldDbFile = new File(CubesideClientFabric.getConfigDirectory(), "/chatStorage/" + server.toLowerCase() + "_1_" + ".db");
+        if (oldDbFile.isFile()) {
+            MVStoreModule storeModule = MVStoreModule.withConfig().filePath(oldDbFile).compress(true).build();
+            Nitrite database = Nitrite.builder().loadModule(storeModule).loadModule(new JacksonMapperModule()).openOrCreate();
+
+            ObjectRepository<ChatRepo> chatRepo = database.getRepository(ChatRepo.class);
+            for (ChatRepo entry : chatRepo.find(FindOptions.orderBy("id", SortOrder.Descending))) {
+                if (entry.getTimestamp() >= minTime) {
+                    chatMessages.addLast(new ChatMessage(entry.getMessage(), entry.getTimestamp()));
+                }
+            }
+
+            ObjectRepository<CommandRepo> commandRepo = database.getRepository(CommandRepo.class);
+            for (CommandRepo entry : commandRepo.find(FindOptions.orderBy("id", SortOrder.Descending))) {
+                if (entry.getTimestamp() >= minTime) {
+                    commands.addLast(new ChatMessage(entry.getCommand(), entry.getTimestamp()));
+                }
+            }
+
+            database.close();
+            oldDbFile.delete();
+        }
 
         time = System.nanoTime();
-
-        List<ChatRepo> chatRepos = chatRepo.find(FindOptions.orderBy("id", SortOrder.Ascending).limit(1)).toList(); // ??? Descending should be correct
-        if (chatRepos != null && !chatRepos.isEmpty()) {
-            currentMessageId = chatRepos.getLast().getMessageID() + 1;
+        if (dbFile != null) {
+            try {
+                dataOut = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(dbFile)));
+                for (ChatMessage message : chatMessages) {
+                    writeChatMessage(message.text(), message.date(), false);
+                }
+                for (ChatMessage message : commands) {
+                    writeCommand(message.text(), message.date(), false);
+                }
+                dataOut.flush();
+            } catch (IOException e) {
+                CubesideClientFabric.LOGGER.log(Level.ERROR, "Could not open chat messages file for writing", e);
+            }
         }
-
-        List<CommandRepo> commandRepos = commandRepo.find(FindOptions.orderBy("id", SortOrder.Ascending).limit(1)).toList(); // ??? Descending should be correct
-        if (commandRepos != null && !commandRepos.isEmpty()) {
-            currentCommandId = commandRepos.getLast().getCommandID() + 1;
-        }
-
         delta = System.nanoTime() - time;
-        CubesideClientFabric.LOGGER.info("Get last messageid (" + currentMessageId + "," + currentCommandId + ") in " + (delta / 1000) + " micros");
+        CubesideClientFabric.LOGGER.info("Saved " + chatMessages.size() + " + " + commands.size() + " chatmessages for " + server + " in " + (delta / 1000) + " micros");
+
     }
 
     public void addMessageEntry(String message) {
-        int id = this.currentMessageId++;
-        ChatRepo entry = new ChatRepo(id, message, System.currentTimeMillis());
-        lastEntry = entry;
-        chatRepo.insert(entry);
-        database.commit();
+        long now = System.currentTimeMillis();
+        chatMessages.addLast(new ChatMessage(message, now));
+        writeChatMessage(message, now, true);
     }
 
-    public void addCommandEntry(String command) {
-        int id = this.currentCommandId++;
-        CommandRepo entry = new CommandRepo(id, command, System.currentTimeMillis());
-        commandRepo.insert(entry);
-        database.commit();
-    }
-
-    public void close() {
-        if (database != null) {
-            database.close();
+    private void writeChatMessage(String message, long now, boolean flush) {
+        if (dbFile != null) {
+            try {
+                dataOut.writeByte(0); // chat message
+                dataOut.writeBoolean(markNextMessageDeleted);
+                try {
+                    dataOut.writeUTF(message);
+                } catch (UTFDataFormatException e) {
+                    dataOut.writeUTF("");
+                }
+                dataOut.writeLong(now);
+                if (flush) {
+                    dataOut.flush();
+                }
+            } catch (IOException e) {
+                CubesideClientFabric.LOGGER.log(Level.ERROR, "Could not serialize chat message", e);
+            }
+            markNextMessageDeleted = false;
         }
     }
 
-    public List<Text> loadMessages(DynamicRegistryManager manager) {
+    public void addCommandEntry(String command) {
+        long now = System.currentTimeMillis();
+        commands.add(new ChatMessage(command, now));
+        writeCommand(command, now, true);
+    }
+
+    private void writeCommand(String command, long now, boolean flush) {
+        if (dbFile != null) {
+            try {
+                dataOut.writeByte(1); // chat command
+                try {
+                    dataOut.writeUTF(command);
+                } catch (UTFDataFormatException e) {
+                    dataOut.writeUTF("");
+                }
+                dataOut.writeLong(now);
+                if (flush) {
+                    dataOut.flush();
+                }
+            } catch (IOException e) {
+                CubesideClientFabric.LOGGER.log(Level.ERROR, "Could not serialize command", e);
+            }
+        }
+    }
+
+    public void close() {
+        if (dataOut != null) {
+            try {
+                dataOut.close();
+            } catch (IOException e) {
+                CubesideClientFabric.LOGGER.log(Level.ERROR, "Could not close chat messages file", e);
+            }
+        }
+    }
+
+    public List<Text> loadMessages() {
+        return loadMessages(-1);
+    }
+
+    public List<Text> loadMessages(int limit) {
         long time = System.nanoTime();
         List<Text> entries = new ArrayList<>();
-        for (ChatRepo entry : chatRepo.find(FindOptions.orderBy("id", SortOrder.Descending))) {
-            try {
-                entries.add(Text.Serialization.fromJson(entry.getMessage(), manager));
-            } catch (JsonParseException ignore) {
+        int size = chatMessages.size();
+        int num = 0;
+        for (ChatMessage entry : chatMessages) {
+            if (limit == -1 || num >= size - limit) {
+                try {
+                    entries.add(Text.Serialization.fromJson(entry.text(), registry));
+                } catch (JsonParseException ignore) {
+                }
             }
+            num++;
         }
         long delta = System.nanoTime() - time;
         CubesideClientFabric.LOGGER.info(entries.size() + " messages were loaded in " + (delta / 1000) + " micros");
@@ -94,8 +210,8 @@ public class ChatDatabase {
     public List<String> loadCommands() {
         long time = System.nanoTime();
         List<String> entries = new ArrayList<>();
-        for (CommandRepo entry : commandRepo.find(FindOptions.orderBy("id", SortOrder.Descending))) {
-            entries.add(entry.getCommand());
+        for (ChatMessage entry : commands) {
+            entries.add(entry.text());
         }
         long delta = System.nanoTime() - time;
         CubesideClientFabric.LOGGER.info(entries.size() + " commands were loaded in " + (delta / 1000) + " micros");
@@ -103,27 +219,10 @@ public class ChatDatabase {
     }
 
     public void deleteNewestMessage() {
-        if (lastEntry != null) {
-            chatRepo.remove(lastEntry);
-            currentMessageId = lastEntry.getMessageID();
-            database.commit();
+        markNextMessageDeleted = true;
+        if (!chatMessages.isEmpty()) {
+            chatMessages.removeLast();
         }
-    }
-
-    private void deleteOldMessages(int days) {
-        long time = System.nanoTime();
-        int count = chatRepo.remove(FluentFilter.where("timestamp").lt(System.currentTimeMillis() - days * 24 * 60 * 60 * 1000L)).getAffectedCount();
-        database.commit();
-        long delta = System.nanoTime() - time;
-        CubesideClientFabric.LOGGER.info(count + " commands were deleted from server " + server + " in " + (delta / 1000) + " micros");
-    }
-
-    private void deleteOldCommands(int days) {
-        long time = System.nanoTime();
-        int count = commandRepo.remove(FluentFilter.where("timestamp").lt(System.currentTimeMillis() - days * 24 * 60 * 60 * 1000L)).getAffectedCount();
-        database.commit();
-        long delta = System.nanoTime() - time;
-        CubesideClientFabric.LOGGER.info(count + " messages were deleted from server " + server + " in " + (delta / 1000) + " micros");
     }
 
     public String getServer() {

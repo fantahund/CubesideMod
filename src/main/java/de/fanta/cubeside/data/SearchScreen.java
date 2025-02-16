@@ -1,6 +1,10 @@
 package de.fanta.cubeside.data;
 
 import de.fanta.cubeside.CubesideClientFabric;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,11 +16,6 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
-
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class SearchScreen extends Screen {
     private final Screen parent;
@@ -33,7 +32,7 @@ public class SearchScreen extends Screen {
     public SearchScreen(Screen parent, DynamicRegistryManager manager) {
         super(Text.literal("Chat Log (" + CubesideClientFabric.getChatDatabase().getServer() + ")"));
         this.parent = parent;
-        allEntries = CubesideClientFabric.getChatDatabase().loadMessages(manager);
+        allEntries = CubesideClientFabric.getChatDatabase().loadMessages();
         filteredEntries = new ArrayList<>(allEntries);
     }
 
@@ -84,7 +83,9 @@ public class SearchScreen extends Screen {
 
         for (int i = scrollOffset; i < Math.min(scrollOffset + ENTRIES_PER_PAGE, filteredEntries.size()); i++) {
             int y = startY + (i - scrollOffset) * (ENTRY_HEIGHT + PADDING);
-            if (y > this.height - 60) break;
+            if (y > this.height - 60) {
+                break;
+            }
 
             int entryBackgroundColor = (i % 2 == 0) ? new Color(128, 128, 128, 100).getRGB() : new Color(166, 166, 166, 100).getRGB();
             context.fill(TEXT_MARGIN, y, this.width - TEXT_MARGIN - 65, y + ENTRY_HEIGHT, entryBackgroundColor);
@@ -107,9 +108,10 @@ public class SearchScreen extends Screen {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        //NOTHING :>
+        // NOTHING :>
     }
 
+    @Override
     public void tick() {
         super.tick();
     }
