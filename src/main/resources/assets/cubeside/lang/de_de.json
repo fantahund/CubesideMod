@@ -16,6 +16,7 @@
     "options.cubeside.afkpling": "Spielt einen Sound ab, sobald du AFK bist",
     "options.cubeside.actionbarshadow": "Enfernt den Textschatten in der ActionBar über der Hotbar",
     "options.cubeside.kickbynotvalidmessage": "Kick beim überprüfen von Nachrichten",
+    "options.cubeside.showadditionalrepaircosts": "Zusätzliche Reperaturkosten bei Items anzeigen",
 
 
     "options.cubeside.keepentityhitbox": "Behält den Entitäten Hitbox Status nach einem Neustart",
@@ -61,5 +62,7 @@
     "options.cubeside.miningassistentdistance": "Mining Assistent entfernung",
     "options.cubeside.miningassistentcircles": "Mining Assistent runden",
     "key.cubeside.miningassistant": "Mining Assistent umschalten",
-    "key.cubeside.setminingassistantstartpoint": "Mining Assistent Startpunkt"
+    "key.cubeside.setminingassistantstartpoint": "Mining Assistent Startpunkt",
+
+    "cubeside.additional_repair_costs": "Zusätzliche Reperaturkosten"
 }

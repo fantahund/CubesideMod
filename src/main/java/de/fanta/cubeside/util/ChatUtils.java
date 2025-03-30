@@ -30,10 +30,6 @@ public class ChatUtils {
         this.timer.start();
     }
 
-    public void stopTimer() {
-        timer.stop();
-    }
-
     public static void sendMessage(Object message) {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.player != null ) {

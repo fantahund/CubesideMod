@@ -16,6 +16,7 @@
     "options.cubeside.afkpling": "Plays a sound when you are AFK",
     "options.cubeside.actionbarshadow": "Removes the text shadow in the ActionBar above the hotbar",
     "options.cubeside.kickbynotvalidmessage": "Kick when verifying messages.",
+    "options.cubeside.showadditionalrepaircosts": "Show additional repair costs for items",
 
     "options.cubeside.keepentityhitbox": "Keep entity hitbox status after restart",
     "options.cubeside.rainbowentityhitbox": "Rainbow entity hitboxes",
@@ -66,5 +67,11 @@
     "key.cubeside.editsign": "Toggle Sign Edit",
     "options.cubeside.woodstriping": "Wood striping at right click with axe",
     "options.cubeside.creategrasspath": "Create grass path at right click with shovel",
-    "options.cubeside.singedit": "Edit sign with right click"
+    "options.cubeside.singedit": "Edit sign with right click",
+
+    "options.cubeside.countduplicatemessages": "Duplicate messages are summarized, and the count is displayed after the message",
+    "options.cubeside.countduplicatemessagesformat": "Duplicate messages count format",
+    "options.cubeside.countduplicatemessagescolor": "Duplicate messages count color",
+
+    "cubeside.additional_repair_costs": "Additional Repair Cost"
 }

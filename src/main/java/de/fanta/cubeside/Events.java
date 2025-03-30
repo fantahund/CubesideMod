@@ -1,9 +1,15 @@
 package de.fanta.cubeside;
 
 import de.fanta.cubeside.config.Configs;
+import de.fanta.cubeside.data.ChatDatabase;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
 import de.fanta.cubeside.util.SoundThread;
+import de.iani.cubesideutils.fabric.permission.PermissionHandler;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -12,21 +18,23 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.AbstractSignBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.option.Perspective;
+import net.minecraft.client.realms.RealmsClient;
+import net.minecraft.client.realms.dto.RealmsServer;
+import net.minecraft.client.realms.dto.RealmsServerList;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ShovelItem;
-import net.minecraft.item.ToolItem;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.WorldSavePath;
 import net.minecraft.util.math.BlockPos;
 import org.apache.logging.log4j.Level;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 public class Events {
 
@@ -46,22 +54,50 @@ public class Events {
     public void init() {
         ClientPlayConnectionEvents.INIT.register((handler, client) -> {
             if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue() && !CubesideClientFabric.databaseinuse) {
-                if (handler.getServerInfo() != null) {
-                    String server = handler.getServerInfo().address.toLowerCase();
-                    List<Text> messages = CubesideClientFabric.getDatabase().loadMessages(server);
-                    List<String> commands = CubesideClientFabric.getDatabase().loadCommands(server);
+                if (!connect) {
+                    String worldName;
+                    if (client.isIntegratedServerRunning()) {
+                        worldName = getMapName(client);
+                    } else {
+                        worldName = getServerName(handler);
+                    }
 
-                    if (!connect) {
-                        CubesideClientFabric.setLoadingMessages(true);
-                        messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredChatMessage);
-                        CubesideClientFabric.LOGGER.log(Level.INFO, (long) messages.size() + " messages loaded.");
-                        commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::addStoredCommand);
-                        CubesideClientFabric.LOGGER.log(Level.INFO, (long) commands.size() + " commands loaded.");
+                    if (worldName == null) {
+                        CubesideClientFabric.LOGGER.log(Level.WARN, "WorldName is Null :(");
+                        return;
+                    }
+                    if (worldName.endsWith(":25565")) {
+                        int portSepLoc = worldName.lastIndexOf(':');
+                        if (portSepLoc != -1) {
+                            worldName = worldName.substring(0, portSepLoc);
+                        }
+                    }
+
+                    String finalWorldName = scrubNameFile(worldName);
+                    connect = true;
+                    CubesideClientFabric.setLoadingMessages(true);
+
+                    try {
+                        CubesideClientFabric.setChatDatabase(new ChatDatabase(finalWorldName, handler.getRegistryManager()));
+
+                        List<Text> messages = CubesideClientFabric.getChatDatabase().loadMessages(Configs.Chat.ChatMessageLimit.getIntegerValue());
+                        List<String> commands = CubesideClientFabric.getChatDatabase().loadCommands();
+
+                        client.inGameHud.getChatHud().clear(true);
+                        if (messages != null) {
+                            messages.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredChatMessage);
+                        }
+                        if (commands != null) {
+                            commands.forEach(((ChatHudMethods) client.inGameHud.getChatHud())::cubesideMod$addStoredCommand);
+                        }
+                    } finally {
                         CubesideClientFabric.setLoadingMessages(false);
-                        connect = true;
+
                         CubesideClientFabric.messageQueue.forEach(text -> client.inGameHud.getChatHud().addMessage(text));
                         CubesideClientFabric.messageQueue.clear();
+
                     }
+
                 }
 
                 if (Configs.HitBox.KeepEntityHitBox.getBooleanValue()) {
@@ -71,9 +107,14 @@ public class Events {
         });
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+            ChatDatabase chatDatabase = CubesideClientFabric.getChatDatabase();
+            if (chatDatabase != null) {
+                chatDatabase.close();
+                CubesideClientFabric.setChatDatabase(null);
+            }
+
             if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
                 connect = false;
-                CubesideClientFabric.setRank(null);
             }
             CubesideClientFabric.setChatInfo(null);
         });
@@ -81,7 +122,7 @@ public class Events {
         ClientTickEvents.END_CLIENT_TICK.register(mc -> {
             if (mc.player != null) {
                 if (Configs.Generic.ThirdPersonElytra.getBooleanValue()) {
-                    if (mc.player.isFallFlying()) {
+                    if (mc.player.isGliding()) {
                         if (!flyingLastTick) {
                             flyingLastTick = true;
                             lastmode = mc.options.getPerspective();
@@ -97,10 +138,10 @@ public class Events {
 
                 if (Configs.Generic.ElytraAlarm.getBooleanValue()) {
                     if (sound == null) {
-                        Identifier location = new Identifier(CubesideClientFabric.MODID, "alarm");
+                        Identifier location = Identifier.of(CubesideClientFabric.MODID, "alarm");
                         sound = SoundEvent.of(location);
                     }
-                    if (mc.player.isFallFlying() && mc.player.getY() <= mc.world.getBottomY()) {
+                    if (mc.player.isGliding() && mc.player.getY() <= mc.world.getBottomY()) {
                         if (soundThread == null) {
                             soundThread = SoundThread.of(1944, sound, mc.player);
                             soundThread.start();
@@ -112,7 +153,7 @@ public class Events {
                 }
 
                 while (KeyBinds.AUTO_CHAT.wasPressed()) {
-                    if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
+                    if (PermissionHandler.hasPermission("cubeside.autochat")) {
                         if (Configs.PermissionSettings.AutoChat.getBooleanValue()) {
                             Configs.PermissionSettings.AutoChat.setBooleanValue(false);
                             mc.player.sendMessage(Text.of("§cAuto Chat deaktiviert"), true);
@@ -177,7 +218,9 @@ public class Events {
             }
         });
 
-        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> CubesideClientFabric.commands.register(dispatcher));
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            CubesideClientFabric.commands.register(dispatcher);
+        });
 
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(context -> MiningAssistent.render(context.matrixStack()));
 
@@ -186,7 +229,7 @@ public class Events {
             BlockPos blockPos = hitResult.getBlockPos();
             BlockState blockState = world.getBlockState(blockPos);
 
-            if (!Configs.Generic.WoodStriping.getBooleanValue() && itemInHand.getItem() instanceof ToolItem && AxeItem.STRIPPED_BLOCKS.containsKey(blockState.getBlock())) {
+            if (!Configs.Generic.WoodStriping.getBooleanValue() && itemInHand.getItem() instanceof AxeItem && AxeItem.STRIPPED_BLOCKS.containsKey(blockState.getBlock())) {
                 return ActionResult.FAIL;
             }
 
@@ -200,5 +243,67 @@ public class Events {
 
             return ActionResult.PASS;
         });
+    }
+
+    public String getMapName(MinecraftClient client) {
+        Optional<IntegratedServer> integratedServer = Optional.ofNullable(client.getServer());
+
+        if (integratedServer.isEmpty()) {
+            String error = "Tried fetching map name on a non-integrated server!";
+            CubesideClientFabric.LOGGER.fatal(error);
+            throw new IllegalStateException(error);
+        }
+
+        return integratedServer.get().getSavePath(WorldSavePath.ROOT).normalize().toFile().getName();
+    }
+
+    public String getServerName(ClientPlayNetworkHandler networkHandler) {
+        String serverName = null;
+
+        try {
+            ServerInfo serverInfo = networkHandler.getServerInfo();
+            serverInfo = serverInfo != null ? serverInfo : MinecraftClient.getInstance().getCurrentServerEntry();
+            boolean isRealm = serverInfo != null && serverInfo.isRealm();
+            if (serverInfo != null) {
+                boolean isOnLAN = serverInfo.isLocal();
+                if (isOnLAN) {
+                    CubesideClientFabric.LOGGER.warn("LAN server detected!");
+                    serverName = serverInfo.name;
+                } else if (isRealm) {
+                    CubesideClientFabric.LOGGER.info("Server is a Realm.");
+                    RealmsClient realmsClient = RealmsClient.createRealmsClient(MinecraftClient.getInstance());
+                    RealmsServerList realmsServerList = realmsClient.listWorlds();
+                    for (RealmsServer realmsServer : realmsServerList.servers) {
+                        if (realmsServer.name.equals(serverInfo.name)) {
+                            serverName = "Realm_" + realmsServer.id + "." + realmsServer.ownerUUID;
+                            break;
+                        }
+                    }
+                } else {
+                    serverName = serverInfo.address;
+                }
+            }
+        } catch (Exception var6) {
+            CubesideClientFabric.LOGGER.error("error getting ServerData", var6);
+        }
+
+        return serverName;
+    }
+
+    public static String scrubNameFile(String input) {
+        if (input == null) {
+            return "";
+        }
+
+        return input
+                .replace("<", "~less~")
+                .replace(">", "~greater~")
+                .replace(":", "~colon~")
+                .replace("\"", "~quote~")
+                .replace("/", "~slash~")
+                .replace("\\", "~backslash~")
+                .replace("|", "~pipe~")
+                .replace("?", "~question~")
+                .replace("*", "~star~");
     }
 }

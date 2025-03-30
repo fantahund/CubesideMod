@@ -29,7 +29,7 @@ public class SoundThread extends Thread {
     public void run() {
         while (running) {
             if (soundPlaying) {
-                player.playSound(sound, SoundCategory.PLAYERS, 100.0f, 1.0f);
+                player.playSoundToPlayer(sound, SoundCategory.PLAYERS, 100.0f, 1.0f);
                 force = false;
             }
             try {

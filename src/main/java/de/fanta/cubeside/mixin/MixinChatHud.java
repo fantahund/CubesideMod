@@ -1,66 +1,70 @@
 package de.fanta.cubeside.mixin;
 
+import de.fanta.cubeside.ChatInfoHud;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
-import de.fanta.cubeside.data.Database;
+import de.fanta.cubeside.data.ChatDatabase;
 import de.fanta.cubeside.util.ChatHudMethods;
 import de.fanta.cubeside.util.ChatUtils;
+import de.iani.cubesideutils.fabric.permission.PermissionHandler;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
-import net.minecraft.network.message.MessageSignatureData;
+import net.minecraft.client.util.ChatMessages;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.util.math.MathHelper;
+import org.apache.logging.log4j.Level;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 @Mixin(ChatHud.class)
 public abstract class MixinChatHud implements ChatHudMethods {
-
-    private static final Database database = CubesideClientFabric.getDatabase();
+    @Unique
     private static final Date DATE = new Date();
+    @Unique
+    private Text lastMessage;
+    @Unique
+    private Text lastEditMessage;
+    @Unique
+    private int count = 1;
+    @Unique
+    private static ChatInfoHud chatInfoHud;
     @Final
     @Shadow
     private MinecraftClient client;
 
-    @Inject(method = "clear", at = @At("HEAD"), cancellable = true)
-    private void clear(boolean clearHistory, CallbackInfo ci) {
-        if (!Configs.Chat.ClearChatByServerChange.getBooleanValue() && (this.client.getNetworkHandler() == null || this.client.getNetworkHandler().getWorld() != null)) {
-            ci.cancel();
-        }
-    }
-
+    @Unique
     private static String getChatTimestamp() {
         SimpleDateFormat sdf = new SimpleDateFormat("[HH:mm:ss]");
         DATE.setTime(System.currentTimeMillis());
         return sdf.format(DATE);
     }
 
-    @Shadow
-    protected abstract void addMessage(Text message, @Nullable MessageSignatureData signature, int ticks, @Nullable MessageIndicator indicator, boolean refresh);
-
-    @Redirect(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;logChatMessage(Lnet/minecraft/text/Text;Lnet/minecraft/client/gui/hud/MessageIndicator;)V"))
-    private void addMessage(ChatHud instance, Text message, MessageIndicator indicator) {
+    @Redirect(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/ChatHud;logChatMessage(Lnet/minecraft/client/gui/hud/ChatHudLine;)V"))
+    private void addMessage(ChatHud instance, ChatHudLine message) {
         if (!CubesideClientFabric.isLoadingMessages()) {
-            logChatMessage(message, indicator);
+            logChatMessage(message);
         }
     }
 
@@ -68,7 +72,32 @@ public abstract class MixinChatHud implements ChatHudMethods {
     public abstract void addToMessageHistory(String message);
 
     @Shadow
-    protected abstract void logChatMessage(Text message, @Nullable MessageIndicator indicator);
+    public abstract void logChatMessage(ChatHudLine message);
+
+    @Shadow
+    @Final
+    public List<ChatHudLine.Visible> visibleMessages;
+
+    @Shadow
+    public abstract int getWidth();
+
+    @Shadow
+    public abstract double getChatScale();
+
+    @Shadow
+    @Final
+    public List<ChatHudLine> messages;
+
+    @Shadow
+    public abstract void addVisibleMessage(ChatHudLine message);
+
+    @Inject(method = "render", at = @At(value = "RETURN"))
+    private void renderChatHudInfo(DrawContext context, int currentTick, int mouseX, int mouseY, boolean focused, CallbackInfo ci) {
+        if (focused) {
+            chatInfoHud = chatInfoHud != null ? chatInfoHud : new ChatInfoHud();
+            chatInfoHud.onRenderChatInfoHud(context);
+        }
+    }
 
     @ModifyVariable(method = "addMessage(Lnet/minecraft/text/Text;Lnet/minecraft/network/message/MessageSignatureData;Lnet/minecraft/client/gui/hud/MessageIndicator;)V", at = @At("HEAD"), argsOnly = true)
     private Text modifyMessages(Text componentIn) {
@@ -76,6 +105,40 @@ public abstract class MixinChatHud implements ChatHudMethods {
             CubesideClientFabric.messageQueue.add(componentIn);
             return Text.empty();
         }
+
+        if (Configs.Chat.CountDuplicateMessages.getBooleanValue()) {
+            if (lastMessage != null && lastMessage.equals(componentIn)) {
+                count++;
+                lastMessage = componentIn;
+
+                MutableText text = lastMessage.copy();
+                MutableText countText = Text.literal(String.format(Configs.Chat.CountDuplicateMessagesFormat.getStringValue(), count));
+                countText.setStyle(Style.EMPTY.withColor(TextColor.parse(Configs.Chat.CountDuplicateMessagesColor.getColor().toHexString()).result().get()));
+                text.append(countText);
+                componentIn = text;
+
+                if (lastEditMessage != null) {
+                    int with = MathHelper.floor(this.getWidth() / this.getChatScale());
+                    List<OrderedText> list = ChatMessages.breakRenderedChatMessageLines(lastEditMessage, with, this.client.textRenderer);
+                    for (int i = 1; i <= list.size(); i++) {
+                        this.visibleMessages.removeFirst();
+                        this.messages.removeFirst();
+                    }
+                    if (CubesideClientFabric.getChatDatabase() != null) {
+                        try {
+                            CubesideClientFabric.getChatDatabase().deleteNewestMessage();
+                        } catch (Throwable e) {
+                            CubesideClientFabric.LOGGER.log(Level.WARN, "Could not delete latest message from Database " + e.getMessage());
+                        }
+                    }
+                }
+
+            } else {
+                lastMessage = componentIn;
+                count = 1;
+            }
+        }
+
         if (Configs.PermissionSettings.AutoChat.getBooleanValue()) {
             String s = componentIn.toString();
             String[] arr = s.split(" ");
@@ -83,7 +146,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
             if (arr.length >= 16) {
                 if (arr[7].equals("literal{From") && arr[8].equals("}[style={color=light_purple}],") && (arr[16].contains("style={color=white}") || arr[16].contains("style={color=green}"))) {
                     if (client.player != null) {
-                        if (CubesideClientFabric.hasPermission("cubeside.autochat")) {
+                        if (PermissionHandler.hasPermission("cubeside.autochat")) {
                             client.player.networkHandler.sendCommand("r " + Configs.PermissionSettings.AutoChatAntwort.getStringValue());
                         } else {
                             ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
@@ -109,23 +172,23 @@ public abstract class MixinChatHud implements ChatHudMethods {
             MutableText component = Text.literal("");
             if (args2.length == 2) {
                 MutableText name = Text.literal(args2[0]);
-                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592").result().get()));
                 MutableText accept = Text.literal("[Annehmen]");
-                accept.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept")));
+                accept.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d").result().get()).withClickEvent(new ClickEvent.RunCommand("/tpaccept")));
                 MutableText deny = Text.literal(" [Ablehnen]");
-                deny.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny")));
+                deny.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139").result().get()).withClickEvent(new ClickEvent.RunCommand("/tpdeny")));
 
                 if (args2[1].startsWith("fragt, ob er sich zu dir teleportieren darf.")) {
                     component.append(name);
                     MutableText message = Text.literal(" möchte sich zu dir teleportieren.\n");
-                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message);
                     component.append(accept);
                     component.append(deny);
 
                     if (Configs.Generic.TpaSound.getBooleanValue()) {
                         if (client.player != null) {
-                            client.player.playSound(SoundEvent.of(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                            client.player.playSoundToPlayer(SoundEvent.of(Identifier.of("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
                         }
                     }
 
@@ -135,14 +198,14 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 if (args2[1].startsWith("fragt, ob du dich zu ihm teleportieren möchtest.")) {
                     component.append(name);
                     MutableText message = Text.literal(" möchte, dass du dich zu ihm teleportierst.\n");
-                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message);
                     component.append(accept);
                     component.append(deny);
 
                     if (Configs.Generic.TpaSound.getBooleanValue()) {
                         if (client.player != null) {
-                            client.player.playSound(SoundEvent.of(new Identifier("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
+                            client.player.playSoundToPlayer(SoundEvent.of(Identifier.of("block.note_block.flute")), SoundCategory.PLAYERS, 20.0f, 0.5f);
                         }
                     }
 
@@ -152,10 +215,10 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 if (args2[1].startsWith("hat deine Teleportierungsanfrage angenommen.")) {
                     component.append(name);
                     MutableText message = Text.literal(" hat deine Teleportierungsanfrage");
-                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message);
                     MutableText message2 = Text.literal(" angenommen.");
-                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")));
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d").result().get()));
                     component.append(message2);
                     componentIn = component;
                 }
@@ -163,25 +226,25 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 if (args2[1].startsWith("hat deine Teleportierungsanfrage abgelehnt.")) {
                     component.append(name);
                     MutableText message = Text.literal(" hat deine Teleportierungsanfrage");
-                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message);
                     MutableText message2 = Text.literal(" abgelehnt.");
-                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139").result().get()));
                     component.append(message2);
                     componentIn = component;
                 }
             }
             if (args5.length == 5) {
                 MutableText name = Text.literal(args6[4].replace(".", ""));
-                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592").result().get()));
 
                 if (tpamessage.startsWith("Du teleportierst dich zu")) {
                     MutableText message1 = Text.literal("Du wirst zu ");
-                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message1);
                     component.append(name);
                     MutableText message2 = Text.literal(" teleportiert.");
-                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message2);
                     componentIn = component;
                 }
@@ -189,28 +252,28 @@ public abstract class MixinChatHud implements ChatHudMethods {
 
             if (args6.length == 6) {
                 MutableText name = Text.literal(args6[4].replace(".", ""));
-                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+                name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592").result().get()));
                 if (tpamessage.startsWith("Eine Anfrage wurde an")) {
                     MutableText message1 = Text.literal("Du hast eine Anfrage an ");
-                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message1);
                     component.append(name);
                     MutableText message2 = Text.literal(" gesendet.");
-                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message2);
                     componentIn = component;
                 }
 
                 if (tpamessage.startsWith("Diese Anfrage wird nach")) {
                     MutableText message1 = Text.literal("Diese Anfrage wird in ");
-                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message1);
                     component.append(name);
                     MutableText seconds = Text.literal(" Sekunden ");
-                    seconds.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592")));
+                    seconds.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592").result().get()));
                     component.append(seconds);
                     MutableText message2 = Text.literal("ablaufen.");
-                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                    message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                     component.append(message2);
                     componentIn = component;
                 }
@@ -218,37 +281,37 @@ public abstract class MixinChatHud implements ChatHudMethods {
             }
             if (tpamessage.equals("Teleportation läuft...")) {
                 MutableText message = Text.literal("Teleportation läuft...");
-                message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                message.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                 component.append(message);
                 componentIn = component;
             }
 
             if (tpamessage.equals("Du hast die Teleportierungsanfrage abgelehnt.")) {
                 MutableText message1 = Text.literal("Du hast die Teleportierungsanfrage");
-                message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                 component.append(message1);
                 MutableText message2 = Text.literal(" abgelehnt.");
-                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
+                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139").result().get()));
                 component.append(message2);
                 componentIn = component;
             }
 
             if (tpamessage.equals("Du hast die Teleportierungsanfrage angenommen.")) {
                 MutableText message1 = Text.literal("Du hast die Teleportierungsanfrage");
-                message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                message1.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                 component.append(message1);
                 MutableText message2 = Text.literal(" angenommen.");
-                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d")));
+                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d").result().get()));
                 component.append(message2);
                 componentIn = component;
             }
 
             if (tpamessage.equals("Fehler: Du hast keine Teleportierungsanfragen.")) {
                 MutableText message = Text.literal("Fehler: ");
-                message.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139")));
+                message.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139").result().get()));
                 component.append(message);
                 MutableText message2 = Text.literal("Du hast keine Teleportierungsanfrage.");
-                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db")));
+                message2.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff5db").result().get()));
                 component.append(message2);
                 componentIn = component;
             }
@@ -260,12 +323,15 @@ public abstract class MixinChatHud implements ChatHudMethods {
             timestamp.setStyle(Style.EMPTY.withColor(Configs.Chat.TimeStampColor.getColor().intValue));
             component.append(timestamp);
             component.append(componentIn);
-            addMessagetoDatabase(component);
-            return component;
+            addMessageToDatabase(component);
+            componentIn = component;
         } else {
-            addMessagetoDatabase(componentIn);
+            addMessageToDatabase(componentIn);
         }
 
+        if (Configs.Chat.CountDuplicateMessages.getBooleanValue()) {
+            lastEditMessage = componentIn;
+        }
         return componentIn;
     }
 
@@ -284,39 +350,49 @@ public abstract class MixinChatHud implements ChatHudMethods {
             return;
         }
         if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
-            if (client.getCurrentServerEntry() != null) {
-                if (!CubesideClientFabric.databaseinuse) {
-                    database.addCommand(message, client.getCurrentServerEntry().address.toLowerCase());
+            ChatDatabase chatDatabase = CubesideClientFabric.getChatDatabase();
+            if (chatDatabase != null) {
+                try {
+                    chatDatabase.addCommandEntry(message);
+                } catch (Throwable e) {
+                    CubesideClientFabric.LOGGER.log(Level.WARN, "Command can not save to Database " + e.getMessage());
                 }
             }
         }
     }
 
     @Override
-    public void addStoredChatMessage(Text message) {
-        this.addMessage(message, null, 0, new MessageIndicator(10631423, null, null, null), false);
+    public void cubesideMod$addStoredChatMessage(Text message) {
+        this.addVisibleMessage(new ChatHudLine(0, message, null, new MessageIndicator(10631423, null, Text.literal("*"), null)));
     }
 
     @Override
-    public void addStoredCommand(String message) {
+    public void cubesideMod$addStoredCommand(String message) {
         this.addToMessageHistory(message);
     }
 
+    @Unique
     public void playAFKSound() {
         if (client.player != null) {
-            SoundEvent sound = SoundEvent.of(new Identifier(CubesideClientFabric.MODID, "afk"));
-            client.player.playSound(sound, SoundCategory.PLAYERS, 0.2f, 1.0f);
+            SoundEvent sound = SoundEvent.of(Identifier.of(CubesideClientFabric.MODID, "afk"));
+            client.player.playSoundToPlayer(sound, SoundCategory.PLAYERS, 0.2f, 1.0f);
         }
     }
 
-    public void addMessagetoDatabase(Text component) {
+    @Unique
+    public void addMessageToDatabase(Text component) {
         if (Configs.Chat.SaveMessagesToDatabase.getBooleanValue()) {
-            if (client.getCurrentServerEntry() != null) {
-                if (!CubesideClientFabric.databaseinuse) {
-                    database.addMessage(component, client.getCurrentServerEntry().address.toLowerCase());
+            ChatDatabase chatDatabase = CubesideClientFabric.getChatDatabase();
+            if (chatDatabase != null) {
+                ClientWorld world = client.world;
+                if (world != null) {
+                    try {
+                        chatDatabase.addMessageEntry(Text.Serialization.toJsonString(component, world.getRegistryManager()));
+                    } catch (Throwable e) {
+                        CubesideClientFabric.LOGGER.log(Level.WARN, "Message can not save to Database " + e.getMessage());
+                    }
                 }
             }
         }
     }
 }
-

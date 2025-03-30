@@ -1,16 +1,11 @@
 package de.fanta.cubeside;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ChatInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.ChatHud;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
 import java.awt.*;
@@ -34,12 +29,8 @@ public class ChatInfoHud {
         }
     }
 
-    public void onRenderGameOverlayPost(DrawContext context) {
-        if (minecraft.getDebugHud().shouldShowDebugHud()) {
-            return;
-        }
-        if (this.minecraft.currentScreen instanceof ChatScreen && Configs.Chat.DisplayChatInfo.getBooleanValue() && CubesideClientFabric.getChatInfo() != null) {
-            GlStateManager._clearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    public void onRenderChatInfoHud(DrawContext context) {
+        if (Configs.Chat.DisplayChatInfo.getBooleanValue() && CubesideClientFabric.getChatInfo() != null) {
             renderChatInfoHud(context, CubesideClientFabric.getChatInfo());
         }
     }

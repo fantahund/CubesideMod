@@ -1,4 +1,4 @@
-{
+    {
   "schemaVersion": 1,
   "id": "cubeside",
   "version": "${version}",
@@ -22,9 +22,10 @@
   "mixins": [ "cubeside.mixins.json" ],
   "accessWidener" : "cubeside.accesswidener",
   "depends": {
-    "fabricloader": ">=0.14.6",
+    "fabricloader": ">=0.15.10",
     "fabric": "*",
     "minecraft": "*",
-    "malilib": ">=0.13.1"
+    "malilib": ">=0.19.999-sakura",
+    "cubesideutilsfabricclient": ">=1.0.4-SNAPSHOT"
   }
 }

@@ -4,7 +4,7 @@ import net.minecraft.text.Text;
 
 public interface ChatHudMethods {
 
-    void addStoredChatMessage(Text message);
+    void cubesideMod$addStoredChatMessage(Text message);
 
-    void addStoredCommand(String command);
+    void cubesideMod$addStoredCommand(String command);
 }

@@ -15,8 +15,8 @@ import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigInteger;
 import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.config.options.ConfigStringList;
-import fi.dy.masa.malilib.util.Color4f;
 import fi.dy.masa.malilib.util.JsonUtils;
+import fi.dy.masa.malilib.util.data.Color4f;
 import net.minecraft.text.Text;
 import org.apache.commons.io.FileUtils;
 
@@ -41,6 +41,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean WoodStriping = new ConfigBoolean("WoodStriping", true, Text.translatable("options.cubeside.woodstriping").getString());
         public static final ConfigBoolean CreateGrassPath = new ConfigBoolean("CreateGrassPath", true, Text.translatable("options.cubeside.creategrasspath").getString());
         public static final ConfigBoolean SignEdit = new ConfigBoolean("SingEdit", true, Text.translatable("options.cubeside.singedit").getString());
+        public static final ConfigBoolean ShowAdditionalRepairCosts = new ConfigBoolean("ShowAdditionalRepairCosts", false, Text.translatable("options.cubeside.showadditionalrepaircosts").getString());
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 ThirdPersonElytra,
@@ -54,26 +55,32 @@ public class Configs implements IConfigHandler {
                 ActionBarShadow,
                 WoodStriping,
                 CreateGrassPath,
-                SignEdit
+                SignEdit,
+                ShowAdditionalRepairCosts
         );
     }
 
     public static class Chat {
-        public static final ConfigBoolean ClearChatByServerChange = new ConfigBoolean("ClearChatByServerChange", false, Text.translatable("options.cubeside.clearchatbyserverchange").getString());
         public static final ConfigBoolean ChatTimeStamps = new ConfigBoolean("ChatTimeStamps", false, Text.translatable("options.cubeside.chattimestamps").getString());
         public static final ConfigColor TimeStampColor = new ConfigColor("TimeStampColor", "#ffffff", Text.translatable("options.cubeside.timestampcolor").getString());
         public static final ConfigBoolean SaveMessagesToDatabase = new ConfigBoolean("SaveMessagesToDatabase", false, Text.translatable("options.cubeside.savemessagestodatabase").getString());
         public static final ConfigInteger DaysTheMessagesAreStored = new ConfigInteger("DaysTheMessagesAreStored", 10, 1, 30, true, Text.translatable("options.cubeside.daysthemessagesarestored").getString());
         public static final ConfigInteger ChatMessageLimit = new ConfigInteger("ChatMessageLimit", 100, 1, 100000, true, Text.translatable("options.cubeside.chatlimit").getString());
         public static final ConfigBoolean DisplayChatInfo = new ConfigBoolean("DisplayChatInfo", true, Text.translatable("options.cubeside.displaychatinfo").getString());
+        public static final ConfigBoolean CountDuplicateMessages = new ConfigBoolean("CountDuplicateMessages", false, Text.translatable("options.cubeside.countduplicatemessages").getString());
+        public static final ConfigString CountDuplicateMessagesFormat = new ConfigString("CountDuplicateMessagesFormat", " (%sx)", Text.translatable("options.cubeside.countduplicatemessagesformat").getString());
+        public static final ConfigColor CountDuplicateMessagesColor = new ConfigColor("CountDuplicateMessagesColor", "#ffffff", Text.translatable("options.cubeside.countduplicatemessagescolor").getString());
+
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                ClearChatByServerChange,
                 ChatTimeStamps,
                 TimeStampColor,
                 SaveMessagesToDatabase,
                 DaysTheMessagesAreStored,
                 ChatMessageLimit,
-                DisplayChatInfo
+                DisplayChatInfo,
+                CountDuplicateMessages,
+                CountDuplicateMessagesFormat,
+                CountDuplicateMessagesColor
         );
     }
 
@@ -90,10 +97,8 @@ public class Configs implements IConfigHandler {
     }
 
     public static class Fun {
-        public static final ConfigBoolean DropItemFancy = new ConfigBoolean("DropItemFancy", false, Text.translatable("options.cubeside.dropitemfancy").getString());
         public static final ConfigBoolean DisableChristmasChest = new ConfigBoolean("DisableChristmasChest", false, Text.translatable("options.cubeside.removechristmaschest").getString());
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
-                DropItemFancy,
                 DisableChristmasChest
         );
     }
@@ -102,7 +107,7 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean KeepEntityHitBox = new ConfigBoolean("KeepEntityHitBox", false, Text.translatable("options.cubeside.keepentityhitbox").getString());
         public static final ConfigBoolean RainbowEntityHitBox = new ConfigBoolean("RainbowEntityHitBox", false, Text.translatable("options.cubeside.rainbowentityhitbox").getString());
         public static final ConfigColorList RainbowEntityHitBoxColorList = new ConfigColorList("RainbowEntityHitBoxColorList", ImmutableList.of(Color4f.fromColor(16711684), Color4f.fromColor(16754176), Color4f.fromColor(16769280), Color4f.fromColor(65305), Color4f.fromColor(35071), Color4f.fromColor(13959423)), Text.translatable("options.cubeside.rainbowentityhitboxcolorlist").getString());
-        public static final ConfigDouble RainbowEntityHitBoxSpeed = new ConfigDouble("RainbowEntityHitBoxSpeed", 0.1, 0.0, 1, true, Text.translatable("options.cubeside.rainbowentityhitboxspeed").getString());
+        public static final ConfigDouble RainbowEntityHitBoxSpeed = new ConfigDouble("RainbowEntityHitBoxSpeed", 0.1, 0.0, 1.0, true, Text.translatable("options.cubeside.rainbowentityhitboxspeed").getString());
         public static final ConfigDouble EntityHitBoxVisibility = new ConfigDouble("EntityHitBoxVisibility", 1, 0.0, 1, true, Text.translatable("options.cubeside.entityhitboxvisibility").getString());
         public static final ConfigColor EntityHitBoxColor = new ConfigColor("EntityHitBoxColor", "#ffffff", Text.translatable("options.cubeside.entityhitboxcolor").getString());
         public static final ConfigBoolean EntityHitBoxDirection = new ConfigBoolean("EntityHitBoxDirection", true, Text.translatable("options.cubeside.entityhitboxdirection").getString());
@@ -172,7 +177,7 @@ public class Configs implements IConfigHandler {
     }
 
     public static void loadFromFile() {
-        File oldConfigFile = new File(fi.dy.masa.malilib.util.FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
+        File oldConfigFile = new File(fi.dy.masa.malilib.util.FileUtils.getConfigDirectoryAsPath().toFile(), CONFIG_FILE_NAME);
         File configFile = new File(CubesideClientFabric.getConfigDirectory(), CONFIG_FILE_NAME);
         if (oldConfigFile.exists()) {
             try {

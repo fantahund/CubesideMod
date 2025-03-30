@@ -20,7 +20,7 @@ public abstract class MixinRenderEntity {
     @Inject(method = "isInvisibleTo", at = @At("HEAD"), cancellable = true)
     private void showInvisibleArmorstands(net.minecraft.entity.player.PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
         if (Configs.Generic.ShowInvisibleArmorstands.getBooleanValue()) {
-            Item iteminmainhand = player.getHandItems().iterator().next().getItem();
+            Item iteminmainhand = player.getMainHandStack().getItem();
             if (iteminmainhand == Items.ARMOR_STAND && getType().equals(EntityType.ARMOR_STAND) && isInvisible()) {
                 cir.setReturnValue(false);
             }

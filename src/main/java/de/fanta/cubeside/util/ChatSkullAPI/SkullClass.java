@@ -1,9 +1,9 @@
 package de.fanta.cubeside.util.ChatSkullAPI;
 
-
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.util.ChatUtils;
 
+import java.net.URI;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.net.URL;
@@ -30,6 +30,6 @@ public class SkullClass {
   private static URL newURL(String name) throws Exception {
     String url = "https://mineskin.eu/helm/%pname%/8.png";
     url = url.replace("%pname%", name);
-    return new URL(url);
+    return new URI(url).toURL();
   }
 }
