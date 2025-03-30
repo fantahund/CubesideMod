@@ -45,7 +45,7 @@ public class CubesideClientFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        configDirectory = new File(FileUtils.getConfigDirectory().getPath() + "/CubesideMod");
+        configDirectory = new File(FileUtils.getConfigDirectoryAsPath() + "/CubesideMod");
         if (!configDirectory.isDirectory()) {
             configDirectory.mkdirs();
         }

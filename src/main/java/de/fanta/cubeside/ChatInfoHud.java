@@ -1,6 +1,5 @@
 package de.fanta.cubeside;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ChatInfo;
 import net.minecraft.client.MinecraftClient;
@@ -32,7 +31,6 @@ public class ChatInfoHud {
 
     public void onRenderChatInfoHud(DrawContext context) {
         if (Configs.Chat.DisplayChatInfo.getBooleanValue() && CubesideClientFabric.getChatInfo() != null) {
-            GlStateManager._clearColor(1.0f, 1.0f, 1.0f, 1.0f);
             renderChatInfoHud(context, CubesideClientFabric.getChatInfo());
         }
     }

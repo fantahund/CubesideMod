@@ -1,6 +1,6 @@
 package de.fanta.cubeside.util;
 
-import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.malilib.util.data.Color4f;
 
 import java.awt.*;
 import java.util.List;

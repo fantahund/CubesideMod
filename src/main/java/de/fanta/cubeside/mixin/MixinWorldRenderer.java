@@ -3,7 +3,7 @@ package de.fanta.cubeside.mixin;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ColorUtils;
-import fi.dy.masa.malilib.util.Color4f;
+import fi.dy.masa.malilib.util.data.Color4f;
 import net.minecraft.client.render.WorldRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.Constant;

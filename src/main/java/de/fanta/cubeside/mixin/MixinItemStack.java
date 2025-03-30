@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ItemStack.class)
 public class MixinItemStack {
-    @Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/component/ComponentType;Lnet/minecraft/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/item/tooltip/TooltipType;)V", ordinal = 4), locals = LocalCapture.CAPTURE_FAILHARD)
+    /*@Inject(method = "getTooltip", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;appendTooltip(Lnet/minecraft/component/ComponentType;Lnet/minecraft/item/Item$TooltipContext;Ljava/util/function/Consumer;Lnet/minecraft/item/tooltip/TooltipType;)V", ordinal = 4), locals = LocalCapture.CAPTURE_FAILHARD)
     private void addMoreTooltip(Item.TooltipContext context, PlayerEntity player, TooltipType type, CallbackInfoReturnable<List<Text>> cir, boolean bl, List list, Consumer consumer) {
         if (Configs.Generic.ShowAdditionalRepairCosts.getBooleanValue()) {
             ItemStack stack = (ItemStack) (Object) this;
@@ -31,5 +31,5 @@ public class MixinItemStack {
                 }
             }
         }
-    }
+    }*/
 }

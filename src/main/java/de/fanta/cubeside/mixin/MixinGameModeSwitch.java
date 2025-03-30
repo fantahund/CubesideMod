@@ -3,7 +3,7 @@ package de.fanta.cubeside.mixin;
 import de.fanta.cubeside.config.Configs;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.GameModeSelectionScreen;
+import net.minecraft.client.gui.screen.GameModeSwitcherScreen;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,7 +16,7 @@ public class MixinGameModeSwitch {
     public void behaviour(int key, CallbackInfoReturnable<Boolean> cir) {
         if (Configs.Generic.GamemodeSwitcher.getBooleanValue()) {
             if (key == 293) {
-                MinecraftClient.getInstance().setScreen(new GameModeSelectionScreen());
+                MinecraftClient.getInstance().setScreen(new GameModeSwitcherScreen());
                 cir.setReturnValue(true);
             }
         }

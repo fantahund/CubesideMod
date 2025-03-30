@@ -174,9 +174,9 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 MutableText name = Text.literal(args2[0]);
                 name.setStyle(Style.EMPTY.withColor(TextColor.parse("#2ff592").result().get()));
                 MutableText accept = Text.literal("[Annehmen]");
-                accept.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d").result().get()).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpaccept")));
+                accept.setStyle(Style.EMPTY.withColor(TextColor.parse("#119e1d").result().get()).withClickEvent(new ClickEvent.RunCommand("/tpaccept")));
                 MutableText deny = Text.literal(" [Ablehnen]");
-                deny.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139").result().get()).withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tpdeny")));
+                deny.setStyle(Style.EMPTY.withColor(TextColor.parse("#9e1139").result().get()).withClickEvent(new ClickEvent.RunCommand("/tpdeny")));
 
                 if (args2[1].startsWith("fragt, ob er sich zu dir teleportieren darf.")) {
                     component.append(name);

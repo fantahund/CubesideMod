@@ -15,8 +15,8 @@ import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigInteger;
 import fi.dy.masa.malilib.config.options.ConfigString;
 import fi.dy.masa.malilib.config.options.ConfigStringList;
-import fi.dy.masa.malilib.util.Color4f;
 import fi.dy.masa.malilib.util.JsonUtils;
+import fi.dy.masa.malilib.util.data.Color4f;
 import net.minecraft.text.Text;
 import org.apache.commons.io.FileUtils;
 
@@ -177,7 +177,7 @@ public class Configs implements IConfigHandler {
     }
 
     public static void loadFromFile() {
-        File oldConfigFile = new File(fi.dy.masa.malilib.util.FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
+        File oldConfigFile = new File(fi.dy.masa.malilib.util.FileUtils.getConfigDirectoryAsPath().toFile(), CONFIG_FILE_NAME);
         File configFile = new File(CubesideClientFabric.getConfigDirectory(), CONFIG_FILE_NAME);
         if (oldConfigFile.exists()) {
             try {
