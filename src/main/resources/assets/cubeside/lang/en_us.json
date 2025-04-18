@@ -73,5 +73,8 @@
     "options.cubeside.countduplicatemessagesformat": "Duplicate messages count format",
     "options.cubeside.countduplicatemessagescolor": "Duplicate messages count color",
 
-    "cubeside.additional_repair_costs": "Additional Repair Cost"
+    "cubeside.additional_repair_costs": "Additional Repair Cost",
+    "options.cubeside.fastjoinbuttontext": "Mainmenu fast join button text",
+    "options.cubeside.fastjoinbuttonip": "Mainmenu fast join button ip",
+    "options.cubeside.fastjoinbuttonport": "Mainmenu fast join button port"
 }

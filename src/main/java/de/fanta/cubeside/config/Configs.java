@@ -42,6 +42,9 @@ public class Configs implements IConfigHandler {
         public static final ConfigBoolean CreateGrassPath = new ConfigBoolean("CreateGrassPath", true, Text.translatable("options.cubeside.creategrasspath").getString());
         public static final ConfigBoolean SignEdit = new ConfigBoolean("SingEdit", true, Text.translatable("options.cubeside.singedit").getString());
         public static final ConfigBoolean ShowAdditionalRepairCosts = new ConfigBoolean("ShowAdditionalRepairCosts", false, Text.translatable("options.cubeside.showadditionalrepaircosts").getString());
+        public static final ConfigString FastJoinButtonText = new ConfigString("FastJoinButtonText", "Join Cubeside", Text.translatable("options.cubeside.fastjoinbuttontext").getString());
+        public static final ConfigString FastJoinButtonIP = new ConfigString("FastJoinButtonIP", "cubeside.de", Text.translatable("options.cubeside.fastjoinbuttonip").getString());
+        public static final ConfigInteger FastJoinButtonPort = new ConfigInteger("FastJoinButtonPort", 25565, Text.translatable("options.cubeside.fastjoinbuttonport").getString());
 
         public static final ImmutableList<IConfigBase> OPTIONS = ImmutableList.of(
                 ThirdPersonElytra,
@@ -56,7 +59,10 @@ public class Configs implements IConfigHandler {
                 WoodStriping,
                 CreateGrassPath,
                 SignEdit,
-                ShowAdditionalRepairCosts
+                ShowAdditionalRepairCosts,
+                FastJoinButtonText,
+                FastJoinButtonIP,
+                FastJoinButtonPort
         );
     }
 
