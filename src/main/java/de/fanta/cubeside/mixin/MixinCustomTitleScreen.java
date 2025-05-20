@@ -33,11 +33,13 @@ public abstract class MixinCustomTitleScreen extends Screen {
 
     @Inject(at = @At("HEAD"), method = "addNormalWidgets")
     private void addCustomButton(int y, int spacingY, CallbackInfoReturnable<Integer> cir) {
-        this.addDrawableChild(ButtonWidget.builder(Text.literal(Configs.Generic.FastJoinButtonText.getStringValue()), button -> {
-            if (selectedEntry != null) {
-                ConnectScreen.connect(this, MinecraftClient.getInstance(), new ServerAddress(Configs.Generic.FastJoinButtonIP.getStringValue(), Configs.Generic.FastJoinButtonPort.getIntegerValue()), selectedEntry, false, null);
-            }
-        }).dimensions(this.width / 2 - 100 + 205, y + spacingY, 80, 20).build());
+        if (!Configs.Generic.FastJoinButtonText.getStringValue().isBlank() && !Configs.Generic.FastJoinButtonIP.getStringValue().isBlank()) {
+            this.addDrawableChild(ButtonWidget.builder(Text.literal(Configs.Generic.FastJoinButtonText.getStringValue()), button -> {
+                if (selectedEntry != null) {
+                    ConnectScreen.connect(this, MinecraftClient.getInstance(), new ServerAddress(Configs.Generic.FastJoinButtonIP.getStringValue(), Configs.Generic.FastJoinButtonPort.getIntegerValue()), selectedEntry, false, null);
+                }
+            }).dimensions(this.width / 2 - 100 + 205, y + spacingY, 80, 20).build());
+        }
     }
 
 }
