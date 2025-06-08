@@ -7,9 +7,11 @@ import com.mojang.serialization.JsonOps;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.util.ChatInfo;
 import java.awt.Color;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
@@ -41,18 +43,19 @@ public class CubesideDataS2C implements CustomPayload {
                     String currentPrivateChatPrefixString = packet.readString();
                     String currentResponsePartnerPrefixString = packet.readString();
 
+                    RegistryOps<JsonElement> ops = MinecraftClient.getInstance().world.getRegistryManager().getOps(JsonOps.INSTANCE);
                     JsonElement jsonElement = StrictJsonParser.parse(currentChannelColorString);
-                    DataResult<Pair<Text, JsonElement>> result = TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement);
+                    DataResult<Pair<Text, JsonElement>> result = TextCodecs.CODEC.decode(ops, jsonElement);
                     if (result.isSuccess()) {
                         currentChannelColor = result.getOrThrow().getFirst().copy();
                     }
                     jsonElement = StrictJsonParser.parse(currentPrivateChatPrefixString);
-                    result = TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement);
+                    result = TextCodecs.CODEC.decode(ops, jsonElement);
                     if (result.isSuccess()) {
                         currentPrivateChatPrefix = result.getOrThrow().getFirst().copy();
                     }
                     jsonElement = StrictJsonParser.parse(currentResponsePartnerPrefixString);
-                    result = TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement);
+                    result = TextCodecs.CODEC.decode(ops, jsonElement);
                     if (result.isSuccess()) {
                         currentResponsePartnerPrefix = result.getOrThrow().getFirst().copy();
                     }

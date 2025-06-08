@@ -1,5 +1,6 @@
 package de.fanta.cubeside.mixin;
 
+import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
 import de.fanta.cubeside.ChatInfoHud;
 import de.fanta.cubeside.CubesideClientFabric;
@@ -18,6 +19,7 @@ import net.minecraft.client.gui.hud.ChatHudLine;
 import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.client.util.ChatMessages;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.ClickEvent;
@@ -389,7 +391,8 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 ClientWorld world = client.world;
                 if (world != null) {
                     try {
-                        chatDatabase.addMessageEntry(TextCodecs.CODEC.encode(component, JsonOps.INSTANCE, JsonOps.INSTANCE.empty()).getOrThrow().toString());
+                        RegistryOps<JsonElement> ops = world.getRegistryManager().getOps(JsonOps.INSTANCE);
+                        chatDatabase.addMessageEntry(TextCodecs.CODEC.encode(component, ops, ops.empty()).getOrThrow().toString());
                     } catch (Throwable e) {
                         CubesideClientFabric.LOGGER.log(Level.WARN, "Message can not save to Database " + e.getMessage());
                     }

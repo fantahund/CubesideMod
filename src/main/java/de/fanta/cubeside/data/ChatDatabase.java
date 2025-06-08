@@ -20,6 +20,7 @@ import java.io.UTFDataFormatException;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
 import net.minecraft.util.StrictJsonParser;
@@ -199,11 +200,12 @@ public class ChatDatabase {
         List<Text> entries = new ArrayList<>();
         int size = chatMessages.size();
         int num = 0;
+        RegistryOps<JsonElement> ops = registry.getOps(JsonOps.INSTANCE);
         for (ChatMessage entry : chatMessages) {
             if (limit == -1 || num >= size - limit) {
                 try {
                     JsonElement jsonElement = StrictJsonParser.parse(entry.text());
-                    DataResult<Pair<Text, JsonElement>> result = TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement);
+                    DataResult<Pair<Text, JsonElement>> result = TextCodecs.CODEC.decode(ops, jsonElement);
                     if (result.isSuccess()) {
                         entries.add(result.getOrThrow().getFirst());
                     }
