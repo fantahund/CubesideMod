@@ -1,15 +1,20 @@
 package de.fanta.cubeside.packets;
 
+import com.google.gson.JsonElement;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.util.ChatInfo;
 import java.awt.Color;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextCodecs;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.StrictJsonParser;
 
 public class CubesideDataS2C implements CustomPayload {
     public static final Id<CubesideDataS2C> PACKET_ID = new Id<>(Identifier.of("cubesidemod", "data"));
@@ -36,9 +41,21 @@ public class CubesideDataS2C implements CustomPayload {
                     String currentPrivateChatPrefixString = packet.readString();
                     String currentResponsePartnerPrefixString = packet.readString();
 
-                    currentChannelColor = Text.Serialization.fromJson(currentChannelColorString, DynamicRegistryManager.EMPTY);
-                    currentPrivateChatPrefix = Text.Serialization.fromJson(currentPrivateChatPrefixString, DynamicRegistryManager.EMPTY);
-                    currentResponsePartnerPrefix = Text.Serialization.fromJson(currentResponsePartnerPrefixString, DynamicRegistryManager.EMPTY);
+                    JsonElement jsonElement = StrictJsonParser.parse(currentChannelColorString);
+                    DataResult<Pair<Text, JsonElement>> result = TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement);
+                    if (result.isSuccess()) {
+                        currentChannelColor = result.getOrThrow().getFirst().copy();
+                    }
+                    jsonElement = StrictJsonParser.parse(currentPrivateChatPrefixString);
+                    result = TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement);
+                    if (result.isSuccess()) {
+                        currentPrivateChatPrefix = result.getOrThrow().getFirst().copy();
+                    }
+                    jsonElement = StrictJsonParser.parse(currentResponsePartnerPrefixString);
+                    result = TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement);
+                    if (result.isSuccess()) {
+                        currentResponsePartnerPrefix = result.getOrThrow().getFirst().copy();
+                    }
                 } catch (IndexOutOfBoundsException ignored) {
                 }
 
@@ -72,6 +89,5 @@ public class CubesideDataS2C implements CustomPayload {
         return screenFlashInfo;
     }
 
-    public record ScreenFlashInfo(int duration, Color color) {
-    }
+    public record ScreenFlashInfo(int duration, Color color) {}
 }

@@ -6,17 +6,16 @@ import de.fanta.cubeside.config.Configs;
 import de.fanta.cubeside.util.ChatUtils;
 import de.iani.cubesideutils.commands.ArgsParser;
 import de.iani.cubesideutils.fabric.commands.SubCommand;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.scoreboard.Team;
 import net.minecraft.world.GameMode;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
 
 public class AFKCheckCommand extends SubCommand {
     private static boolean teleport = false;
@@ -52,7 +51,7 @@ public class AFKCheckCommand extends SubCommand {
 
                 teleport = true;
                 String teleportPlayer = playerList.getFirst();
-                sender.getPlayer().networkHandler.sendCommand("tt p " + teleportPlayer);
+                sender.getPlayer().networkHandler.sendChatCommand("tt p " + teleportPlayer);
                 ChatUtils.sendNormalMessage("Du wurdest zu " + teleportPlayer + " teleportiert.");
                 playerList.remove(teleportPlayer);
                 break;
@@ -60,7 +59,7 @@ public class AFKCheckCommand extends SubCommand {
                 if (teleport) {
                     if (!playerList.isEmpty()) {
                         String portPlayer = playerList.getFirst();
-                        sender.getPlayer().networkHandler.sendCommand("tt p " + portPlayer);
+                        sender.getPlayer().networkHandler.sendChatCommand("tt p " + portPlayer);
                         ChatUtils.sendNormalMessage("Du wurdest zu " + portPlayer + " teleportiert.");
                         playerList.remove(portPlayer);
                     } else {
@@ -105,6 +104,7 @@ public class AFKCheckCommand extends SubCommand {
     private static final Ordering<PlayerListEntry> ENTRY_ORDERING = Ordering.from((playerListEntry, playerListEntry2) -> {
         Team team = playerListEntry.getScoreboardTeam();
         Team team2 = playerListEntry2.getScoreboardTeam();
-        return ComparisonChain.start().compareTrueFirst(playerListEntry.getGameMode() != GameMode.SPECTATOR, playerListEntry2.getGameMode() != GameMode.SPECTATOR).compare(team != null ? team.getName() : "", team2 != null ? team2.getName() : "").compare(playerListEntry.getProfile().getName(), playerListEntry2.getProfile().getName(), String::compareToIgnoreCase).result();
+        return ComparisonChain.start().compareTrueFirst(playerListEntry.getGameMode() != GameMode.SPECTATOR, playerListEntry2.getGameMode() != GameMode.SPECTATOR).compare(team != null ? team.getName() : "", team2 != null ? team2.getName() : "")
+                .compare(playerListEntry.getProfile().getName(), playerListEntry2.getProfile().getName(), String::compareToIgnoreCase).result();
     });
 }

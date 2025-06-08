@@ -1,6 +1,10 @@
 package de.fanta.cubeside.data;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
 import java.io.BufferedInputStream;
@@ -17,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextCodecs;
+import net.minecraft.util.StrictJsonParser;
 import org.apache.logging.log4j.Level;
 import org.dizitart.no2.Nitrite;
 import org.dizitart.no2.collection.FindOptions;
@@ -196,7 +202,11 @@ public class ChatDatabase {
         for (ChatMessage entry : chatMessages) {
             if (limit == -1 || num >= size - limit) {
                 try {
-                    entries.add(Text.Serialization.fromJson(entry.text(), registry));
+                    JsonElement jsonElement = StrictJsonParser.parse(entry.text());
+                    DataResult<Pair<Text, JsonElement>> result = TextCodecs.CODEC.decode(JsonOps.INSTANCE, jsonElement);
+                    if (result.isSuccess()) {
+                        entries.add(result.getOrThrow().getFirst());
+                    }
                 } catch (JsonParseException ignore) {
                 }
             }

@@ -1,5 +1,6 @@
 package de.fanta.cubeside.mixin;
 
+import com.mojang.serialization.JsonOps;
 import de.fanta.cubeside.ChatInfoHud;
 import de.fanta.cubeside.CubesideClientFabric;
 import de.fanta.cubeside.config.Configs;
@@ -24,6 +25,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextCodecs;
 import net.minecraft.text.TextColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -147,7 +149,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 if (arr[7].equals("literal{From") && arr[8].equals("}[style={color=light_purple}],") && (arr[16].contains("style={color=white}") || arr[16].contains("style={color=green}"))) {
                     if (client.player != null) {
                         if (PermissionHandler.hasPermission("cubeside.autochat")) {
-                            client.player.networkHandler.sendCommand("r " + Configs.PermissionSettings.AutoChatAntwort.getStringValue());
+                            client.player.networkHandler.sendChatCommand("r " + Configs.PermissionSettings.AutoChatAntwort.getStringValue());
                         } else {
                             ChatUtils.sendErrorMessage("AutoChat kannst du erst ab Staff benutzen!");
                         }
@@ -387,7 +389,7 @@ public abstract class MixinChatHud implements ChatHudMethods {
                 ClientWorld world = client.world;
                 if (world != null) {
                     try {
-                        chatDatabase.addMessageEntry(Text.Serialization.toJsonString(component, world.getRegistryManager()));
+                        chatDatabase.addMessageEntry(TextCodecs.CODEC.encode(component, JsonOps.INSTANCE, JsonOps.INSTANCE.empty()).getOrThrow().toString());
                     } catch (Throwable e) {
                         CubesideClientFabric.LOGGER.log(Level.WARN, "Message can not save to Database " + e.getMessage());
                     }

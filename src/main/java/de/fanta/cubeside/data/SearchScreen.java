@@ -72,7 +72,7 @@ public class SearchScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.applyBlur();
+        // FIXME 1.21.6 this.applyBlur();
         this.renderDarkening(context);
 
         buttonCache.forEach(this::remove);
