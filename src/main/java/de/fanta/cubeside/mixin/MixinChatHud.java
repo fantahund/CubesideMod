@@ -125,8 +125,12 @@ public abstract class MixinChatHud implements ChatHudMethods {
                     int with = MathHelper.floor(this.getWidth() / this.getChatScale());
                     List<OrderedText> list = ChatMessages.breakRenderedChatMessageLines(lastEditMessage, with, this.client.textRenderer);
                     for (int i = 1; i <= list.size(); i++) {
-                        this.visibleMessages.removeFirst();
-                        this.messages.removeFirst();
+                        if (!this.visibleMessages.isEmpty()) {
+                            this.visibleMessages.removeFirst();
+                        }
+                        if (!this.messages.isEmpty()) {
+                            this.messages.removeFirst();
+                        }
                     }
                     if (CubesideClientFabric.getChatDatabase() != null) {
                         try {
