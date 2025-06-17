@@ -16,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
-    // FIXME 1.21.6 ActionBarShadow
     @Redirect(method = "renderOverlayMessage", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithBackground(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;IIII)V"))
     public void render(DrawContext instance, TextRenderer textRenderer, Text text, int x, int y, int width, int color) {
         if (!Configs.Generic.ActionBarShadow.getBooleanValue()) {
