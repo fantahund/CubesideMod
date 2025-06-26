@@ -1,7 +1,6 @@
 plugins {
     id 'fabric-loom' version '1.10-SNAPSHOT'
     id 'maven-publish'
-    id "com.gradleup.shadow" version "9.0.0-beta2"
     id "com.modrinth.minotaur" version "2.4.3"
 }
 
@@ -33,11 +32,6 @@ repositories {
     mavenLocal()
 }
 
-configurations {
-    shade
-    compileClasspath.extendsFrom shade
-}
-
 dependencies {
     //to change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -51,12 +45,6 @@ dependencies {
 
     modImplementation include("fi.dy.masa.malilib:malilib-fabric-1.21.7-rc1:${project.malilib_version}")
     modImplementation "de.cubeside.cubesideutils.fabric:CubesideUtilsFabricClient:${project.cubeside_utils_version}"
-
-    implementation(platform("org.dizitart:nitrite-bom:4.3.0"))
-    implementation('org.dizitart:nitrite')
-    implementation('org.dizitart:nitrite-mvstore-adapter')
-    implementation('org.dizitart:nitrite-jackson-mapper')
-    implementation('com.h2database:h2-mvstore:2.3.232')
 
     modImplementation "maven.modrinth:sodium:${project.sodium_version}"
 
@@ -100,32 +88,6 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
-}
-
-shadowJar {
-    archiveClassifier.set('shaded')
-
-    base {
-        archivesName.set(project.archives_base_name + "-" + project.minecraft_version)
-    }
-    dependencies {
-        include(dependency('org.dizitart:nitrite-bom'))
-        include(dependency('org.dizitart:nitrite'))
-        include(dependency('org.dizitart:nitrite-mvstore-adapter'))
-        include(dependency('org.dizitart:nitrite-jackson-mapper'))
-        include(dependency('com.h2database:h2-mvstore'))
-    }
-
-    relocate 'org.dizitart', 'de.fanta.cubeside.libs.nitrite'
-    relocate 'com.h2database', 'de.fanta.cubeside.libs.h2database'
-    minimize()
-    minimizeJar.set(true)
-}
-
-remapJar {
-    dependsOn(shadowJar)
-    mustRunAfter(shadowJar)
-    inputFile = shadowJar.archivePath
 }
 
 tasks.publish.dependsOn build

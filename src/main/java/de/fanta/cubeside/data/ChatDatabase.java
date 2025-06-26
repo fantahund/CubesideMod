@@ -25,12 +25,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TextCodecs;
 import net.minecraft.util.StrictJsonParser;
 import org.apache.logging.log4j.Level;
-import org.dizitart.no2.Nitrite;
-import org.dizitart.no2.collection.FindOptions;
-import org.dizitart.no2.common.SortOrder;
-import org.dizitart.no2.common.mapper.JacksonMapperModule;
-import org.dizitart.no2.mvstore.MVStoreModule;
-import org.dizitart.no2.repository.ObjectRepository;
 
 public class ChatDatabase {
     private final String server;
@@ -88,24 +82,6 @@ public class ChatDatabase {
 
         File oldDbFile = new File(CubesideClientFabric.getConfigDirectory(), "/chatStorage/" + server.toLowerCase() + "_1_" + ".db");
         if (oldDbFile.isFile()) {
-            MVStoreModule storeModule = MVStoreModule.withConfig().filePath(oldDbFile).compress(true).build();
-            Nitrite database = Nitrite.builder().loadModule(storeModule).loadModule(new JacksonMapperModule()).openOrCreate();
-
-            ObjectRepository<ChatRepo> chatRepo = database.getRepository(ChatRepo.class);
-            for (ChatRepo entry : chatRepo.find(FindOptions.orderBy("id", SortOrder.Descending))) {
-                if (entry.getTimestamp() >= minTime) {
-                    chatMessages.addLast(new ChatMessage(entry.getMessage(), entry.getTimestamp()));
-                }
-            }
-
-            ObjectRepository<CommandRepo> commandRepo = database.getRepository(CommandRepo.class);
-            for (CommandRepo entry : commandRepo.find(FindOptions.orderBy("id", SortOrder.Descending))) {
-                if (entry.getTimestamp() >= minTime) {
-                    commands.addLast(new ChatMessage(entry.getCommand(), entry.getTimestamp()));
-                }
-            }
-
-            database.close();
             oldDbFile.delete();
         }
 
